@@ -5,6 +5,8 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import MobileNav from "@/components/layout/MobileNav";
 import { Toaster } from "@/components/ui/sonner";
+import { isAuthenticated } from "@/app/actions/auth";
+import { getUserSession } from "@/app/actions/user";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -21,22 +23,25 @@ export const metadata: Metadata = {
   description: "Book home cleaning, plumbing, AC repair, and more in Davanagere.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const isAdmin = await isAuthenticated();
+  const userSession = await getUserSession();
+
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased pb-16 md:pb-0`}
       >
-        <Navbar />
+        <Navbar isAuth={isAdmin} userSession={userSession} />
         <main className="min-h-screen">
           {children}
         </main>
         <Footer />
-        <MobileNav />
+        <MobileNav isAuth={isAdmin} userSession={userSession} />
         <Toaster position="top-center" />
       </body>
     </html>

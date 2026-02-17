@@ -14,9 +14,14 @@ interface BookingFormProps {
     serviceId: string;
     serviceName: string;
     price: number;
+    userData?: {
+        name: string;
+        email: string;
+        phone: string;
+    } | null;
 }
 
-export default function BookingForm({ serviceId, serviceName, price }: BookingFormProps) {
+export default function BookingForm({ serviceId, serviceName, price, userData }: BookingFormProps) {
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -30,6 +35,7 @@ export default function BookingForm({ serviceId, serviceName, price }: BookingFo
 
         const data = {
             serviceId,
+            serviceName,
             customerName: formData.get('name') as string,
             customerPhone: formData.get('phone') as string,
             customerEmail: formData.get('email') as string,
@@ -74,7 +80,7 @@ export default function BookingForm({ serviceId, serviceName, price }: BookingFo
                         </Label>
                         <div className="relative">
                             <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 group-focus-within/input:text-primary transition-colors" />
-                            <Input id="name" name="name" placeholder="Who is booking?" className="pl-10 h-12 rounded-xl border-gray-100 focus:border-primary focus:ring-primary/10 transition-all" required />
+                            <Input id="name" name="name" defaultValue={userData?.name || ''} placeholder="Who is booking?" className="pl-10 h-12 rounded-xl border-gray-100 focus:border-primary focus:ring-primary/10 transition-all" required />
                         </div>
                     </div>
 
@@ -84,7 +90,7 @@ export default function BookingForm({ serviceId, serviceName, price }: BookingFo
                         </Label>
                         <div className="relative">
                             <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 group-focus-within/input:text-primary transition-colors" />
-                            <Input id="phone" name="phone" type="tel" placeholder="+91 XXXXX XXXXX" className="pl-10 h-12 rounded-xl border-gray-100 focus:border-primary focus:ring-primary/10 transition-all" required />
+                            <Input id="phone" name="phone" type="tel" defaultValue={userData?.phone || ''} placeholder="+91 XXXXX XXXXX" className="pl-10 h-12 rounded-xl border-gray-100 focus:border-primary focus:ring-primary/10 transition-all" required />
                         </div>
                     </div>
 
@@ -94,7 +100,7 @@ export default function BookingForm({ serviceId, serviceName, price }: BookingFo
                         </Label>
                         <div className="relative">
                             <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 group-focus-within/input:text-primary transition-colors" />
-                            <Input id="email" name="email" type="email" placeholder="yourname@example.com" className="pl-10 h-12 rounded-xl border-gray-100 focus:border-primary focus:ring-primary/10 transition-all" required />
+                            <Input id="email" name="email" type="email" defaultValue={userData?.email || ''} placeholder="yourname@example.com" className="pl-10 h-12 rounded-xl border-gray-100 focus:border-primary focus:ring-primary/10 transition-all" required />
                         </div>
                     </div>
 

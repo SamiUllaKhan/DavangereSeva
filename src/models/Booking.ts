@@ -3,6 +3,8 @@ import mongoose, { Schema, model, models } from 'mongoose';
 const BookingSchema = new Schema({
     // Changed to Mixed to allow both mock strings and real ObjectIds during transition
     service: { type: Schema.Types.Mixed, required: true },
+    customerId: { type: Schema.Types.ObjectId, ref: 'User' },
+    assignedPartnerId: { type: Schema.Types.ObjectId, ref: 'User' },
     customerName: { type: String, required: true },
     customerPhone: { type: String, required: true },
     customerEmail: { type: String, required: true },

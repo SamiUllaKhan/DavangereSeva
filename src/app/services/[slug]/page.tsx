@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { CheckCircle2, Star, ShieldCheck, Clock, Award, MapPin, Zap } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import BookingForm from '@/components/forms/BookingForm';
+import { getCurrentUser } from '@/app/actions/user';
 
 // Mock data generator
 function getServiceData(slug: string) {
@@ -128,6 +129,7 @@ export async function generateMetadata(
 export default async function ServicePage({ params }: Props) {
     const slug = (await params).slug;
     const service = getServiceData(slug);
+    const user = await getCurrentUser();
 
     if (!service) {
         notFound();
@@ -258,6 +260,7 @@ export default async function ServicePage({ params }: Props) {
                             serviceId={service.id}
                             serviceName={service.name}
                             price={service.price}
+                            userData={user}
                         />
 
                         <div className="mt-8 flex items-center justify-center gap-8 opacity-40 grayscale hover:grayscale-0 transition-all cursor-default">

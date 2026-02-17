@@ -4,15 +4,15 @@ import Link from 'next/link';
 import { Home, Grid, Calendar, User } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 
-const navItems = [
-    { icon: Home, label: 'Home', href: '/' },
-    { icon: Grid, label: 'Categories', href: '/categories' },
-    { icon: Calendar, label: 'Bookings', href: '/bookings' },
-    { icon: User, label: 'Account', href: '/profile' },
-];
-
-export default function MobileNav() {
+export default function MobileNav({ isAuth, userSession }: { isAuth: boolean, userSession?: any }) {
     const pathname = usePathname();
+
+    const navItems = [
+        { icon: Home, label: 'Home', href: '/' },
+        { icon: Grid, label: 'Services', href: '/services' },
+        { icon: Calendar, label: isAuth ? 'Admin' : (userSession?.role === 'partner' ? 'Orders' : (userSession ? 'My Bookings' : 'Bookings')), href: isAuth ? '/admin' : (userSession?.role === 'partner' ? '/partner-dashboard' : (userSession ? '/bookings' : '/register')) },
+        { icon: User, label: userSession ? userSession.name.split(' ')[0] : 'Account', href: userSession ? '/bookings' : '/register' },
+    ];
 
     return (
         <div className="fixed bottom-0 left-0 z-50 w-full h-16 bg-white border-t border-gray-200 md:hidden">
@@ -27,7 +27,7 @@ export default function MobileNav() {
                                 }`}
                         >
                             <item.icon className={`w-6 h-6 mb-1 ${isActive ? 'text-primary' : 'text-gray-500'}`} />
-                            <span className="text-xs">{item.label}</span>
+                            <span className="text-[10px] font-bold uppercase tracking-tighter truncate w-full text-center">{item.label}</span>
                         </Link>
                     );
                 })}
