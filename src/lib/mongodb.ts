@@ -15,6 +15,10 @@ if (!cached) {
 
 async function dbConnect() {
   if (!MONGODB_URI) {
+    if (process.env.NODE_ENV === 'production') {
+      console.warn('⚠️ MONGODB_URI is not defined. Database connection will fail.');
+      return null;
+    }
     throw new Error('MONGODB_URI is not defined. Please add it to your .env.local file.');
   }
 
