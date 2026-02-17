@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { getCustomerBookings } from '@/app/actions/booking';
 import { getUserSession } from '@/app/actions/user';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -51,8 +52,8 @@ export default async function CustomerBookingsPage() {
                                 </div>
                                 <Badge
                                     className={`${booking.status === 'Pending' ? 'bg-amber-100 text-amber-700' :
-                                            booking.status === 'Confirmed' ? 'bg-blue-100 text-blue-700' :
-                                                booking.status === 'Completed' ? 'bg-green-100 text-green-700' : 'bg-rose-100 text-rose-700'
+                                        booking.status === 'Confirmed' ? 'bg-blue-100 text-blue-700' :
+                                            booking.status === 'Completed' ? 'bg-green-100 text-green-700' : 'bg-rose-100 text-rose-700'
                                         } border-none font-bold uppercase text-[10px] tracking-widest px-3 py-1`}
                                 >
                                     {booking.status}

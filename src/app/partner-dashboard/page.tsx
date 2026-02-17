@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { getPartnerBookings } from '@/app/actions/booking';
 import { getCurrentUser } from '@/app/actions/user';
 import { Badge } from '@/components/ui/badge';

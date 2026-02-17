@@ -1,4 +1,5 @@
 'use client';
+export const dynamic = 'force-dynamic';
 
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -8,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Mail, Lock, LogIn, ArrowRight } from 'lucide-react';
+import { Mail, Lock, LogIn, ArrowRight, ShieldAlert } from 'lucide-react';
 import Link from 'next/link';
 
 import { loginUser } from '@/app/actions/user';
@@ -41,42 +42,54 @@ export default function UserLoginPage() {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50/50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+        <div className="min-h-screen bg-white flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden">
+            {/* Background Decorative Elements */}
+            <div className="absolute top-0 left-0 w-full h-full -z-10 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-20" />
+            <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] -z-10 animate-pulse" />
+            <div className="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] bg-blue-500/5 rounded-full blur-[120px] -z-10 animate-pulse" style={{ animationDelay: '2s' }} />
+
             <div className="sm:mx-auto sm:w-full sm:max-w-md">
-                <Card className="rounded-[40px] border-none shadow-2xl shadow-gray-200/50 overflow-hidden bg-white">
-                    <div className="bg-primary h-32 flex flex-col items-center justify-center p-8 text-white relative">
-                        <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-3xl -mr-16 -mt-16" />
-                        <CardTitle className="text-4xl font-black uppercase tracking-tighter mb-1">Welcome Back</CardTitle>
-                        <CardDescription className="text-blue-100/70 font-bold uppercase tracking-[0.2em] text-[10px]">Secure Gateway</CardDescription>
+                <Card className="rounded-[50px] border border-gray-100/50 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] overflow-hidden bg-white/80 backdrop-blur-xl">
+                    <div className="bg-primary h-40 flex flex-col items-center justify-center p-8 text-white relative overflow-hidden">
+                        {/* Glassmorphic highlights in header */}
+                        <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full blur-3xl -mr-20 -mt-20 rotate-12" />
+                        <div className="absolute bottom-0 left-0 w-24 h-24 bg-blue-400/20 rounded-full blur-2xl -ml-12 -mb-12" />
+
+                        <CardTitle className="text-4xl font-black uppercase tracking-tighter mb-1 relative z-10">Welcome Back</CardTitle>
+                        <CardDescription className="text-blue-100/70 font-black uppercase tracking-[0.4em] text-[10px] relative z-10">Secure Gateway Access</CardDescription>
                     </div>
 
                     <CardContent className="p-8 lg:p-12">
                         <form onSubmit={handleSubmit} className="space-y-6">
                             <div className="space-y-1.5">
-                                <Label htmlFor="email" className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 ml-1">Email Address</Label>
+                                <Label htmlFor="email" className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-400 ml-2">Verified Email</Label>
                                 <div className="relative group/input">
-                                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within/input:text-primary transition-colors" />
+                                    <div className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within/input:text-primary transition-colors">
+                                        <Mail size={18} />
+                                    </div>
                                     <Input
                                         id="email"
                                         name="email"
                                         type="email"
-                                        placeholder="Enter your email"
-                                        className="pl-12 h-16 rounded-[24px] border-gray-100 bg-gray-50/30 focus:bg-white focus:ring-4 focus:ring-primary/5 transition-all font-bold text-gray-700"
+                                        placeholder="your@email.com"
+                                        className="pl-14 h-16 rounded-[28px] border-gray-100 bg-gray-50/50 focus:bg-white focus:ring-8 focus:ring-primary/5 transition-all font-bold text-gray-700"
                                         required
                                     />
                                 </div>
                             </div>
 
                             <div className="space-y-1.5">
-                                <Label htmlFor="password" className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 ml-1">Secure Password</Label>
+                                <Label htmlFor="password" className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-400 ml-2">Access Password</Label>
                                 <div className="relative group/input">
-                                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within/input:text-primary transition-colors" />
+                                    <div className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within/input:text-primary transition-colors">
+                                        <Lock size={18} />
+                                    </div>
                                     <Input
                                         id="password"
                                         name="password"
                                         type="password"
                                         placeholder="••••••••"
-                                        className="pl-12 h-16 rounded-[24px] border-gray-100 bg-gray-50/30 focus:bg-white focus:ring-4 focus:ring-primary/5 transition-all font-bold text-gray-700"
+                                        className="pl-14 h-16 rounded-[28px] border-gray-100 bg-gray-50/50 focus:bg-white focus:ring-8 focus:ring-primary/5 transition-all font-bold text-gray-700"
                                         required
                                     />
                                 </div>
@@ -86,40 +99,44 @@ export default function UserLoginPage() {
                                 type="submit"
                                 size="lg"
                                 disabled={isSubmitting}
-                                className="w-full h-16 rounded-[24px] font-black uppercase tracking-[0.2em] text-xs shadow-xl shadow-primary/20 hover:shadow-primary/40 hover:scale-[1.02] active:scale-95 transition-all"
+                                className="w-full h-16 rounded-[28px] font-black uppercase tracking-[0.3em] text-[11px] shadow-2xl shadow-primary/30 hover:shadow-primary/50 hover:scale-[1.02] active:scale-[0.98] transition-all bg-primary hover:bg-primary-dark"
                             >
-                                {isSubmitting ? 'Authenticating...' : 'Login'}
+                                {isSubmitting ? (
+                                    <span className="flex items-center gap-2 animate-pulse">Authenticating...</span>
+                                ) : (
+                                    <span className="flex items-center gap-2">Login to Account <ArrowRight size={14} /></span>
+                                )}
                             </Button>
                         </form>
 
-                        <div className="mt-12">
+                        <div className="mt-14">
                             <div className="relative mb-10 text-center">
                                 <div className="absolute inset-0 flex items-center">
-                                    <span className="w-full border-t border-gray-100"></span>
+                                    <div className="w-full border-t border-gray-100"></div>
                                 </div>
-                                <span className="relative px-6 bg-white text-[10px] font-black uppercase tracking-[0.3em] text-gray-300">
-                                    New Member?
+                                <span className="relative px-6 bg-white/80 backdrop-blur-sm text-[10px] font-black uppercase tracking-[0.4em] text-gray-300">
+                                    New to Seva?
                                 </span>
                             </div>
 
                             <div className="grid grid-cols-2 gap-4">
-                                <Link href="/register/customer" className="group/choice">
-                                    <div className="p-6 rounded-[30px] border border-gray-100 bg-gray-50/20 hover:bg-primary hover:border-primary transition-all text-center">
-                                        <p className="font-black text-primary group-hover/choice:text-white uppercase tracking-tight text-sm">Join as Customer</p>
+                                <Link href="/register/customer" className="group/choice flex flex-col">
+                                    <div className="p-6 rounded-[35px] border border-gray-100 bg-gray-50/30 hover:bg-primary hover:border-primary transition-all text-center flex-grow flex items-center justify-center">
+                                        <p className="font-black text-primary group-hover/choice:text-white uppercase tracking-tighter text-xs">Join as Customer</p>
                                     </div>
                                 </Link>
 
-                                <Link href="/register/partner" className="group/choice">
-                                    <div className="p-6 rounded-[30px] border border-gray-100 bg-gray-50/20 hover:bg-orange-600 hover:border-orange-600 transition-all text-center">
-                                        <p className="font-black text-orange-600 group-hover/choice:text-white uppercase tracking-tight text-sm">Join as Partner</p>
+                                <Link href="/register/partner" className="group/choice flex flex-col">
+                                    <div className="p-6 rounded-[35px] border border-gray-100 bg-gray-50/30 hover:bg-orange-600 hover:border-orange-600 transition-all text-center flex-grow flex items-center justify-center">
+                                        <p className="font-black text-orange-600 group-hover/choice:text-white uppercase tracking-tighter text-xs">Join as Partner</p>
                                     </div>
                                 </Link>
                             </div>
                         </div>
 
-                        <div className="mt-10 pt-8 border-t border-gray-50 text-center">
-                            <Link href="/admin/login" className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-300 hover:text-primary transition-colors flex items-center justify-center gap-2">
-                                <LogIn size={12} /> Admin Dashboard
+                        <div className="mt-12 pt-8 border-t border-gray-50/50 text-center">
+                            <Link href="/admin/login" className="inline-flex items-center gap-2 px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.3em] text-gray-300 hover:text-primary hover:bg-primary/5 transition-all">
+                                <LogIn size={12} className="opacity-50" /> Portal for Administrators
                             </Link>
                         </div>
                     </CardContent>

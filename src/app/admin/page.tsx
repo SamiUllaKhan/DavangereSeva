@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { getBookings, getPartners } from '@/app/actions/booking';
 import AdminOrderList from '@/components/admin/AdminOrderList';
 

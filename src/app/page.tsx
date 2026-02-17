@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import Link from 'next/link';
 import { Search, MapPin, ShieldCheck, Zap, Clock, Star, Grid, Database, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
