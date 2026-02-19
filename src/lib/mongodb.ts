@@ -15,11 +15,9 @@ if (!cached) {
 
 async function dbConnect() {
   if (!MONGODB_URI) {
-    if (process.env.NODE_ENV === 'production') {
-      console.warn('⚠️ MONGODB_URI is not defined. Database connection will fail.');
-      return null;
-    }
-    throw new Error('MONGODB_URI is not defined. Please add it to your .env.local file.');
+    const errorMsg = 'MONGODB_URI is missing. Set it in Vercel Environment Variables.';
+    console.error(`❌ ${errorMsg}`);
+    throw new Error(errorMsg);
   }
 
   if (cached.conn) {

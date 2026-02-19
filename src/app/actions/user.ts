@@ -95,8 +95,9 @@ export async function loginUser(formData: FormData) {
         }
 
         return { success: false, error: 'Invalid email or password' };
-    } catch (error) {
-        return { success: false, error: 'Internal server error' };
+    } catch (error: any) {
+        console.error('Login error:', error);
+        return { success: false, error: error.message || 'Authentication failed' };
     }
 }
 
