@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Facebook, Twitter, Instagram, Mail, Phone, MapPin } from 'lucide-react';
+import NewsletterForm from '@/components/forms/NewsletterForm';
 
 export default function Footer() {
     return (
@@ -12,9 +13,9 @@ export default function Footer() {
                             Your trusted marketplace for all household and professional services in Davanagere. Quality guaranteed.
                         </p>
                         <div className="flex space-x-4">
-                            <Link href="#" className="hover:text-blue-200 transition-colors"><Facebook size={20} /></Link>
-                            <Link href="#" className="hover:text-blue-200 transition-colors"><Twitter size={20} /></Link>
-                            <Link href="#" className="hover:text-blue-200 transition-colors"><Instagram size={20} /></Link>
+                            <Link href="#" aria-label="Facebook" className="hover:text-blue-200 transition-colors"><Facebook size={20} /></Link>
+                            <Link href="#" aria-label="Twitter" className="hover:text-blue-200 transition-colors"><Twitter size={20} /></Link>
+                            <Link href="#" aria-label="Instagram" className="hover:text-blue-200 transition-colors"><Instagram size={20} /></Link>
                         </div>
                     </div>
 
@@ -49,18 +50,11 @@ export default function Footer() {
                     <div>
                         <h4 className="font-bold mb-4">Newsletter</h4>
                         <p className="text-sm text-blue-100 mb-4">Subscribe to get updates on new services and offers.</p>
-                        <div className="flex gap-2">
-                            <input
-                                type="email"
-                                placeholder="Your email"
-                                className="bg-white/10 border border-white/20 rounded px-3 py-2 text-sm w-full outline-none focus:ring-1 focus:ring-white/30"
-                            />
-                            <button className="bg-white text-primary px-4 py-2 rounded text-sm font-bold">Join</button>
-                        </div>
+                        <NewsletterForm />
                     </div>
                 </div>
                 <div className="border-t border-white/10 mt-12 pt-8 text-center text-sm text-blue-200">
-                    <p>© {new Date().getFullYear()} Davanagere Seva. All rights reserved.</p>
+                    <p>{'©'} {new Date().getFullYear()} Davanagere Seva. All rights reserved.</p>
                 </div>
             </div>
         </footer>

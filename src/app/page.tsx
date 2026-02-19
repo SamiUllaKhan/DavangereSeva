@@ -1,10 +1,8 @@
 export const dynamic = 'force-dynamic';
 import Link from 'next/link';
-import { Search, MapPin, ShieldCheck, Zap, Clock, Star, Grid, Database, ArrowRight } from 'lucide-react';
+import { ShieldCheck, Zap, Clock, Star, Grid, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
-import dbConnect from '@/lib/mongodb';
 import {
   Wrench,
   Paintbrush,
@@ -15,43 +13,23 @@ import {
   Truck,
   Monitor
 } from 'lucide-react';
+import { getCategories } from '@/app/actions/service';
+import HomeSearchBar from '@/components/search/HomeSearchBar';
 
-const categories = [
-  { name: 'Cleaning', icon: Sparkles, slug: 'cleaning', color: 'bg-blue-50' },
-  { name: 'Plumbing', icon: Wrench, slug: 'plumbing', color: 'bg-indigo-50' },
-  { name: 'Electrician', icon: Plug, slug: 'electrician', color: 'bg-amber-50' },
-  { name: 'AC Repair', icon: Wind, slug: 'ac-repair', color: 'bg-cyan-50' },
-  { name: 'Painting', icon: Paintbrush, slug: 'painting', color: 'bg-rose-50' },
-  { name: 'Pest Control', icon: Bug, slug: 'pest-control', color: 'bg-emerald-50' },
-  { name: 'Appliance', icon: Monitor, slug: 'appliance-repair', color: 'bg-purple-50' },
-  { name: 'Shifting', icon: Truck, slug: 'packers-movers', color: 'bg-orange-50' },
-];
+const iconMap: Record<string, any> = {
+  Sparkles, Wrench, Plug, Wind, Paintbrush, Bug, Monitor, Truck,
+};
 
 export default async function Home() {
-  let isConnected = false;
+  let categories: any[] = [];
   try {
-    await dbConnect();
-    isConnected = true;
+    categories = await getCategories();
   } catch (e) {
-    console.error('Database connection failed:', e);
+    console.error('Failed to load categories:', e);
   }
 
   return (
     <div className="flex flex-col gap-12 pb-12">
-      {/* Database Connection Status (Internal/Dev Only) */}
-      <div className="fixed top-4 right-4 z-[100] scale-75 origin-top-right">
-        {isConnected ? (
-          <div className="bg-emerald-500 text-white px-3 py-1 rounded-full text-xs font-bold flex items-center gap-2 shadow-lg animate-pulse">
-            <Database size={14} />
-            DB CONNECTED
-          </div>
-        ) : (
-          <div className="bg-rose-500 text-white px-3 py-1 rounded-full text-xs font-bold flex items-center gap-2 shadow-lg">
-            <Database size={14} />
-            DB DISCONNECTED
-          </div>
-        )}
-      </div>
 
       {/* Hero Section */}
       <section className="relative h-[500px] flex items-center justify-center overflow-hidden bg-primary">
@@ -66,24 +44,7 @@ export default async function Home() {
             Book professional services for your home and office in Davanagere.
           </p>
 
-          <div className="max-w-3xl mx-auto flex flex-col md:flex-row gap-2 bg-white p-2 rounded-lg shadow-2xl">
-            <div className="flex-1 flex items-center px-4 gap-2 border-b md:border-b-0 md:border-r">
-              <MapPin className="text-primary" size={20} />
-              <Input
-                className="border-none focus-visible:ring-0 text-black placeholder:text-gray-400"
-                placeholder="Davanagere, Karnataka"
-                readOnly
-              />
-            </div>
-            <div className="flex-[2] flex items-center px-4 gap-2">
-              <Search className="text-gray-400" size={20} />
-              <Input
-                className="border-none focus-visible:ring-0 text-black placeholder:text-gray-400"
-                placeholder="What service do you need?"
-              />
-            </div>
-            <Button size="lg" className="px-8 font-bold uppercase tracking-wide">Search</Button>
-          </div>
+          <HomeSearchBar />
         </div>
       </section>
 
@@ -93,16 +54,19 @@ export default async function Home() {
           <CardContent className="p-8">
             <h2 className="text-2xl font-bold mb-8 text-center text-gray-800 tracking-tight">Browse by Category</h2>
             <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-6">
-              {categories.map((cat) => (
-                <Link key={cat.slug} href={`/services/${cat.slug}`} className="group flex flex-col items-center gap-3">
-                  <div className={`w-16 h-16 rounded-2xl ${cat.color} flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:shadow-md`}>
-                    <cat.icon className="w-8 h-8 text-primary" />
-                  </div>
-                  <span className="text-sm font-semibold text-gray-700 text-center group-hover:text-primary transition-colors">
-                    {cat.name}
-                  </span>
-                </Link>
-              ))}
+              {categories.map((cat: any) => {
+                const IconComponent = iconMap[cat.icon] || Sparkles;
+                return (
+                  <Link key={cat.slug} href={`/services/${cat.slug}`} className="group flex flex-col items-center gap-3">
+                    <div className={`w-16 h-16 rounded-2xl ${cat.color || 'bg-blue-50'} flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:shadow-md`}>
+                      <IconComponent className="w-8 h-8 text-primary" />
+                    </div>
+                    <span className="text-sm font-semibold text-gray-700 text-center group-hover:text-primary transition-colors">
+                      {cat.name}
+                    </span>
+                  </Link>
+                );
+              })}
             </div>
           </CardContent>
         </Card>
@@ -175,9 +139,11 @@ export default async function Home() {
           </div>
 
           <div className="mt-20 text-center">
-            <Button size="lg" className="rounded-full px-12 h-14 font-black uppercase tracking-widest gap-2 bg-gray-950 hover:bg-primary transition-all shadow-xl hover:shadow-primary/20">
-              Ready to start? <ArrowRight size={20} />
-            </Button>
+            <Link href="/services">
+              <Button size="lg" className="rounded-full px-12 h-14 font-black uppercase tracking-widest gap-2 bg-gray-950 hover:bg-primary transition-all shadow-xl hover:shadow-primary/20">
+                Ready to start? <ArrowRight size={20} />
+              </Button>
+            </Link>
           </div>
         </div>
 
@@ -209,7 +175,9 @@ export default async function Home() {
                   </div>
                 ))}
               </div>
-              <Button className="mt-10 px-8 py-6 text-lg font-bold uppercase tracking-wide">Book a Service Now</Button>
+              <Link href="/services">
+                <Button className="mt-10 px-8 py-6 text-lg font-bold uppercase tracking-wide">Book a Service Now</Button>
+              </Link>
             </div>
             <div className="relative">
               <div className="aspect-square bg-blue-200 rounded-[3rem] rotate-3 absolute inset-0 -z-10 opacity-30"></div>

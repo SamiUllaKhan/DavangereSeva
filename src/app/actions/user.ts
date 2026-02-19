@@ -117,11 +117,57 @@ export async function getCurrentUser() {
 
     try {
         await dbConnect();
-        const user = await User.findById(session.id).select('name email phone role').lean();
+        const user = await User.findById(session.id).select('name email phone role serviceCategory experience bio isVerified createdAt').lean();
         if (!user) return null;
         return JSON.parse(JSON.stringify(user));
     } catch (error) {
         console.error('Error fetching current user:', error);
         return null;
+    }
+}
+
+export async function updateUserProfile(data: {
+    name: string;
+    phone: string;
+    bio?: string;
+}) {
+    const session = await getUserSession();
+    if (!session || !session.id) {
+        return { success: false, error: 'Not authenticated' };
+    }
+
+    try {
+        await dbConnect();
+        const updateData: any = {
+            name: data.name.trim(),
+            phone: data.phone.trim(),
+        };
+        if (data.bio !== undefined) {
+            updateData.bio = data.bio.trim();
+        }
+
+        const user = await User.findByIdAndUpdate(session.id, updateData, { new: true })
+            .select('name email phone role serviceCategory experience bio isVerified')
+            .lean();
+
+        if (!user) return { success: false, error: 'User not found' };
+
+        // Update session cookie with new name
+        const cookieStore = await cookies();
+        cookieStore.set(SESSION_COOKIE_NAME, JSON.stringify({
+            id: (user as any)._id,
+            role: (user as any).role,
+            name: (user as any).name,
+        }), {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax',
+            maxAge: 60 * 60 * 24 * 7,
+            path: '/'
+        });
+
+        return { success: true, user: JSON.parse(JSON.stringify(user)) };
+    } catch (error: any) {
+        return { success: false, error: error.message || 'Update failed' };
     }
 }

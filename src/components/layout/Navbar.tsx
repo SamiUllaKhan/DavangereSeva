@@ -44,6 +44,14 @@ export default function Navbar({ isAuth, userSession }: { isAuth: boolean, userS
                         </div>
                     ) : userSession ? (
                         <div className="hidden md:flex items-center gap-3">
+                            <Link href="/profile">
+                                <Button variant="ghost" size="sm" className="rounded-xl text-gray-600 hover:text-primary gap-1">
+                                    <span className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-primary text-xs font-bold">
+                                        {userSession.name?.[0] || 'U'}
+                                    </span>
+                                    Profile
+                                </Button>
+                            </Link>
                             <Link href={userSession.role === 'partner' ? '/partner-dashboard' : '/bookings'}>
                                 <Button variant="outline" size="sm" className="rounded-xl border-primary text-primary hover:bg-primary/5">
                                     {userSession.role === 'partner' ? 'Service Dashboard' : 'My Bookings'}

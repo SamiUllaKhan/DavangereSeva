@@ -5,13 +5,17 @@ import Booking from '@/models/Booking';
 import User from '@/models/User';
 import { revalidatePath } from 'next/cache';
 import { getUserSession } from './user';
+import {
+    sendSMS,
+    bookingConfirmationMessage,
+    bookingAssignedMessage,
+    partnerAssignedMessage,
+    bookingStatusMessage,
+} from '@/lib/sms';
 
 export async function createBooking(formData: any) {
     try {
         await dbConnect();
-
-        console.log('Attempting to create booking for service:', formData.serviceName);
-        console.log('Customer Email to save:', formData.customerEmail);
 
         const session = await getUserSession();
 
@@ -35,7 +39,19 @@ export async function createBooking(formData: any) {
         const newBooking = new Booking(newBookingDTO);
 
         const savedBooking = await newBooking.save();
-        console.log('Booking saved successfully:', savedBooking._id);
+
+        // Send SMS notification to customer
+        if (formData.customerPhone) {
+            const dateStr = new Date(formData.bookingDate).toLocaleDateString('en-IN', {
+                day: 'numeric', month: 'short', year: 'numeric'
+            });
+            const smsMessage = bookingConfirmationMessage(
+                formData.serviceName,
+                dateStr,
+                savedBooking._id.toString()
+            );
+            await sendSMS(formData.customerPhone, smsMessage);
+        }
 
         revalidatePath('/admin');
         return { success: true };
@@ -85,11 +101,57 @@ export async function getPartnerBookings(partnerId: string) {
 export async function updateBooking(bookingId: string, data: { status?: string, assignedPartnerId?: string | null }) {
     try {
         await dbConnect();
+
+        // Get booking before update for notification context
+        const existingBooking = await Booking.findById(bookingId).lean() as any;
+
         const updatedBooking = await Booking.findByIdAndUpdate(
             bookingId,
             { $set: data },
             { new: true }
         );
+
+        if (updatedBooking && existingBooking) {
+            // SMS: Partner assigned
+            if (data.assignedPartnerId && data.assignedPartnerId !== existingBooking.assignedPartnerId?.toString()) {
+                const partner = await User.findById(data.assignedPartnerId).lean() as any;
+                if (partner) {
+                    // Notify customer that a partner is assigned
+                    if (existingBooking.customerPhone) {
+                        await sendSMS(
+                            existingBooking.customerPhone,
+                            bookingAssignedMessage(existingBooking.service?.name || 'Service', partner.name)
+                        );
+                    }
+                    // Notify partner about the new job
+                    if (partner.phone) {
+                        const dateStr = new Date(existingBooking.bookingDate).toLocaleDateString('en-IN', {
+                            day: 'numeric', month: 'short', year: 'numeric'
+                        });
+                        await sendSMS(
+                            partner.phone,
+                            partnerAssignedMessage(
+                                existingBooking.customerName,
+                                existingBooking.service?.name || 'Service',
+                                existingBooking.customerAddress || 'Davanagere',
+                                dateStr
+                            )
+                        );
+                    }
+                }
+            }
+
+            // SMS: Status changed
+            if (data.status && data.status !== existingBooking.status) {
+                if (existingBooking.customerPhone) {
+                    await sendSMS(
+                        existingBooking.customerPhone,
+                        bookingStatusMessage(existingBooking.service?.name || 'Service', data.status)
+                    );
+                }
+            }
+        }
+
         revalidatePath('/admin');
         revalidatePath('/partner-dashboard');
         revalidatePath('/bookings');
