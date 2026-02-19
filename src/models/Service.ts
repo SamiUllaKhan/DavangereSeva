@@ -11,6 +11,14 @@ const ServiceSchema = new Schema({
     features: [{ type: String }],
     whyChooseUs: [{ type: String }],
     isActive: { type: Boolean, default: true },
+    image: { type: String },
 }, { timestamps: true });
+
+// Text index for full-text search
+ServiceSchema.index({ name: 'text', description: 'text', shortDescription: 'text' });
+
+if (process.env.NODE_ENV === 'development') {
+    delete models.Service;
+}
 
 export default models.Service || model('Service', ServiceSchema);
