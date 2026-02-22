@@ -13,6 +13,7 @@ export interface IService {
         _id: string;
         name: string;
         slug: string;
+        status?: 'active' | 'inactive' | 'coming-soon';
     };
     description: string;
     price: number;
