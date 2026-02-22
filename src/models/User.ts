@@ -5,6 +5,7 @@ const UserSchema = new Schema({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     phone: { type: String, required: true },
+    address: { type: String },
     role: { type: String, enum: ['customer', 'partner'], required: true },
     // Partner specific fields
     serviceCategory: { type: String },

@@ -19,9 +19,10 @@ interface BookingFormProps {
         email: string;
         phone: string;
     } | null;
+    isComingSoon?: boolean;
 }
 
-export default function BookingForm({ serviceId, serviceName, price, userData }: BookingFormProps) {
+export default function BookingForm({ serviceId, serviceName, price, userData, isComingSoon }: BookingFormProps) {
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -66,10 +67,12 @@ export default function BookingForm({ serviceId, serviceName, price, userData }:
 
     return (
         <Card className="shadow-2xl border-none overflow-hidden group">
-            <CardHeader className="bg-primary text-white py-6 transition-all group-hover:bg-primary/95">
-                <CardTitle className="text-2xl font-bold uppercase tracking-tight">Book {serviceName}</CardTitle>
-                <CardDescription className="text-blue-100/80">
-                    Trusted experts for your home service.
+            <CardHeader className={`${isComingSoon ? 'bg-amber-500' : 'bg-primary'} text-white py-6 transition-all`}>
+                <CardTitle className="text-2xl font-bold uppercase tracking-tight">
+                    {isComingSoon ? 'Request Service' : `Book ${serviceName}`}
+                </CardTitle>
+                <CardDescription className="text-white/80">
+                    {isComingSoon ? 'This service is launching soon. Submit a request to be notified.' : 'Trusted experts for your home service.'}
                 </CardDescription>
             </CardHeader>
             <CardContent className="pt-4 px-6 pb-10 space-y-6">
@@ -137,8 +140,8 @@ export default function BookingForm({ serviceId, serviceName, price, userData }:
                             </div>
                             <p className="text-[10px] text-gray-400 italic">Pay after service completion</p>
                         </div>
-                        <Button type="submit" size="lg" disabled={isSubmitting} className="w-full h-14 rounded-xl font-bold uppercase tracking-widest text-base shadow-xl hover:shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all">
-                            {isSubmitting ? 'Processing...' : 'Secure Booking'}
+                        <Button type="submit" size="lg" disabled={isSubmitting} className={`w-full h-14 rounded-xl font-bold uppercase tracking-widest text-base shadow-xl transition-all ${isComingSoon ? 'bg-amber-600 hover:bg-amber-700 shadow-amber-200' : 'hover:shadow-primary/20'}`}>
+                            {isSubmitting ? 'Processing...' : (isComingSoon ? 'Send Interest Request' : 'Secure Booking')}
                         </Button>
                     </div>
                 </form>

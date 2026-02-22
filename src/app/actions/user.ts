@@ -118,11 +118,60 @@ export async function getCurrentUser() {
 
     try {
         await dbConnect();
-        const user = await User.findById(session.id).select('name email phone role').lean();
+        const user = await User.findById(session.id).select('name email phone address role').lean();
         if (!user) return null;
         return JSON.parse(JSON.stringify(user));
     } catch (error) {
         console.error('Error fetching current user:', error);
         return null;
+    }
+}
+
+export async function updateUserProfile(formData: FormData) {
+    const session = await getUserSession();
+    if (!session || !session.id) return { success: false, error: 'Not authenticated' };
+
+    const phone = formData.get('phone') as string;
+    const address = formData.get('address') as string;
+
+    try {
+        await dbConnect();
+        const user = await User.findById(session.id);
+        if (!user) return { success: false, error: 'User not found' };
+
+        user.phone = phone;
+        user.address = address;
+        await user.save();
+
+        return { success: true, message: 'Profile updated successfully' };
+    } catch (error: any) {
+        console.error('Update profile error:', error);
+        return { success: false, error: error.message || 'Failed to update profile' };
+    }
+}
+
+export async function updateUserPassword(formData: FormData) {
+    const session = await getUserSession();
+    if (!session || !session.id) return { success: false, error: 'Not authenticated' };
+
+    const currentPassword = formData.get('currentPassword') as string;
+    const newPassword = formData.get('newPassword') as string;
+
+    try {
+        await dbConnect();
+        const user = await User.findById(session.id);
+        if (!user) return { success: false, error: 'User not found' };
+
+        if (user.password !== currentPassword) {
+            return { success: false, error: 'Incorrect current password' };
+        }
+
+        user.password = newPassword;
+        await user.save();
+
+        return { success: true, message: 'Password updated successfully' };
+    } catch (error: any) {
+        console.error('Update password error:', error);
+        return { success: false, error: error.message || 'Failed to update password' };
     }
 }

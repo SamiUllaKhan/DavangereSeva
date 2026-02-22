@@ -25,7 +25,7 @@ export default function Navbar({ isAuth, userSession }: { isAuth: boolean, userS
                 <div className="flex items-center gap-4">
                     <div className="hidden lg:flex items-center gap-2 text-primary font-semibold mr-4">
                         <Phone size={18} />
-                        <span>+91 98765 43210</span>
+                        <span>+91 890 4777 090</span>
                     </div>
 
                     {isAuth ? (
@@ -47,6 +47,11 @@ export default function Navbar({ isAuth, userSession }: { isAuth: boolean, userS
                             <Link href={userSession.role === 'partner' ? '/partner-dashboard' : '/bookings'}>
                                 <Button variant="outline" size="sm" className="rounded-xl border-primary text-primary hover:bg-primary/5">
                                     {userSession.role === 'partner' ? 'Service Dashboard' : 'My Bookings'}
+                                </Button>
+                            </Link>
+                            <Link href="/profile">
+                                <Button variant="ghost" size="sm" className="text-gray-600 gap-2">
+                                    Profile
                                 </Button>
                             </Link>
                             <Button

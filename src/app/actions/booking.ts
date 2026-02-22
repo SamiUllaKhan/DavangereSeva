@@ -3,6 +3,7 @@
 import dbConnect from '@/lib/mongodb';
 import Booking from '@/models/Booking';
 import User from '@/models/User';
+import Service from '@/models/Service';
 import { revalidatePath } from 'next/cache';
 import { getUserSession } from './user';
 
@@ -110,3 +111,30 @@ export async function getPartners() {
         return [];
     }
 }
+
+export async function submitRating(bookingId: string, rating: number, review: string) {
+    try {
+        await dbConnect();
+        const booking = await Booking.findById(bookingId);
+        if (!booking) return { success: false, error: 'Booking not found' };
+
+        if (booking.status !== 'Completed') {
+            return { success: false, error: 'Only completed services can be rated' };
+        }
+
+        booking.rating = rating;
+        booking.review = review;
+        booking.isReviewApproved = false; // Ensure it's false on submission
+        await booking.save();
+
+        revalidatePath('/bookings');
+        revalidatePath('/admin');
+        // If there's a specific service page, revalidate it.
+        // revalidatePath(`/services/${booking.service.id}`);
+        return { success: true };
+    } catch (error: any) {
+        console.error('Rating Error:', error);
+        return { success: false, error: error.message };
+    }
+}
+

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
     Table,
     TableBody,
@@ -16,16 +16,11 @@ import {
     Search,
     Calendar,
     Phone,
-    User as UserIcon,
     MapPin,
-    Mail,
     Clock,
     CheckCircle,
-    Settings2,
     Filter,
     ArrowUpRight,
-    TrendingUp,
-    Users,
     Briefcase,
     Hammer,
     X,
@@ -41,6 +36,11 @@ import {
     DialogDescription,
     DialogFooter
 } from '@/components/ui/dialog';
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 import { updateBooking } from '@/app/actions/booking';
@@ -50,14 +50,15 @@ interface AdminStatsProps {
     total: number;
     pending: number;
     completed: number;
+    totalPartners: number;
 }
 
-function AdminStats({ total, pending, completed }: AdminStatsProps) {
+function AdminStats({ total, pending, completed, totalPartners }: AdminStatsProps) {
     const stats = [
         { label: 'Total Requests', value: total, icon: Briefcase, color: 'text-blue-600', bg: 'bg-blue-50' },
         { label: 'Pending Task', value: pending, icon: Clock, color: 'text-amber-600', bg: 'bg-amber-50' },
         { label: 'Completed', value: completed, icon: CheckCircle, color: 'text-green-600', bg: 'bg-green-50' },
-        { label: 'Network experts', value: 24, icon: Hammer, color: 'text-orange-600', bg: 'bg-orange-50' },
+        { label: 'Network experts', value: totalPartners, icon: Hammer, color: 'text-orange-600', bg: 'bg-orange-50' },
     ];
 
     return (
@@ -82,8 +83,14 @@ function AdminStats({ total, pending, completed }: AdminStatsProps) {
     );
 }
 
+import { useRouter } from 'next/navigation';
+
 export default function AdminOrderList({ initialBookings, partners }: { initialBookings: any[], partners: any[] }) {
+    const router = useRouter();
+    const [mounted, setMounted] = useState(false);
+    useEffect(() => { setMounted(true); }, []);
     const [searchQuery, setSearchQuery] = useState('');
+    const [filterStatus, setFilterStatus] = useState<string>('all');
     const [selectedBooking, setSelectedBooking] = useState<any>(null);
     const [isUpdating, setIsUpdating] = useState(false);
 
@@ -92,16 +99,50 @@ export default function AdminOrderList({ initialBookings, partners }: { initialB
     const [partnerId, setPartnerId] = useState('');
 
     const filteredBookings = useMemo(() => {
-        return initialBookings.filter(b =>
-            b.customerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            (typeof b.service === 'object' ? b.service.name : b.service).toLowerCase().includes(searchQuery.toLowerCase())
-        );
-    }, [initialBookings, searchQuery]);
+        return initialBookings.filter(b => {
+            const matchesSearch = b.customerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                (typeof b.service === 'object' ? b.service.name : b.service).toLowerCase().includes(searchQuery.toLowerCase()) ||
+                b.customerPhone.includes(searchQuery);
+
+            const matchesStatus = filterStatus === 'all' || b.status === filterStatus;
+
+            return matchesSearch && matchesStatus;
+        });
+    }, [initialBookings, searchQuery, filterStatus]);
 
     const stats = {
         total: initialBookings.length,
         pending: initialBookings.filter(b => b.status === 'Pending').length,
         completed: initialBookings.filter(b => b.status === 'Completed').length,
+    };
+
+    const exportToCSV = () => {
+        const headers = ['Customer Name', 'Phone', 'Service', 'Booking Date', 'Status', 'Partner'];
+        const csvRows = [headers.join(',')];
+
+        filteredBookings.forEach(b => {
+            const row = [
+                b.customerName,
+                b.customerPhone,
+                typeof b.service === 'object' ? b.service.name : b.service,
+                new Date(b.bookingDate).toLocaleDateString(),
+                b.status,
+                partners.find(p => p._id === b.assignedPartnerId)?.name || 'Unassigned'
+            ];
+            csvRows.push(row.map(cell => `"${(cell || '').toString().replace(/"/g, '""')}"`).join(','));
+        });
+
+        const csvContent = csvRows.join('\n');
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', `bookings_export_${new Date().toISOString().split('T')[0]}.csv`);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        toast.success('Report exported successfully');
     };
 
     function handleOpenManage(booking: any) {
@@ -124,9 +165,7 @@ export default function AdminOrderList({ initialBookings, partners }: { initialB
             if (res.success) {
                 toast.success('Booking updated successfully');
                 setSelectedBooking(null);
-                // In a real app, we'd use router.refresh() or local state update
-                // Since this is a server component parent, refresh will work
-                window.location.reload();
+                router.refresh();
             } else {
                 toast.error('Failed to update: ' + res.error);
             }
@@ -139,10 +178,10 @@ export default function AdminOrderList({ initialBookings, partners }: { initialB
 
     return (
         <div className="space-y-6">
-            <AdminStats {...stats} />
+            <AdminStats {...stats} totalPartners={partners.length} />
 
-            <div className="flex flex-col md:flex-row gap-4 items-center justify-between bg-white p-6 rounded-[35px] shadow-xl shadow-gray-100/50 border border-gray-100 mb-8">
-                <div className="relative w-full md:max-w-md">
+            <div className="flex flex-col lg:flex-row gap-4 items-center justify-between bg-white p-6 rounded-[35px] shadow-xl shadow-gray-100/50 border border-gray-100 mb-8">
+                <div className="relative w-full lg:max-w-md">
                     <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
                     <Input
                         placeholder="Search customer, service or contact..."
@@ -151,11 +190,46 @@ export default function AdminOrderList({ initialBookings, partners }: { initialB
                         onChange={(e) => setSearchQuery(e.target.value)}
                     />
                 </div>
-                <div className="flex gap-3 w-full md:w-auto">
-                    <Button variant="outline" className="h-14 rounded-2xl border-gray-100 font-bold uppercase tracking-widest text-[10px] gap-2 px-6">
-                        <Filter size={16} /> Filters
-                    </Button>
-                    <Button className="h-14 rounded-2xl font-bold uppercase tracking-widest text-[10px] px-8 shadow-lg shadow-primary/20">
+                <div className="flex flex-wrap gap-3 w-full lg:w-auto">
+                    <Popover>
+                        <PopoverTrigger asChild>
+                            <Button variant="outline" className={`h-14 rounded-2xl border-gray-100 font-bold uppercase tracking-widest text-[10px] gap-2 px-6 ${filterStatus !== 'all' ? 'bg-primary/5 border-primary/20 text-primary' : ''}`}>
+                                <Filter size={16} /> {filterStatus === 'all' ? 'Filters' : filterStatus}
+                            </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-56 rounded-2xl border-none shadow-2xl p-4 space-y-4">
+                            <div className="space-y-2">
+                                <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 px-1">Filter by Status</p>
+                                <div className="grid gap-1">
+                                    {['all', 'Pending', 'Confirmed', 'Completed', 'Cancelled'].map((s) => (
+                                        <Button
+                                            key={s}
+                                            variant="ghost"
+                                            size="sm"
+                                            onClick={() => setFilterStatus(s)}
+                                            className={`justify-start font-bold uppercase text-[10px] rounded-xl h-10 ${filterStatus === s ? 'bg-primary text-white hover:bg-primary' : 'hover:bg-primary/5 text-gray-600'}`}
+                                        >
+                                            {s === 'all' ? 'View All Orders' : s}
+                                        </Button>
+                                    ))}
+                                </div>
+                            </div>
+                            {filterStatus !== 'all' && (
+                                <Button
+                                    variant="ghost"
+                                    onClick={() => setFilterStatus('all')}
+                                    className="w-full h-8 text-rose-500 font-bold uppercase text-[9px] hover:bg-rose-50 hover:text-rose-600 rounded-lg"
+                                >
+                                    Reset Filters
+                                </Button>
+                            )}
+                        </PopoverContent>
+                    </Popover>
+
+                    <Button
+                        onClick={exportToCSV}
+                        className="h-14 rounded-2xl font-bold uppercase tracking-widest text-[10px] px-8 shadow-lg shadow-primary/20 bg-gray-950 hover:bg-gray-800 text-white"
+                    >
                         Export Data
                     </Button>
                 </div>
@@ -209,7 +283,9 @@ export default function AdminOrderList({ initialBookings, partners }: { initialB
                                                     </Badge>
                                                     <div className="flex items-center gap-2">
                                                         <Calendar size={10} className="text-gray-400" />
-                                                        <span className="text-[10px] font-bold text-gray-500 uppercase">{new Date(booking.bookingDate).toLocaleDateString()}</span>
+                                                        <span className="text-[10px] font-bold text-gray-500 uppercase">
+                                                            {mounted ? new Date(booking.bookingDate).toLocaleDateString() : '...'}
+                                                        </span>
                                                     </div>
                                                 </div>
                                             </TableCell>

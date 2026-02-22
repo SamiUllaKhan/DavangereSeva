@@ -11,6 +11,8 @@ const ServiceSchema = new Schema({
     features: [{ type: String }],
     whyChooseUs: [{ type: String }],
     isActive: { type: Boolean, default: true },
+    rating: { type: Number, default: 0 },
+    reviewCount: { type: Number, default: 0 },
 }, { timestamps: true });
 
 export default models.Service || model('Service', ServiceSchema);

@@ -1,32 +1,26 @@
 import Link from 'next/link';
-import {
-    Wrench,
-    Paintbrush,
-    Sparkles,
-    Wind,
-    Plug,
-    Bug,
-    Truck,
-    Monitor,
-    Search,
-    ArrowRight
-} from 'lucide-react';
+import * as Icons from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
+import dbConnect from '@/lib/mongodb';
+import Category from '@/models/Category';
 
-const categories = [
-    { name: 'Cleaning', icon: Sparkles, slug: 'cleaning', color: 'bg-blue-50', description: 'Deep cleaning for homes and offices.' },
-    { name: 'Plumbing', icon: Wrench, slug: 'plumbing', color: 'bg-indigo-50', description: 'Expert solutions for all plumbing needs.' },
-    { name: 'Electrician', icon: Plug, slug: 'electrician', color: 'bg-amber-50', description: 'Certified electrical repairs and installs.' },
-    { name: 'AC Repair', icon: Wind, slug: 'ac-repair', color: 'bg-cyan-50', description: 'Maintenance and repair for all AC types.' },
-    { name: 'Painting', icon: Paintbrush, slug: 'painting', color: 'bg-rose-50', description: 'Professional interior and exterior painting.' },
-    { name: 'Pest Control', icon: Bug, slug: 'pest-control', color: 'bg-emerald-50', description: 'Safe and effective pest management.' },
-    { name: 'Appliance', icon: Monitor, slug: 'appliance-repair', color: 'bg-purple-50', description: 'Repair for all major home appliances.' },
-    { name: 'Shifting', icon: Truck, slug: 'packers-movers', color: 'bg-orange-50', description: 'Reliable packing and moving services.' },
-];
+async function getCategories() {
+    try {
+        await dbConnect();
+        const categories = await Category.find().lean();
+        return JSON.parse(JSON.stringify(categories));
+    } catch (error) {
+        console.error('Error fetching categories:', error);
+        return [];
+    }
+}
 
-export default function ServicesPage() {
+export default async function ServicesPage() {
+    const categories = await getCategories();
+
     return (
         <div className="min-h-screen bg-gray-50/50">
             {/* Header Section */}
@@ -43,7 +37,7 @@ export default function ServicesPage() {
                     </p>
 
                     <div className="max-w-2xl mx-auto relative">
-                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+                        <Icons.Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
                         <Input
                             placeholder="Search for a service..."
                             className="pl-12 h-14 bg-white text-black rounded-2xl border-none shadow-2xl text-lg"
@@ -55,26 +49,33 @@ export default function ServicesPage() {
             {/* Services Grid */}
             <section className="container px-4 md:px-8 mx-auto -mt-16 pb-24 relative z-20">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {categories.map((cat) => (
-                        <Link key={cat.slug} href={`/services/${cat.slug}`} className="group">
-                            <Card className="h-full border-none shadow-sm hover:shadow-2xl transition-all duration-500 rounded-[32px] overflow-hidden hover:-translate-y-2 flex flex-col">
-                                <CardContent className="p-8 flex-1 flex flex-col items-center text-center">
-                                    <div className={`w-20 h-20 rounded-3xl ${cat.color} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500 shadow-sm shadow-primary/5`}>
-                                        <cat.icon className="w-10 h-10 text-primary" />
-                                    </div>
-                                    <h3 className="text-xl font-bold mb-3 text-gray-900 tracking-tight group-hover:text-primary transition-colors">
-                                        {cat.name}
-                                    </h3>
-                                    <p className="text-gray-500 text-sm font-medium mb-6 leading-relaxed">
-                                        {cat.description}
-                                    </p>
-                                    <div className="mt-auto pt-4 flex items-center gap-2 text-primary font-black text-xs uppercase tracking-[0.2em] opacity-0 group-hover:opacity-100 transition-opacity">
-                                        Book Now <ArrowRight size={14} />
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        </Link>
-                    ))}
+                    {categories.map((cat: any) => {
+                        const IconComponent = (Icons as any)[cat.icon] || Icons.HelpCircle;
+
+                        return (
+                            <Link key={cat.slug} href={`/services/${cat.slug}`} className="group">
+                                <Card className="h-full border-none shadow-sm hover:shadow-2xl transition-all duration-500 rounded-[32px] overflow-hidden hover:-translate-y-2 flex flex-col">
+                                    <CardContent className="p-8 flex-1 flex flex-col items-center text-center">
+                                        <div className={`w-20 h-20 rounded-3xl bg-primary/5 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500 shadow-sm shadow-primary/5 relative`}>
+                                            <IconComponent className="w-10 h-10 text-primary" />
+                                            {cat.status === 'coming-soon' && (
+                                                <Badge className="absolute -top-2 -right-2 bg-amber-500 text-white font-black text-[8px] uppercase tracking-tighter shadow-lg">Soon</Badge>
+                                            )}
+                                        </div>
+                                        <h3 className="text-xl font-bold mb-3 text-gray-900 tracking-tight group-hover:text-primary transition-colors">
+                                            {cat.name}
+                                        </h3>
+                                        <p className="text-gray-500 text-sm font-medium mb-6 leading-relaxed">
+                                            {cat.description}
+                                        </p>
+                                        <div className="mt-auto pt-4 flex items-center gap-2 text-primary font-black text-xs uppercase tracking-[0.2em] opacity-0 group-hover:opacity-100 transition-opacity">
+                                            {cat.status === 'coming-soon' ? 'Send Request' : 'Book Now'} <Icons.ArrowRight size={14} />
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            </Link>
+                        );
+                    })}
                 </div>
             </section>
 
@@ -87,7 +88,7 @@ export default function ServicesPage() {
                             <p className="text-lg text-gray-600 mb-10 font-medium">
                                 Our team is always expanding our service catalog. Contact us for custom requirements.
                             </p>
-                            <Link href="tel:+919876543210">
+                            <Link href="tel:+918904777090">
                                 <Button size="lg" className="h-16 px-10 rounded-full font-black uppercase tracking-widest text-base shadow-xl hover:shadow-primary/20 transition-all">
                                     Talk To An Expert
                                 </Button>

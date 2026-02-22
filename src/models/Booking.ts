@@ -12,6 +12,9 @@ const BookingSchema = new Schema({
     bookingDate: { type: Date, required: true },
     status: { type: String, enum: ['Pending', 'Confirmed', 'Completed', 'Cancelled'], default: 'Pending' },
     notes: { type: String },
+    rating: { type: Number, min: 1, max: 5 },
+    review: { type: String },
+    isReviewApproved: { type: Boolean, default: false },
 }, { timestamps: true });
 
 // In development, clear the model from mongoose cache to pick up schema changes

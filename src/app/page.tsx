@@ -1,33 +1,14 @@
 export const dynamic = 'force-dynamic';
 import Link from 'next/link';
-import { Search, MapPin, ShieldCheck, Zap, Clock, Star, Grid, Database, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import dbConnect from '@/lib/mongodb';
-import {
-  Wrench,
-  Paintbrush,
-  Sparkles,
-  Wind,
-  Plug,
-  Bug,
-  Truck,
-  Monitor
-} from 'lucide-react';
-
-const categories = [
-  { name: 'Cleaning', icon: Sparkles, slug: 'cleaning', color: 'bg-blue-50' },
-  { name: 'Plumbing', icon: Wrench, slug: 'plumbing', color: 'bg-indigo-50' },
-  { name: 'Electrician', icon: Plug, slug: 'electrician', color: 'bg-amber-50' },
-  { name: 'AC Repair', icon: Wind, slug: 'ac-repair', color: 'bg-cyan-50' },
-  { name: 'Painting', icon: Paintbrush, slug: 'painting', color: 'bg-rose-50' },
-  { name: 'Pest Control', icon: Bug, slug: 'pest-control', color: 'bg-emerald-50' },
-  { name: 'Appliance', icon: Monitor, slug: 'appliance-repair', color: 'bg-purple-50' },
-  { name: 'Shifting', icon: Truck, slug: 'packers-movers', color: 'bg-orange-50' },
-];
+import { getCategories } from '@/app/actions/admin';
+import * as Icons from 'lucide-react';
 
 export default async function Home() {
+  const categories = await getCategories();
   let isConnected = false;
   try {
     await dbConnect();
@@ -42,12 +23,12 @@ export default async function Home() {
       <div className="fixed top-4 right-4 z-[100] scale-75 origin-top-right">
         {isConnected ? (
           <div className="bg-emerald-500 text-white px-3 py-1 rounded-full text-xs font-bold flex items-center gap-2 shadow-lg animate-pulse">
-            <Database size={14} />
+            <Icons.Database size={14} />
             DB CONNECTED
           </div>
         ) : (
           <div className="bg-rose-500 text-white px-3 py-1 rounded-full text-xs font-bold flex items-center gap-2 shadow-lg">
-            <Database size={14} />
+            <Icons.Database size={14} />
             DB DISCONNECTED
           </div>
         )}
@@ -68,7 +49,7 @@ export default async function Home() {
 
           <div className="max-w-3xl mx-auto flex flex-col md:flex-row gap-2 bg-white p-2 rounded-lg shadow-2xl">
             <div className="flex-1 flex items-center px-4 gap-2 border-b md:border-b-0 md:border-r">
-              <MapPin className="text-primary" size={20} />
+              <Icons.MapPin className="text-primary" size={20} />
               <Input
                 className="border-none focus-visible:ring-0 text-black placeholder:text-gray-400"
                 placeholder="Davanagere, Karnataka"
@@ -76,7 +57,7 @@ export default async function Home() {
               />
             </div>
             <div className="flex-[2] flex items-center px-4 gap-2">
-              <Search className="text-gray-400" size={20} />
+              <Icons.Search className="text-gray-400" size={20} />
               <Input
                 className="border-none focus-visible:ring-0 text-black placeholder:text-gray-400"
                 placeholder="What service do you need?"
@@ -93,16 +74,22 @@ export default async function Home() {
           <CardContent className="p-8">
             <h2 className="text-2xl font-bold mb-8 text-center text-gray-800 tracking-tight">Browse by Category</h2>
             <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-6">
-              {categories.map((cat) => (
-                <Link key={cat.slug} href={`/services/${cat.slug}`} className="group flex flex-col items-center gap-3">
-                  <div className={`w-16 h-16 rounded-2xl ${cat.color} flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:shadow-md`}>
-                    <cat.icon className="w-8 h-8 text-primary" />
-                  </div>
-                  <span className="text-sm font-semibold text-gray-700 text-center group-hover:text-primary transition-colors">
-                    {cat.name}
-                  </span>
-                </Link>
-              ))}
+              {categories.map((cat: any) => {
+                const IconComponent = (Icons as any)[cat.icon] || Icons.HelpCircle;
+                return (
+                  <Link key={cat.slug} href={`/services/${cat.slug}`} className="group flex flex-col items-center gap-3 relative">
+                    {cat.status === 'coming-soon' && (
+                      <span className="absolute -top-2 -right-2 bg-amber-500 text-white text-[8px] font-black px-1.5 py-0.5 rounded-full z-10 shadow-sm uppercase tracking-tighter">Soon</span>
+                    )}
+                    <div className={`w-16 h-16 rounded-2xl bg-primary/5 flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:shadow-md`}>
+                      <IconComponent className="w-8 h-8 text-primary" />
+                    </div>
+                    <span className="text-sm font-semibold text-gray-700 text-center group-hover:text-primary transition-colors">
+                      {cat.name}
+                    </span>
+                  </Link>
+                );
+              })}
             </div>
           </CardContent>
         </Card>
@@ -132,21 +119,21 @@ export default async function Home() {
                 step: '01',
                 title: 'SELECT SERVICE',
                 desc: 'Explore our curated list of professional home services.',
-                icon: Grid,
+                icon: Icons.Grid,
                 gradient: 'from-primary/80 to-primary'
               },
               {
                 step: '02',
                 title: 'BOOK A SLOT',
                 desc: 'Choose a time and date that works best for your schedule.',
-                icon: Clock,
+                icon: Icons.Clock,
                 gradient: 'from-primary to-primary/90'
               },
               {
                 step: '03',
                 title: 'JOB COMPLETED',
                 desc: 'Sit back while our verified expert handles the rest securely.',
-                icon: Zap,
+                icon: Icons.Zap,
                 gradient: 'from-primary/90 to-primary/70'
               }
             ].map((item, idx) => (
@@ -176,7 +163,7 @@ export default async function Home() {
 
           <div className="mt-20 text-center">
             <Button size="lg" className="rounded-full px-12 h-14 font-black uppercase tracking-widest gap-2 bg-gray-950 hover:bg-primary transition-all shadow-xl hover:shadow-primary/20">
-              Ready to start? <ArrowRight size={20} />
+              Ready to start? <Icons.ArrowRight size={20} />
             </Button>
           </div>
         </div>
@@ -194,9 +181,9 @@ export default async function Home() {
               <h2 className="text-3xl md:text-4xl font-bold mb-6 tracking-tight">Why Choose Davanagere Seva?</h2>
               <div className="space-y-6">
                 {[
-                  { title: 'Verified Professionals', desc: 'Every service provider is strictly background-checked.', icon: ShieldCheck },
-                  { title: 'Transparent Pricing', desc: 'Know exactly what you pay before you book. No hidden costs.', icon: Sparkles },
-                  { title: 'Quality Guarantee', desc: 'We take full responsibility for the quality of work.', icon: Star }
+                  { title: 'Verified Professionals', desc: 'Every service provider is strictly background-checked.', icon: Icons.ShieldCheck },
+                  { title: 'Transparent Pricing', desc: 'Know exactly what you pay before you book. No hidden costs.', icon: Icons.Sparkles },
+                  { title: 'Quality Guarantee', desc: 'We take full responsibility for the quality of work.', icon: Icons.Star }
                 ].map((item, idx) => (
                   <div key={idx} className="flex gap-4">
                     <div className="mt-1">
@@ -217,7 +204,7 @@ export default async function Home() {
               <div className="relative aspect-square bg-gray-200 rounded-[3rem] overflow-hidden flex items-center justify-center text-gray-400 italic">
                 {/* Visual Placeholder for high quality service image */}
                 <div className="text-center group p-8">
-                  <Star className="w-16 h-16 mx-auto mb-4 text-primary/50" />
+                  <Icons.Star className="w-16 h-16 mx-auto mb-4 text-primary/50" />
                   <p className="font-semibold text-lg">Premium Service Guaranteed</p>
                 </div>
               </div>
