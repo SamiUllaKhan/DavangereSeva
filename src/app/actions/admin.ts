@@ -246,3 +246,130 @@ export async function deleteReview(bookingId: string) {
         return { success: false, error: error.message };
     }
 }
+
+// Customer Management
+export async function getCustomers() {
+    try {
+        await checkAdmin();
+        await dbConnect();
+
+        // Fetch customers and their associated bookings
+        const customers = await User.aggregate([
+            { $match: { role: 'customer' } },
+            {
+                $lookup: {
+                    from: 'bookings',
+                    localField: '_id',
+                    foreignField: 'customerId',
+                    as: 'bookings'
+                }
+            },
+            { $sort: { createdAt: -1 } }
+        ]);
+
+        return JSON.parse(JSON.stringify(customers));
+    } catch (error) {
+        console.error('Error fetching customers:', error);
+        return [];
+    }
+}
+
+export async function toggleCustomerStatus(customerId: string, isActive: boolean) {
+    try {
+        await checkAdmin();
+        await dbConnect();
+
+        await User.findByIdAndUpdate(customerId, { isActive });
+
+        revalidatePath('/admin');
+        return { success: true };
+    } catch (error: any) {
+        console.error('Error toggling customer status:', error);
+        return { success: false, error: error.message };
+    }
+}
+
+export async function updateCustomer(customerId: string, data: { name: string, email: string, phone: string, address?: string }) {
+    try {
+        await checkAdmin();
+        await dbConnect();
+
+        await User.findByIdAndUpdate(customerId, data);
+
+        revalidatePath('/admin');
+        return { success: true };
+    } catch (error: any) {
+        console.error('Error updating customer:', error);
+        return { success: false, error: error.message };
+    }
+}
+
+// Full Partner Management
+export async function getAllPartners() {
+    try {
+        await checkAdmin();
+        await dbConnect();
+
+        const partners = await User.aggregate([
+            { $match: { role: 'partner' } },
+            {
+                $lookup: {
+                    from: 'bookings',
+                    localField: '_id',
+                    foreignField: 'assignedPartnerId',
+                    as: 'assignedBookings'
+                }
+            },
+            { $sort: { createdAt: -1 } }
+        ]);
+
+        return JSON.parse(JSON.stringify(partners));
+    } catch (error) {
+        console.error('Error fetching all partners:', error);
+        return [];
+    }
+}
+
+export async function setPartnerStatus(partnerId: string, status: 'active' | 'inactive' | 'hold') {
+    try {
+        await checkAdmin();
+        await dbConnect();
+
+        // Use isActive for active/inactive, add a specific field for 'hold' or manage via isActive
+        // We'll manage this by setting isActive to true/false.
+        // Or if we need a specific status string, we can update the User schema. Let's use isActive for now:
+        // status === 'active' -> isActive: true
+        // status === 'inactive' -> isActive: false
+        // status === 'hold' -> isActive: false (and perhaps we need another flag, but isActive is what we have)
+
+        // Actually, "on hold" vs "inactive" implies a multi-state. Let's add a partnerStatus field later if needed,
+        // but for now let's map: 'active' -> isActive: true, others -> isActive: false
+        // For 'hold', we might want a simple string field `partnerStatus` if they distinctly need "on hold"
+
+        await User.findByIdAndUpdate(partnerId, {
+            isActive: status === 'active',
+            partnerStatus: status // Let's try to set it, mongoose will ignore if it's not in strict mode, or we can add it to schema
+        });
+
+        revalidatePath('/admin');
+        return { success: true };
+    } catch (error: any) {
+        console.error('Error setting partner status:', error);
+        return { success: false, error: error.message };
+    }
+}
+
+export async function updatePartnerDetails(partnerId: string, data: { name: string, email: string, phone: string, serviceCategory?: string, experience?: string }) {
+    try {
+        await checkAdmin();
+        await dbConnect();
+
+        await User.findByIdAndUpdate(partnerId, data);
+
+        revalidatePath('/admin');
+        return { success: true };
+    } catch (error: any) {
+        console.error('Error updating partner details:', error);
+        return { success: false, error: error.message };
+    }
+}

@@ -8,11 +8,12 @@ import AdminPartnerList from './AdminPartnerList';
 import AdminServiceList from './AdminServiceList';
 import AdminCategoryList from './AdminCategoryList';
 import AdminReviewList from './AdminReviewList';
+import AdminCustomerList from './AdminCustomerList';
 
 interface AdminDashboardTabsProps {
     bookings: any[];
     partners: any[];
-    pendingPartners: any[];
+    customers: any[];
     services: any[];
     categories: any[];
     pendingReviews: any[];
@@ -21,7 +22,7 @@ interface AdminDashboardTabsProps {
 export default function AdminDashboardTabs({
     bookings,
     partners,
-    pendingPartners,
+    customers,
     services,
     categories,
     pendingReviews,
@@ -51,13 +52,16 @@ export default function AdminDashboardTabs({
                     <Briefcase size={14} /> Orders
                 </TabsTrigger>
                 <TabsTrigger value="partners" className="rounded-xl px-6 py-3 data-[state=active]:bg-primary data-[state=active]:text-white font-bold uppercase tracking-widest text-[10px] gap-2">
-                    <Users size={14} /> Partners {pendingPartners.length > 0 && <span className="bg-rose-500 text-white w-4 h-4 rounded-full text-[8px] flex items-center justify-center">{pendingPartners.length}</span>}
+                    <Users size={14} /> Partners
                 </TabsTrigger>
                 <TabsTrigger value="services" className="rounded-xl px-6 py-3 data-[state=active]:bg-primary data-[state=active]:text-white font-bold uppercase tracking-widest text-[10px] gap-2">
                     <Hammer size={14} /> Services
                 </TabsTrigger>
                 <TabsTrigger value="categories" className="rounded-xl px-6 py-3 data-[state=active]:bg-primary data-[state=active]:text-white font-bold uppercase tracking-widest text-[10px] gap-2">
                     <LayoutGrid size={14} /> Categories
+                </TabsTrigger>
+                <TabsTrigger value="customers" className="rounded-xl px-6 py-3 data-[state=active]:bg-primary data-[state=active]:text-white font-bold uppercase tracking-widest text-[10px] gap-2">
+                    <Users size={14} /> Customers
                 </TabsTrigger>
                 <TabsTrigger value="reviews" className="rounded-xl px-6 py-3 data-[state=active]:bg-primary data-[state=active]:text-white font-bold uppercase tracking-widest text-[10px] gap-2">
                     <MessageSquare size={14} /> Reviews {pendingReviews.length > 0 && <span className="bg-rose-500 text-white w-4 h-4 rounded-full text-[8px] flex items-center justify-center">{pendingReviews.length}</span>}
@@ -69,7 +73,7 @@ export default function AdminDashboardTabs({
             </TabsContent>
 
             <TabsContent value="partners">
-                <AdminPartnerList initialPartners={pendingPartners} />
+                <AdminPartnerList initialPartners={partners} />
             </TabsContent>
 
             <TabsContent value="services">
@@ -78,6 +82,10 @@ export default function AdminDashboardTabs({
 
             <TabsContent value="categories">
                 <AdminCategoryList categories={categories} />
+            </TabsContent>
+
+            <TabsContent value="customers">
+                <AdminCustomerList initialCustomers={customers} />
             </TabsContent>
 
             <TabsContent value="reviews">

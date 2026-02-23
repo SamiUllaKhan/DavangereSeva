@@ -7,11 +7,13 @@ const UserSchema = new Schema({
     phone: { type: String, required: true },
     address: { type: String },
     role: { type: String, enum: ['customer', 'partner'], required: true },
+    isActive: { type: Boolean, default: true },
     // Partner specific fields
     serviceCategory: { type: String },
     experience: { type: String },
     bio: { type: String },
     isVerified: { type: Boolean, default: false },
+    partnerStatus: { type: String, enum: ['active', 'inactive', 'hold'], default: 'active' },
 }, { timestamps: true });
 
 // In development, clear the model from mongoose cache to pick up schema changes
