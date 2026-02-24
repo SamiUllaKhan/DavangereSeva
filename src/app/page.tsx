@@ -6,6 +6,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import dbConnect from '@/lib/mongodb';
 import { getCategories } from '@/app/actions/admin';
 import * as Icons from 'lucide-react';
+import { SearchBar } from '@/components/layout/SearchBar';
 
 export default async function Home() {
   const categories = await getCategories();
@@ -48,7 +49,7 @@ export default async function Home() {
           </p>
 
           <div className="max-w-3xl mx-auto flex flex-col md:flex-row gap-2 bg-white p-2 rounded-lg shadow-2xl">
-            <div className="flex-1 flex items-center px-4 gap-2 border-b md:border-b-0 md:border-r">
+            <div className="flex-1 flex items-center px-4 gap-2 border-b border-gray-100 md:border-b-0 md:border-r py-2 md:py-0">
               <Icons.MapPin className="text-primary" size={20} />
               <Input
                 className="border-none focus-visible:ring-0 text-black placeholder:text-gray-400"
@@ -56,14 +57,7 @@ export default async function Home() {
                 readOnly
               />
             </div>
-            <div className="flex-[2] flex items-center px-4 gap-2">
-              <Icons.Search className="text-gray-400" size={20} />
-              <Input
-                className="border-none focus-visible:ring-0 text-black placeholder:text-gray-400"
-                placeholder="What service do you need?"
-              />
-            </div>
-            <Button size="lg" className="px-8 font-bold uppercase tracking-wide">Search</Button>
+            <SearchBar variant="home" />
           </div>
         </div>
       </section>

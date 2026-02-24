@@ -6,20 +6,77 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import dbConnect from '@/lib/mongodb';
 import Category from '@/models/Category';
+import Service from '@/models/Service';
+import { SearchBar } from '@/components/layout/SearchBar';
 
-async function getCategories() {
+async function getServicesData() {
     try {
         await dbConnect();
         const categories = await Category.find().lean();
-        return JSON.parse(JSON.stringify(categories));
+        const services = await Service.find().populate('category').lean();
+        return {
+            categories: JSON.parse(JSON.stringify(categories)),
+            services: JSON.parse(JSON.stringify(services))
+        };
     } catch (error) {
-        console.error('Error fetching categories:', error);
-        return [];
+        console.error('Error fetching data:', error);
+        return { categories: [], services: [] };
     }
 }
 
-export default async function ServicesPage() {
-    const categories = await getCategories();
+export default async function ServicesPage({
+    searchParams,
+}: {
+    searchParams: { q?: string };
+}) {
+    const { categories, services } = await getServicesData();
+    // Resolve searchParams before using
+    const resolvedSearchParams = await searchParams;
+    const query = resolvedSearchParams?.q?.toLowerCase() || '';
+
+    // If query exists, we match services (name, description, features) and categories (name, description)
+    // and display a combined/filtered list. We'll show matched services specifically, or categories if only category matched.
+    const displayItems: any[] = [];
+
+    if (query) {
+        // Find matching services
+        const matchedServices = services.filter((srv: any) => {
+            return (
+                srv.name?.toLowerCase().includes(query) ||
+                srv.description?.toLowerCase().includes(query) ||
+                (srv.features || []).some((f: string) => f.toLowerCase().includes(query))
+            );
+        }).map((srv: any) => ({
+            ...srv,
+            type: 'service',
+            icon: srv.category?.icon || 'Wrench'
+        }));
+
+        // Find matching categories
+        const matchedCategories = categories.filter((cat: any) => {
+            return (
+                cat.name?.toLowerCase().includes(query) ||
+                cat.description?.toLowerCase().includes(query)
+            );
+        }).map((cat: any) => ({
+            ...cat,
+            type: 'category'
+        }));
+
+        // Combine unique items (Services and Categories)
+        displayItems.push(...matchedCategories);
+
+        // Add services unless they belong to a category we already matched
+        // to avoid duplicating the entire category's content with its own service
+        matchedServices.forEach((srv: any) => {
+            // Let's just show them all for better search visibility
+            displayItems.push(srv);
+        });
+
+    } else {
+        // No query, just show all categories
+        displayItems.push(...categories.map((c: any) => ({ ...c, type: 'category' })));
+    }
 
     return (
         <div className="min-h-screen bg-gray-50/50">
@@ -36,46 +93,60 @@ export default async function ServicesPage() {
                         Professional, reliable, and affordable services delivered to your doorstep in Davanagere.
                     </p>
 
-                    <div className="max-w-2xl mx-auto relative">
-                        <Icons.Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
-                        <Input
-                            placeholder="Search for a service..."
-                            className="pl-12 h-14 bg-white text-black rounded-2xl border-none shadow-2xl text-lg"
-                        />
-                    </div>
+                    <SearchBar variant="services" placeholder="Search for a service..." />
                 </div>
             </section>
 
             {/* Services Grid */}
             <section className="container px-4 md:px-8 mx-auto -mt-16 pb-24 relative z-20">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {categories.map((cat: any) => {
-                        const IconComponent = (Icons as any)[cat.icon] || Icons.HelpCircle;
+                    {displayItems.length > 0 ? (
+                        displayItems.map((item: any) => {
+                            const IconComponent = (Icons as any)[item.icon] || Icons.HelpCircle;
+                            // For categories we had text like "Send Request", for services "Book Now"
+                            const statusLabel = item.status === 'coming-soon' ? 'Send Request' : 'Book Now';
 
-                        return (
-                            <Link key={cat.slug} href={`/services/${cat.slug}`} className="group">
-                                <Card className="h-full border-none shadow-sm hover:shadow-2xl transition-all duration-500 rounded-[32px] overflow-hidden hover:-translate-y-2 flex flex-col">
-                                    <CardContent className="p-8 flex-1 flex flex-col items-center text-center">
-                                        <div className={`w-20 h-20 rounded-3xl bg-primary/5 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500 shadow-sm shadow-primary/5 relative`}>
-                                            <IconComponent className="w-10 h-10 text-primary" />
-                                            {cat.status === 'coming-soon' && (
-                                                <Badge className="absolute -top-2 -right-2 bg-amber-500 text-white font-black text-[8px] uppercase tracking-tighter shadow-lg">Soon</Badge>
-                                            )}
-                                        </div>
-                                        <h3 className="text-xl font-bold mb-3 text-gray-900 tracking-tight group-hover:text-primary transition-colors">
-                                            {cat.name}
-                                        </h3>
-                                        <p className="text-gray-500 text-sm font-medium mb-6 leading-relaxed">
-                                            {cat.description}
-                                        </p>
-                                        <div className="mt-auto pt-4 flex items-center gap-2 text-primary font-black text-xs uppercase tracking-[0.2em] opacity-0 group-hover:opacity-100 transition-opacity">
-                                            {cat.status === 'coming-soon' ? 'Send Request' : 'Book Now'} <Icons.ArrowRight size={14} />
-                                        </div>
-                                    </CardContent>
-                                </Card>
+                            return (
+                                <Link key={item.slug + item.type} href={`/services/${item.slug}`} className="group">
+                                    <Card className="h-full border-none shadow-sm hover:shadow-2xl transition-all duration-500 rounded-[32px] overflow-hidden hover:-translate-y-2 flex flex-col">
+                                        <CardContent className="p-8 flex-1 flex flex-col items-center text-center">
+                                            <div className={`w-20 h-20 rounded-3xl bg-primary/5 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500 shadow-sm shadow-primary/5 relative`}>
+                                                <IconComponent className="w-10 h-10 text-primary" />
+                                                {item.status === 'coming-soon' && (
+                                                    <Badge className="absolute -top-2 -right-2 bg-amber-500 text-white font-black text-[8px] uppercase tracking-tighter shadow-lg">Soon</Badge>
+                                                )}
+                                                {item.type === 'service' && (
+                                                    <span className="absolute -bottom-2 bg-blue-100 text-blue-700 font-bold text-[8px] px-2 py-0.5 rounded-full uppercase tracking-widest shadow-sm border border-blue-200">Service</span>
+                                                )}
+                                            </div>
+                                            <h3 className="text-xl font-bold mb-3 text-gray-900 tracking-tight group-hover:text-primary transition-colors">
+                                                {item.name}
+                                            </h3>
+                                            <p className="text-gray-500 text-sm font-medium mb-6 leading-relaxed line-clamp-3">
+                                                {item.description}
+                                            </p>
+                                            <div className="mt-auto pt-4 flex items-center gap-2 text-primary font-black text-xs uppercase tracking-[0.2em] opacity-0 group-hover:opacity-100 transition-opacity">
+                                                {statusLabel} <Icons.ArrowRight size={14} />
+                                            </div>
+                                        </CardContent>
+                                    </Card>
+                                </Link>
+                            );
+                        })
+                    ) : (
+                        <div className="col-span-full py-12 text-center">
+                            <Icons.SearchX className="mx-auto h-12 w-12 text-gray-400 mb-4" />
+                            <h3 className="text-xl font-bold text-gray-900 mb-2">No services found</h3>
+                            <p className="text-gray-500">
+                                We couldn't find any services matching "{query}".
+                            </p>
+                            <Link href="/services">
+                                <Button variant="outline" className="mt-6 rounded-xl">
+                                    Clear Search
+                                </Button>
                             </Link>
-                        );
-                    })}
+                        </div>
+                    )}
                 </div>
             </section>
 
