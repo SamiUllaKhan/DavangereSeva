@@ -63,7 +63,8 @@ export default function AdminReviewList({ initialReviews }: { initialReviews: an
                 <Badge className="bg-primary text-white font-bold px-4 py-1.5 rounded-xl">{reviews.length} Pending</Badge>
             </div>
 
-            <Card className="border-none shadow-2xl rounded-[40px] overflow-hidden">
+            {/* Desktop Table View */}
+            <Card className="hidden lg:block border-none shadow-2xl rounded-[40px] overflow-hidden">
                 <div className="overflow-x-auto">
                     <Table>
                         <TableHeader>
@@ -144,6 +145,66 @@ export default function AdminReviewList({ initialReviews }: { initialReviews: an
                     </Table>
                 </div>
             </Card>
+
+            {/* Mobile Card View */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:hidden gap-4">
+                {reviews.length === 0 ? (
+                    <div className="col-span-full h-64 bg-white rounded-[40px] flex flex-col items-center justify-center text-gray-400 shadow-xl border border-gray-50">
+                        <Check size={48} className="mb-4 opacity-20" />
+                        <p className="font-bold uppercase tracking-widest text-xs">All reviews moderated</p>
+                    </div>
+                ) : (
+                    reviews.map((review) => (
+                        <Card key={review._id} className="border-none shadow-xl shadow-gray-100/50 rounded-[35px] overflow-hidden bg-white p-6 space-y-4">
+                            <div className="flex justify-between items-start">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-black text-sm">
+                                        {review.customerName[0]}
+                                    </div>
+                                    <div>
+                                        <p className="font-black text-primary uppercase text-sm leading-tight">{review.customerName}</p>
+                                        <Badge variant="outline" className="mt-1 text-[8px] font-bold uppercase border-primary/20 text-primary bg-primary/5 px-2 py-0">
+                                            {typeof review.service === 'object' ? review.service.name : review.service}
+                                        </Badge>
+                                    </div>
+                                </div>
+                                <div className="flex flex-col items-end gap-1">
+                                    <div className="flex gap-0.5">
+                                        {[...Array(5)].map((_, i) => (
+                                            <Star key={i} size={10} fill={i < review.rating ? '#F59E0B' : 'none'} className={i < review.rating ? 'text-amber-500' : 'text-gray-200'} />
+                                        ))}
+                                    </div>
+                                    <span className="text-[8px] font-bold text-gray-400 uppercase">
+                                        {mounted ? new Date(review.createdAt).toLocaleDateString() : '...'}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <p className="text-xs text-gray-600 leading-relaxed italic bg-gray-50 p-4 rounded-2xl border border-gray-100/50">
+                                "{review.review || 'No written comment'}"
+                            </p>
+
+                            <div className="flex gap-2 pt-2">
+                                <Button
+                                    onClick={() => handleApprove(review._id)}
+                                    disabled={loadingId === review._id}
+                                    className="flex-1 h-11 rounded-xl bg-green-500 hover:bg-green-600 text-white font-bold uppercase tracking-widest text-[9px] gap-2 shadow-lg shadow-green-200"
+                                >
+                                    {loadingId === review._id ? <Loader2 size={14} className="animate-spin" /> : <Check size={14} />} Approve
+                                </Button>
+                                <Button
+                                    onClick={() => handleDelete(review._id)}
+                                    disabled={loadingId === review._id}
+                                    variant="outline"
+                                    className="flex-1 h-11 rounded-xl border-rose-100 text-rose-500 hover:bg-rose-50 font-bold uppercase tracking-widest text-[9px] gap-2 shadow-none"
+                                >
+                                    <X size={14} /> Reject
+                                </Button>
+                            </div>
+                        </Card>
+                    ))
+                )}
+            </div>
         </div>
     );
 }

@@ -102,7 +102,8 @@ export default function AdminServiceList({ initialServices, categories }: { init
                 </Button>
             </div>
 
-            <Card className="border-none shadow-2xl rounded-[40px] overflow-hidden">
+            {/* Desktop Table View */}
+            <Card className="hidden lg:block border-none shadow-2xl rounded-[40px] overflow-hidden">
                 <div className="overflow-x-auto">
                     <Table>
                         <TableHeader>
@@ -175,6 +176,59 @@ export default function AdminServiceList({ initialServices, categories }: { init
                     </Table>
                 </div>
             </Card>
+
+            {/* Mobile Card View */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:hidden gap-4">
+                {filteredServices.length === 0 ? (
+                    <div className="col-span-full h-64 bg-white rounded-[40px] flex flex-col items-center justify-center text-gray-400 shadow-xl border border-gray-50">
+                        <Search size={48} className="mb-4 opacity-20" />
+                        <p className="font-bold uppercase tracking-widest text-xs">No records found</p>
+                    </div>
+                ) : (
+                    filteredServices.map((service) => (
+                        <Card key={service._id} className="border-none shadow-xl shadow-gray-100/50 rounded-[35px] overflow-hidden bg-white p-6 space-y-4">
+                            <div className="flex justify-between items-start">
+                                <div className="flex items-center gap-3 truncate pr-4">
+                                    <div className="w-10 h-10 rounded-2xl bg-primary/5 text-primary flex items-center justify-center shrink-0">
+                                        <Hammer size={20} />
+                                    </div>
+                                    <div className="truncate">
+                                        <p className="font-black text-primary uppercase text-sm truncate">{service.name}</p>
+                                        <p className="text-[10px] text-gray-400 font-bold truncate">{service.category?.name || 'Uncategorized'}</p>
+                                    </div>
+                                </div>
+                                <span className="text-sm font-black text-primary tracking-tighter shrink-0">₹{service.price}</span>
+                            </div>
+
+                            <p className="text-xs text-gray-500 leading-relaxed line-clamp-2 italic">
+                                "{service.description}"
+                            </p>
+
+                            <div className="flex justify-end gap-2 pt-2 border-t border-gray-50">
+                                <Button
+                                    onClick={() => {
+                                        setEditingService(service);
+                                        setIsDialogOpen(true);
+                                    }}
+                                    variant="outline"
+                                    size="sm"
+                                    className="rounded-xl border-gray-100 text-primary font-bold uppercase tracking-widest text-[9px] gap-2 px-4 shadow-none"
+                                >
+                                    <Edit2 size={14} /> Edit
+                                </Button>
+                                <Button
+                                    onClick={() => handleDelete(service._id)}
+                                    variant="outline"
+                                    size="sm"
+                                    className="rounded-xl border-gray-100 text-rose-500 hover:bg-rose-50 font-bold uppercase tracking-widest text-[9px] gap-2 px-4 shadow-none"
+                                >
+                                    <Trash2 size={14} /> Delete
+                                </Button>
+                            </div>
+                        </Card>
+                    ))
+                )}
+            </div>
 
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                 <DialogContent className="rounded-[40px] max-w-2xl max-h-[90vh] overflow-y-auto p-0 border-none shadow-2xl">

@@ -102,7 +102,8 @@ export default function AdminCustomerList({ initialCustomers }: { initialCustome
                 </Badge>
             </div>
 
-            <Card className="border-none shadow-2xl rounded-[40px] overflow-hidden">
+            {/* Desktop Table View */}
+            <Card className="hidden lg:block border-none shadow-2xl rounded-[40px] overflow-hidden">
                 <div className="overflow-x-auto">
                     <Table>
                         <TableHeader>
@@ -118,7 +119,7 @@ export default function AdminCustomerList({ initialCustomers }: { initialCustome
                         <TableBody>
                             {filteredCustomers.length === 0 ? (
                                 <TableRow>
-                                    <TableCell colSpan={5} className="h-64 text-center">
+                                    <TableCell colSpan={6} className="h-64 text-center">
                                         <div className="flex flex-col items-center justify-center text-gray-400">
                                             <Search size={48} className="mb-4 opacity-20" />
                                             <p className="font-bold uppercase tracking-widest text-xs">No records found</p>
@@ -219,83 +220,15 @@ export default function AdminCustomerList({ initialCustomers }: { initialCustome
                                         </TableCell>
                                         <TableCell className="pr-8 text-right">
                                             <div className="flex justify-end gap-2">
-                                                <Dialog open={editingCustomer?._id === customer._id} onOpenChange={(open) => !open && setEditingCustomer(null)}>
-                                                    <DialogTrigger asChild>
-                                                        <Button
-                                                            onClick={() => handleEditClick(customer)}
-                                                            size="sm"
-                                                            variant="outline"
-                                                            className="rounded-xl px-4 border-gray-200 text-gray-600 hover:bg-gray-50"
-                                                        >
-                                                            <Edit className="h-4 w-4" />
-                                                            <span className="ml-2 font-bold uppercase text-[10px]">Edit</span>
-                                                        </Button>
-                                                    </DialogTrigger>
-                                                    <DialogContent className="max-w-md rounded-[35px] p-8 border-none shadow-2xl">
-                                                        <DialogHeader className="mb-6">
-                                                            <DialogTitle className="text-2xl font-black text-primary tracking-tighter uppercase flex items-center gap-3">
-                                                                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                                                                    <Edit className="w-5 h-5 text-primary" />
-                                                                </div>
-                                                                Edit Customer
-                                                            </DialogTitle>
-                                                        </DialogHeader>
-
-                                                        <div className="space-y-4">
-                                                            <div className="space-y-2">
-                                                                <Label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Name</Label>
-                                                                <Input
-                                                                    value={formData.name}
-                                                                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                                                    className="h-12 rounded-xl bg-gray-50 border-none focus:ring-2 focus:ring-primary/20"
-                                                                />
-                                                            </div>
-                                                            <div className="space-y-2">
-                                                                <Label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Email</Label>
-                                                                <Input
-                                                                    type="email"
-                                                                    value={formData.email}
-                                                                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                                                    className="h-12 rounded-xl bg-gray-50 border-none focus:ring-2 focus:ring-primary/20"
-                                                                />
-                                                            </div>
-                                                            <div className="space-y-2">
-                                                                <Label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Phone</Label>
-                                                                <Input
-                                                                    value={formData.phone}
-                                                                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                                                                    className="h-12 rounded-xl bg-gray-50 border-none focus:ring-2 focus:ring-primary/20"
-                                                                />
-                                                            </div>
-                                                            <div className="space-y-2">
-                                                                <Label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Address</Label>
-                                                                <Input
-                                                                    value={formData.address}
-                                                                    onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                                                                    className="h-12 rounded-xl bg-gray-50 border-none focus:ring-2 focus:ring-primary/20"
-                                                                />
-                                                            </div>
-
-                                                            <div className="pt-4 flex justify-end gap-3">
-                                                                <Button
-                                                                    variant="outline"
-                                                                    onClick={() => setEditingCustomer(null)}
-                                                                    className="rounded-xl font-bold"
-                                                                >
-                                                                    Cancel
-                                                                </Button>
-                                                                <Button
-                                                                    onClick={handleSaveCustomer}
-                                                                    disabled={isSaving}
-                                                                    className="rounded-xl font-bold"
-                                                                >
-                                                                    {isSaving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
-                                                                    Save Changes
-                                                                </Button>
-                                                            </div>
-                                                        </div>
-                                                    </DialogContent>
-                                                </Dialog>
+                                                <Button
+                                                    onClick={() => handleEditClick(customer)}
+                                                    size="sm"
+                                                    variant="outline"
+                                                    className="rounded-xl px-4 border-gray-200 text-gray-600 hover:bg-gray-50"
+                                                >
+                                                    <Edit className="h-4 w-4" />
+                                                    <span className="ml-2 font-bold uppercase text-[10px]">Edit</span>
+                                                </Button>
 
                                                 <Button
                                                     onClick={() => handleToggleStatus(customer._id, customer.isActive !== false)}
@@ -327,6 +260,150 @@ export default function AdminCustomerList({ initialCustomers }: { initialCustome
                     </Table>
                 </div>
             </Card>
+
+            {/* Mobile Card View */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:hidden gap-4">
+                {filteredCustomers.length === 0 ? (
+                    <div className="col-span-full h-64 bg-white rounded-[40px] flex flex-col items-center justify-center text-gray-400 shadow-xl border border-gray-50">
+                        <Search size={48} className="mb-4 opacity-20" />
+                        <p className="font-bold uppercase tracking-widest text-xs">No records found</p>
+                    </div>
+                ) : (
+                    filteredCustomers.map((customer) => (
+                        <Card key={customer._id} className="border-none shadow-xl shadow-gray-100/50 rounded-[35px] overflow-hidden bg-white p-6 space-y-4">
+                            <div className="flex justify-between items-start">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 rounded-2xl bg-primary/5 text-primary flex items-center justify-center font-black text-base">
+                                        {customer.name?.charAt(0) || <User size={20} />}
+                                    </div>
+                                    <div>
+                                        <p className="font-black text-primary uppercase text-sm leading-tight">{customer.name}</p>
+                                        <p className="text-[10px] text-gray-400 font-bold leading-tight">{customer.email}</p>
+                                    </div>
+                                </div>
+                                <Badge
+                                    variant="outline"
+                                    className={`font-bold text-[9px] uppercase px-2 py-0.5 rounded-lg ${customer.isActive !== false
+                                        ? 'bg-green-50/50 border-green-200 text-green-600'
+                                        : 'bg-rose-50/50 border-rose-200 text-rose-600'
+                                        }`}
+                                >
+                                    {customer.isActive !== false ? 'Active' : 'Inactive'}
+                                </Badge>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4 pt-2 border-t border-gray-50">
+                                <div className="space-y-1">
+                                    <p className="text-[9px] font-black uppercase text-gray-400 tracking-wider">Contact</p>
+                                    <p className="text-xs font-bold text-gray-700">{customer.phone}</p>
+                                </div>
+                                <div className="space-y-1 text-right">
+                                    <p className="text-[9px] font-black uppercase text-gray-400 tracking-wider">Orders</p>
+                                    <p className="text-xs font-bold text-primary">{customer.bookings?.length || 0} Total</p>
+                                </div>
+                            </div>
+
+                            <div className="flex justify-end gap-2 pt-2 border-t border-gray-50">
+                                <Button
+                                    onClick={() => handleEditClick(customer)}
+                                    size="sm"
+                                    variant="outline"
+                                    className="rounded-xl px-4 border-gray-100 text-gray-600 h-9"
+                                >
+                                    <Edit className="h-3.5 w-3.5 mr-2" />
+                                    <span className="font-bold uppercase text-[9px]">Edit</span>
+                                </Button>
+                                <Button
+                                    onClick={() => handleToggleStatus(customer._id, customer.isActive !== false)}
+                                    disabled={processingId === customer._id}
+                                    size="sm"
+                                    variant="outline"
+                                    className={`rounded-xl px-4 h-9 ${customer.isActive !== false ? 'border-rose-100 text-rose-500' : 'border-green-100 text-green-600'}`}
+                                >
+                                    {processingId === customer._id ? (
+                                        <Loader2 className="animate-spin h-3.5 w-3.5" />
+                                    ) : customer.isActive !== false ? (
+                                        <ZapOff className="h-3.5 w-3.5 mr-2" />
+                                    ) : (
+                                        <Zap className="h-3.5 w-3.5 mr-2" />
+                                    )}
+                                    <span className="font-bold uppercase text-[9px]">
+                                        {customer.isActive !== false ? 'Disable' : 'Enable'}
+                                    </span>
+                                </Button>
+                            </div>
+                        </Card>
+                    ))
+                )}
+            </div>
+
+            {/* Edit Dialog */}
+            <Dialog open={!!editingCustomer} onOpenChange={(open) => !open && setEditingCustomer(null)}>
+                <DialogContent className="max-w-md rounded-[35px] p-8 border-none shadow-2xl">
+                    <DialogHeader className="mb-6">
+                        <DialogTitle className="text-2xl font-black text-primary tracking-tighter uppercase flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                                <Edit className="w-5 h-5 text-primary" />
+                            </div>
+                            Edit Customer
+                        </DialogTitle>
+                    </DialogHeader>
+
+                    <div className="space-y-4">
+                        <div className="space-y-2">
+                            <Label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Name</Label>
+                            <Input
+                                value={formData.name}
+                                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                className="h-12 rounded-xl bg-gray-50 border-none focus:ring-2 focus:ring-primary/20"
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <Label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Email</Label>
+                            <Input
+                                type="email"
+                                value={formData.email}
+                                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                className="h-12 rounded-xl bg-gray-50 border-none focus:ring-2 focus:ring-primary/20"
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <Label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Phone</Label>
+                            <Input
+                                value={formData.phone}
+                                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                                className="h-12 rounded-xl bg-gray-50 border-none focus:ring-2 focus:ring-primary/20"
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <Label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Address</Label>
+                            <Input
+                                value={formData.address}
+                                onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                                className="h-12 rounded-xl bg-gray-50 border-none focus:ring-2 focus:ring-primary/20"
+                            />
+                        </div>
+
+                        <div className="pt-4 flex justify-end gap-3">
+                            <Button
+                                variant="outline"
+                                onClick={() => setEditingCustomer(null)}
+                                className="rounded-xl font-bold"
+                            >
+                                Cancel
+                            </Button>
+                            <Button
+                                onClick={handleSaveCustomer}
+                                disabled={isSaving}
+                                className="rounded-xl font-bold"
+                            >
+                                {isSaving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
+                                Save Changes
+                            </Button>
+                        </div>
+                    </div>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }

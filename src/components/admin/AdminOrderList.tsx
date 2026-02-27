@@ -235,7 +235,8 @@ export default function AdminOrderList({ initialBookings, partners }: { initialB
                 </div>
             </div>
 
-            <Card className="border-none shadow-2xl rounded-[40px] overflow-hidden">
+            {/* Desktop Table View */}
+            <Card className="hidden lg:block border-none shadow-2xl rounded-[40px] overflow-hidden">
                 <div className="overflow-x-auto">
                     <Table>
                         <TableHeader>
@@ -330,6 +331,82 @@ export default function AdminOrderList({ initialBookings, partners }: { initialB
                     </Table>
                 </div>
             </Card>
+
+            {/* Mobile Card View */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:hidden gap-4">
+                {filteredBookings.length === 0 ? (
+                    <div className="col-span-full h-64 bg-white rounded-[40px] flex flex-col items-center justify-center text-gray-400 shadow-xl border border-gray-50">
+                        <Search size={48} className="mb-4 opacity-20" />
+                        <p className="font-bold uppercase tracking-widest text-xs">No records found</p>
+                    </div>
+                ) : (
+                    filteredBookings.map((booking) => {
+                        const assignedPartner = partners.find(p => p._id === booking.assignedPartnerId);
+                        return (
+                            <Card key={booking._id} className="border-none shadow-xl shadow-gray-100/50 rounded-[35px] overflow-hidden bg-white p-6 space-y-4">
+                                <div className="flex justify-between items-start">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-10 h-10 rounded-2xl bg-primary/5 text-primary flex items-center justify-center font-black text-base">
+                                            {booking.customerName.charAt(0)}
+                                        </div>
+                                        <div>
+                                            <p className="font-black text-primary uppercase text-sm">{booking.customerName}</p>
+                                            <p className="text-[10px] text-gray-400 flex items-center gap-1 font-bold">
+                                                <Phone size={10} /> {booking.customerPhone}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <Badge
+                                        className={`
+                                            ${booking.status === 'Completed' ? 'bg-green-100 text-green-700' :
+                                                booking.status === 'Confirmed' ? 'bg-blue-100 text-blue-700' : 'bg-amber-100 text-amber-700'}
+                                            border-none shadow-none font-black text-[9px] uppercase tracking-widest px-3 py-1 rounded-xl
+                                        `}
+                                    >
+                                        {booking.status}
+                                    </Badge>
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-4 pt-2 border-t border-gray-50">
+                                    <div className="space-y-1">
+                                        <p className="text-[9px] font-black uppercase text-gray-400 tracking-wider">Service Requested</p>
+                                        <p className="text-xs font-bold text-gray-700 uppercase truncate">
+                                            {typeof booking.service === 'object' ? booking.service.name : booking.service}
+                                        </p>
+                                    </div>
+                                    <div className="space-y-1">
+                                        <p className="text-[9px] font-black uppercase text-gray-400 tracking-wider">Booking Date</p>
+                                        <div className="flex items-center gap-1 text-xs font-bold text-gray-500">
+                                            <Calendar size={12} />
+                                            <span>{mounted ? new Date(booking.bookingDate).toLocaleDateString() : '...'}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="bg-gray-50 rounded-2xl p-4 flex justify-between items-center">
+                                    <div className="space-y-1">
+                                        <p className="text-[9px] font-black uppercase text-gray-400 tracking-wider">Assignee</p>
+                                        {assignedPartner ? (
+                                            <p className="text-xs font-bold text-orange-600 uppercase flex items-center gap-1">
+                                                <Hammer size={12} /> {assignedPartner.name}
+                                            </p>
+                                        ) : (
+                                            <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest bg-gray-200/50 px-2 py-0.5 rounded-lg">Unassigned</span>
+                                        )}
+                                    </div>
+                                    <Button
+                                        onClick={() => handleOpenManage(booking)}
+                                        size="sm"
+                                        className="rounded-xl bg-primary text-white font-bold uppercase tracking-widest text-[9px] px-4 py-2 h-auto hover:bg-primary/90"
+                                    >
+                                        Modify
+                                    </Button>
+                                </div>
+                            </Card>
+                        );
+                    })
+                )}
+            </div>
 
             {/* Management Dialog */}
             <Dialog open={!!selectedBooking} onOpenChange={(open) => !open && setSelectedBooking(null)}>

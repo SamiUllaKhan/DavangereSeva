@@ -34,37 +34,42 @@ export default function AdminDashboardTabs({
         return (
             <div className="space-y-8">
                 {/* Skeleton tab bar */}
-                <div className="bg-white p-1 rounded-2xl shadow-lg border border-gray-100 h-14 flex gap-1 items-center px-2">
+                <div className="bg-white p-1 sm:p-1.5 rounded-2xl shadow-lg border border-gray-100 h-14 sm:h-16 flex gap-1 sm:gap-2 items-center px-1.5 sm:px-2 w-full max-w-full overflow-hidden">
                     {[...Array(5)].map((_, i) => (
-                        <div key={i} className="h-10 rounded-xl bg-gray-100 animate-pulse flex-1" />
+                        <div key={i} className="h-10 sm:h-11 rounded-xl bg-gray-100 animate-pulse shrink-0 w-24 sm:flex-1 sm:min-w-[100px]" />
                     ))}
                 </div>
                 {/* Skeleton content */}
-                <div className="h-96 bg-white rounded-[40px] animate-pulse shadow-xl" />
+                <div className="h-96 bg-white rounded-3xl animate-pulse shadow-xl" />
             </div>
         );
     }
 
     return (
-        <Tabs defaultValue="orders" className="space-y-8">
-            <TabsList className="bg-white p-1 rounded-2xl shadow-lg border border-gray-100 h-auto gap-1">
-                <TabsTrigger value="orders" className="rounded-xl px-6 py-3 data-[state=active]:bg-primary data-[state=active]:text-white font-bold uppercase tracking-widest text-[10px] gap-2">
-                    <Briefcase size={14} /> Orders
+        <Tabs defaultValue="orders" className="flex flex-col gap-10">
+            <TabsList className="bg-white p-2 rounded-[30px] shadow-xl border border-gray-100/50 !h-auto flex flex-wrap lg:flex-nowrap justify-center lg:justify-start gap-x-2 gap-y-3 w-full relative z-20">
+                <TabsTrigger value="orders" className="flex-1 lg:flex-none rounded-2xl px-5 py-3.5 data-[state=active]:bg-primary data-[state=active]:text-white data-[state=inactive]:text-gray-500 data-[state=inactive]:hover:bg-gray-50 font-black uppercase tracking-widest text-[10px] gap-2 transition-all shadow-none border-none">
+                    <Briefcase size={14} className="shrink-0" /> <span className="truncate">Orders</span>
                 </TabsTrigger>
-                <TabsTrigger value="partners" className="rounded-xl px-6 py-3 data-[state=active]:bg-primary data-[state=active]:text-white font-bold uppercase tracking-widest text-[10px] gap-2">
-                    <Users size={14} /> Partners
+                <TabsTrigger value="partners" className="flex-1 lg:flex-none rounded-2xl px-5 py-3.5 data-[state=active]:bg-primary data-[state=active]:text-white data-[state=inactive]:text-gray-500 data-[state=inactive]:hover:bg-gray-50 font-black uppercase tracking-widest text-[10px] gap-2 transition-all shadow-none border-none">
+                    <Users size={14} className="shrink-0" /> <span className="truncate">Partners</span>
                 </TabsTrigger>
-                <TabsTrigger value="services" className="rounded-xl px-6 py-3 data-[state=active]:bg-primary data-[state=active]:text-white font-bold uppercase tracking-widest text-[10px] gap-2">
-                    <Hammer size={14} /> Services
+                <TabsTrigger value="services" className="flex-1 lg:flex-none rounded-2xl px-5 py-3.5 data-[state=active]:bg-primary data-[state=active]:text-white data-[state=inactive]:text-gray-500 data-[state=inactive]:hover:bg-gray-50 font-black uppercase tracking-widest text-[10px] gap-2 transition-all shadow-none border-none">
+                    <Hammer size={14} className="shrink-0" /> <span className="truncate">Services</span>
                 </TabsTrigger>
-                <TabsTrigger value="categories" className="rounded-xl px-6 py-3 data-[state=active]:bg-primary data-[state=active]:text-white font-bold uppercase tracking-widest text-[10px] gap-2">
-                    <LayoutGrid size={14} /> Categories
+                <TabsTrigger value="categories" className="flex-1 lg:flex-none rounded-2xl px-5 py-3.5 data-[state=active]:bg-primary data-[state=active]:text-white data-[state=inactive]:text-gray-500 data-[state=inactive]:hover:bg-gray-50 font-black uppercase tracking-widest text-[10px] gap-2 transition-all shadow-none border-none">
+                    <LayoutGrid size={14} className="shrink-0" /> <span className="truncate">Categories</span>
                 </TabsTrigger>
-                <TabsTrigger value="customers" className="rounded-xl px-6 py-3 data-[state=active]:bg-primary data-[state=active]:text-white font-bold uppercase tracking-widest text-[10px] gap-2">
-                    <Users size={14} /> Customers
+                <TabsTrigger value="customers" className="flex-1 lg:flex-none rounded-2xl px-5 py-3.5 data-[state=active]:bg-primary data-[state=active]:text-white data-[state=inactive]:text-gray-500 data-[state=inactive]:hover:bg-gray-50 font-black uppercase tracking-widest text-[10px] gap-2 transition-all shadow-none border-none">
+                    <Users size={14} className="shrink-0" /> <span className="truncate">Customers</span>
                 </TabsTrigger>
-                <TabsTrigger value="reviews" className="rounded-xl px-6 py-3 data-[state=active]:bg-primary data-[state=active]:text-white font-bold uppercase tracking-widest text-[10px] gap-2">
-                    <MessageSquare size={14} /> Reviews {pendingReviews.length > 0 && <span className="bg-rose-500 text-white w-4 h-4 rounded-full text-[8px] flex items-center justify-center">{pendingReviews.length}</span>}
+                <TabsTrigger value="reviews" className="flex-1 lg:flex-none rounded-2xl px-5 py-3.5 data-[state=active]:bg-primary data-[state=active]:text-white data-[state=inactive]:text-gray-500 data-[state=inactive]:hover:bg-gray-50 font-black uppercase tracking-widest text-[10px] gap-2 transition-all shadow-none border-none relative">
+                    <MessageSquare size={14} className="shrink-0" /> <span className="truncate">Reviews</span>
+                    {pendingReviews.length > 0 && (
+                        <span className="bg-rose-500 text-white min-w-[20px] h-[20px] px-1.5 rounded-full text-[9px] flex items-center justify-center shrink-0 ml-1.5 font-black border-2 border-white shadow-sm">
+                            {pendingReviews.length}
+                        </span>
+                    )}
                 </TabsTrigger>
             </TabsList>
 

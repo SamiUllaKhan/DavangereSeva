@@ -102,7 +102,8 @@ export default function AdminPartnerList({ initialPartners }: { initialPartners:
                 </Badge>
             </div>
 
-            <Card className="border-none shadow-2xl rounded-[40px] overflow-hidden">
+            {/* Desktop Table View */}
+            <Card className="hidden lg:block border-none shadow-2xl rounded-[40px] overflow-hidden">
                 <div className="overflow-x-auto">
                     <Table>
                         <TableHeader>
@@ -166,92 +167,14 @@ export default function AdminPartnerList({ initialPartners }: { initialPartners:
                                         </TableCell>
                                         <TableCell className="pr-8 text-right">
                                             <div className="flex justify-end gap-2 items-center flex-wrap">
-                                                <Dialog open={editingPartner?._id === partner._id} onOpenChange={(open) => !open && setEditingPartner(null)}>
-                                                    <DialogTrigger asChild>
-                                                        <Button
-                                                            onClick={() => handleEditClick(partner)}
-                                                            size="sm"
-                                                            variant="outline"
-                                                            className="rounded-xl px-3 border-gray-200 text-gray-600 hover:bg-gray-50 h-8"
-                                                        >
-                                                            <Edit className="h-3.5 w-3.5" />
-                                                        </Button>
-                                                    </DialogTrigger>
-                                                    <DialogContent className="max-w-md rounded-[35px] p-8 border-none shadow-2xl">
-                                                        <DialogHeader className="mb-6">
-                                                            <DialogTitle className="text-2xl font-black text-primary tracking-tighter uppercase flex items-center gap-3">
-                                                                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                                                                    <Edit className="w-5 h-5 text-primary" />
-                                                                </div>
-                                                                Edit Partner
-                                                            </DialogTitle>
-                                                        </DialogHeader>
-
-                                                        <div className="space-y-4 text-left">
-                                                            <div className="space-y-2">
-                                                                <Label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Name</Label>
-                                                                <Input
-                                                                    value={formData.name}
-                                                                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                                                    className="h-12 rounded-xl bg-gray-50 border-none focus:ring-2 focus:ring-primary/20"
-                                                                />
-                                                            </div>
-                                                            <div className="space-y-2">
-                                                                <Label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Phone</Label>
-                                                                <Input
-                                                                    value={formData.phone}
-                                                                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                                                                    className="h-12 rounded-xl bg-gray-50 border-none focus:ring-2 focus:ring-primary/20"
-                                                                />
-                                                            </div>
-                                                            <div className="space-y-2">
-                                                                <Label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Email</Label>
-                                                                <Input
-                                                                    value={formData.email}
-                                                                    type="email"
-                                                                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                                                    className="h-12 rounded-xl bg-gray-50 border-none focus:ring-2 focus:ring-primary/20"
-                                                                />
-                                                            </div>
-                                                            <div className="grid grid-cols-2 gap-4">
-                                                                <div className="space-y-2">
-                                                                    <Label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Category</Label>
-                                                                    <Input
-                                                                        value={formData.serviceCategory}
-                                                                        onChange={(e) => setFormData({ ...formData, serviceCategory: e.target.value })}
-                                                                        className="h-12 rounded-xl bg-gray-50 border-none focus:ring-2 focus:ring-primary/20"
-                                                                    />
-                                                                </div>
-                                                                <div className="space-y-2">
-                                                                    <Label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Experience (Yrs)</Label>
-                                                                    <Input
-                                                                        value={formData.experience}
-                                                                        onChange={(e) => setFormData({ ...formData, experience: e.target.value })}
-                                                                        className="h-12 rounded-xl bg-gray-50 border-none focus:ring-2 focus:ring-primary/20"
-                                                                    />
-                                                                </div>
-                                                            </div>
-
-                                                            <div className="pt-4 flex justify-end gap-3">
-                                                                <Button
-                                                                    variant="outline"
-                                                                    onClick={() => setEditingPartner(null)}
-                                                                    className="rounded-xl font-bold"
-                                                                >
-                                                                    Cancel
-                                                                </Button>
-                                                                <Button
-                                                                    onClick={handleSavePartner}
-                                                                    disabled={isSaving}
-                                                                    className="rounded-xl font-bold"
-                                                                >
-                                                                    {isSaving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
-                                                                    Save Changes
-                                                                </Button>
-                                                            </div>
-                                                        </div>
-                                                    </DialogContent>
-                                                </Dialog>
+                                                <Button
+                                                    onClick={() => handleEditClick(partner)}
+                                                    size="sm"
+                                                    variant="outline"
+                                                    className="rounded-xl px-3 border-gray-200 text-gray-600 hover:bg-gray-50 h-8"
+                                                >
+                                                    <Edit className="h-3.5 w-3.5" />
+                                                </Button>
 
                                                 {partner.partnerStatus !== 'active' && (
                                                     <Button
@@ -300,6 +223,159 @@ export default function AdminPartnerList({ initialPartners }: { initialPartners:
                     </Table>
                 </div>
             </Card>
+
+            {/* Mobile Card View */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:hidden gap-4">
+                {filteredPartners.length === 0 ? (
+                    <div className="col-span-full h-64 bg-white rounded-[40px] flex flex-col items-center justify-center text-gray-400 shadow-xl border border-gray-50">
+                        <Search size={48} className="mb-4 opacity-20" />
+                        <p className="font-bold uppercase tracking-widest text-xs">No records found</p>
+                    </div>
+                ) : (
+                    filteredPartners.map((partner) => (
+                        <Card key={partner._id} className="border-none shadow-xl shadow-gray-100/50 rounded-[35px] overflow-hidden bg-white p-6 space-y-4">
+                            <div className="flex justify-between items-start">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 rounded-2xl bg-primary/5 text-primary flex items-center justify-center font-black text-base">
+                                        {partner.name?.charAt(0) || <User size={20} />}
+                                    </div>
+                                    <div>
+                                        <p className="font-black text-primary uppercase text-sm">{partner.name}</p>
+                                        <p className="text-[10px] text-gray-400 font-bold">{partner.phone}</p>
+                                    </div>
+                                </div>
+                                <Badge
+                                    variant="outline"
+                                    className={`font-bold text-[9px] uppercase px-2 py-0.5 rounded-lg ${partner.partnerStatus === 'active'
+                                        ? 'bg-green-50/50 border-green-200 text-green-600'
+                                        : partner.partnerStatus === 'hold'
+                                            ? 'bg-orange-50/50 border-orange-200 text-orange-600'
+                                            : 'bg-rose-50/50 border-rose-200 text-rose-600'
+                                        }`}
+                                >
+                                    {partner.partnerStatus || (partner.isActive ? 'active' : 'inactive')}
+                                </Badge>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4 pt-2 border-t border-gray-50">
+                                <div className="space-y-1">
+                                    <p className="text-[9px] font-black uppercase text-gray-400 tracking-wider">Category</p>
+                                    <Badge variant="outline" className="bg-white border-primary/20 text-primary font-bold text-[9px] uppercase px-2 py-0.5 rounded-lg">
+                                        {partner.serviceCategory || 'Uncategorized'}
+                                    </Badge>
+                                </div>
+                                <div className="space-y-1 text-right">
+                                    <p className="text-[9px] font-black uppercase text-gray-400 tracking-wider">Experience</p>
+                                    <p className="text-xs font-bold text-gray-700">{partner.experience || 'N/A'} Yrs</p>
+                                </div>
+                            </div>
+
+                            <div className="flex justify-between items-center bg-gray-50 rounded-2xl p-4">
+                                <div className="flex items-center gap-2">
+                                    <span className="text-[10px] font-black uppercase text-gray-400">Jobs:</span>
+                                    <span className="font-black text-primary">{partner.assignedBookings?.length || 0}</span>
+                                </div>
+                                <div className="flex gap-2">
+                                    <Button
+                                        onClick={() => handleEditClick(partner)}
+                                        size="sm"
+                                        variant="outline"
+                                        className="rounded-xl px-3 border-gray-200 bg-white h-8"
+                                    >
+                                        <Edit className="h-3.5 w-3.5" />
+                                    </Button>
+                                    <Button
+                                        onClick={() => handleSetStatus(partner._id, partner.partnerStatus === 'active' ? 'inactive' : 'active')}
+                                        size="sm"
+                                        variant="outline"
+                                        className={`rounded-xl px-3 h-8 ${partner.partnerStatus === 'active' ? 'border-rose-200 text-rose-600' : 'border-green-200 text-green-600'}`}
+                                    >
+                                        {partner.partnerStatus === 'active' ? <XCircle className="h-3.5 w-3.5" /> : <CheckCircle className="h-3.5 w-3.5" />}
+                                    </Button>
+                                </div>
+                            </div>
+                        </Card>
+                    ))
+                )}
+            </div>
+
+            {/* Modals remain the same but ensure they are wrapped correctly */}
+            <Dialog open={!!editingPartner} onOpenChange={(open) => !open && setEditingPartner(null)}>
+                <DialogContent className="max-w-md rounded-[35px] p-8 border-none shadow-2xl">
+                    <DialogHeader className="mb-6">
+                        <DialogTitle className="text-2xl font-black text-primary tracking-tighter uppercase flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                                <Edit className="w-5 h-5 text-primary" />
+                            </div>
+                            Edit Partner
+                        </DialogTitle>
+                    </DialogHeader>
+
+                    <div className="space-y-4 text-left">
+                        <div className="space-y-2">
+                            <Label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Name</Label>
+                            <Input
+                                value={formData.name}
+                                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                className="h-12 rounded-xl bg-gray-50 border-none focus:ring-2 focus:ring-primary/20"
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <Label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Phone</Label>
+                            <Input
+                                value={formData.phone}
+                                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                                className="h-12 rounded-xl bg-gray-50 border-none focus:ring-2 focus:ring-primary/20"
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <Label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Email</Label>
+                            <Input
+                                value={formData.email}
+                                type="email"
+                                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                className="h-12 rounded-xl bg-gray-50 border-none focus:ring-2 focus:ring-primary/20"
+                            />
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                                <Label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Category</Label>
+                                <Input
+                                    value={formData.serviceCategory}
+                                    onChange={(e) => setFormData({ ...formData, serviceCategory: e.target.value })}
+                                    className="h-12 rounded-xl bg-gray-50 border-none focus:ring-2 focus:ring-primary/20"
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <Label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Experience (Yrs)</Label>
+                                <Input
+                                    value={formData.experience}
+                                    onChange={(e) => setFormData({ ...formData, experience: e.target.value })}
+                                    className="h-12 rounded-xl bg-gray-50 border-none focus:ring-2 focus:ring-primary/20"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="pt-4 flex justify-end gap-3">
+                            <Button
+                                variant="outline"
+                                onClick={() => setEditingPartner(null)}
+                                className="rounded-xl font-bold"
+                            >
+                                Cancel
+                            </Button>
+                            <Button
+                                onClick={handleSavePartner}
+                                disabled={isSaving}
+                                className="rounded-xl font-bold"
+                            >
+                                {isSaving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
+                                Save Changes
+                            </Button>
+                        </div>
+                    </div>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }
