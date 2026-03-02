@@ -62,16 +62,16 @@ export default function UserLoginPage() {
                     <CardContent className="p-8 lg:p-12">
                         <form onSubmit={handleSubmit} className="space-y-6">
                             <div className="space-y-1.5">
-                                <Label htmlFor="email" className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-400 ml-2">Verified Email</Label>
+                                <Label htmlFor="email" className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-400 ml-2">Email or Mobile Number</Label>
                                 <div className="relative group/input">
                                     <div className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within/input:text-primary transition-colors">
-                                        <Mail size={18} />
+                                        <LogIn size={18} />
                                     </div>
                                     <Input
                                         id="email"
                                         name="email"
-                                        type="email"
-                                        placeholder="your@email.com"
+                                        type="text"
+                                        placeholder="Email or Mobile No"
                                         className="pl-14 h-16 rounded-[28px] border-gray-100 bg-gray-50/50 focus:bg-white focus:ring-8 focus:ring-primary/5 transition-all font-bold text-gray-700"
                                         required
                                     />

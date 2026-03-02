@@ -32,7 +32,7 @@ export async function registerUser(formData: FormData) {
 
         const userData: any = {
             name,
-            email,
+            email: email.toLowerCase(),
             phone,
             password,
             role,
@@ -82,12 +82,17 @@ export async function userLogout() {
 }
 
 export async function loginUser(formData: FormData) {
-    const email = formData.get('email') as string;
+    const identifier = formData.get('email') as string;
     const password = formData.get('password') as string;
 
     try {
         await dbConnect();
-        const user = await User.findOne({ email });
+        const user = await User.findOne({
+            $or: [
+                { email: identifier.toLowerCase() },
+                { phone: identifier }
+            ]
+        });
 
         if (user && user.password === password) {
             const cookieStore = await cookies();

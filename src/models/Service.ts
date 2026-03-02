@@ -8,6 +8,7 @@ const ServiceSchema = new Schema({
     shortDescription: { type: String },
     price: { type: Number, required: true },
     priceUnit: { type: String, default: 'Starting from' },
+    image: { type: String },
     features: [{ type: String }],
     whyChooseUs: [{ type: String }],
     isActive: { type: Boolean, default: true },
