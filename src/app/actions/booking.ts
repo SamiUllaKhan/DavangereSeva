@@ -6,6 +6,7 @@ import User from '@/models/User';
 import Service from '@/models/Service';
 import { revalidatePath } from 'next/cache';
 import { getUserSession } from './user';
+import { sendBookingNotifications } from '@/lib/notifications';
 
 export async function createBooking(formData: any) {
     try {
@@ -37,6 +38,12 @@ export async function createBooking(formData: any) {
 
         const savedBooking = await newBooking.save();
         console.log('Booking saved successfully:', savedBooking._id);
+
+        // Send Email/SMS notifications asynchronously (don't block user feedback)
+        sendBookingNotifications({
+            ...newBookingDTO,
+            _id: savedBooking._id
+        }).catch(err => console.error('Delayed Notification Error:', err));
 
         revalidatePath('/admin');
         return { success: true };

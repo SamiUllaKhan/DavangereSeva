@@ -36,9 +36,9 @@ export default function Navbar({ isAuth, userSession }: { isAuth: boolean, userS
                     <div className="hidden lg:flex items-center gap-3">
                         {isAuth ? (
                             <>
-                                <Link href="/admin">
-                                    <Button variant="outline" size="sm" className="rounded-xl border-primary text-primary font-bold uppercase tracking-widest text-[10px] px-6 h-10">Admin Control</Button>
-                                </Link>
+                                <Button asChild variant="outline" size="sm" className="rounded-xl border-primary text-primary font-bold uppercase tracking-widest text-[10px] px-6 h-10">
+                                    <Link href="/admin">Admin Control</Link>
+                                </Button>
                                 <Button
                                     variant="ghost"
                                     size="sm"
@@ -50,11 +50,11 @@ export default function Navbar({ isAuth, userSession }: { isAuth: boolean, userS
                             </>
                         ) : userSession ? (
                             <>
-                                <Link href={userSession.role === 'partner' ? '/partner-dashboard' : '/bookings'}>
-                                    <Button variant="outline" size="sm" className="rounded-xl border-primary text-primary hover:bg-primary/5 font-bold uppercase tracking-widest text-[10px] px-6 h-10">
+                                <Button asChild variant="outline" size="sm" className="rounded-xl border-primary text-primary hover:bg-primary/5 font-bold uppercase tracking-widest text-[10px] px-6 h-10">
+                                    <Link href={userSession.role === 'partner' ? '/partner-dashboard' : '/bookings'}>
                                         {userSession.role === 'partner' ? 'Service Dashboard' : 'My Bookings'}
-                                    </Button>
-                                </Link>
+                                    </Link>
+                                </Button>
                                 <Button
                                     variant="ghost"
                                     size="sm"
@@ -69,12 +69,12 @@ export default function Navbar({ isAuth, userSession }: { isAuth: boolean, userS
                             </>
                         ) : (
                             <div className="flex items-center gap-2">
-                                <Link href="/login">
-                                    <Button className="rounded-xl bg-primary text-white hover:bg-primary/90 transition-all font-bold uppercase tracking-widest text-[10px] px-8 h-11 shadow-lg shadow-primary/20">Login / Join</Button>
-                                </Link>
-                                <Link href="/admin/login">
-                                    <Button variant="ghost" className="text-[9px] uppercase font-black tracking-[0.2em] opacity-40 hover:opacity-100 h-11">Management</Button>
-                                </Link>
+                                <Button asChild className="rounded-xl bg-primary text-white hover:bg-primary/90 transition-all font-bold uppercase tracking-widest text-[10px] px-8 h-11 shadow-lg shadow-primary/20">
+                                    <Link href="/login">Login / Join</Link>
+                                </Button>
+                                <Button asChild variant="ghost" className="text-[9px] uppercase font-black tracking-[0.2em] opacity-40 hover:opacity-100 h-11">
+                                    <Link href="/admin/login">Management</Link>
+                                </Button>
                             </div>
                         )}
                     </div>
@@ -155,9 +155,9 @@ export default function Navbar({ isAuth, userSession }: { isAuth: boolean, userS
 
                                     {isAuth ? (
                                         <>
-                                            <Link href="/admin" onClick={() => setIsMenuOpen(false)} className="block">
-                                                <Button className="w-full rounded-2xl bg-primary h-14 font-black uppercase tracking-widest text-[10px] shadow-lg shadow-primary/20">Go to Admin</Button>
-                                            </Link>
+                                            <Button asChild className="w-full rounded-2xl bg-primary h-14 font-black uppercase tracking-widest text-[10px] shadow-lg shadow-primary/20" onClick={() => setIsMenuOpen(false)}>
+                                                <Link href="/admin">Go to Admin</Link>
+                                            </Button>
                                             <Button
                                                 variant="outline"
                                                 className="w-full rounded-2xl h-14 border-rose-100 text-rose-500 font-black uppercase tracking-widest text-[10px] gap-2 hover:bg-rose-50"
@@ -171,12 +171,12 @@ export default function Navbar({ isAuth, userSession }: { isAuth: boolean, userS
                                         </>
                                     ) : userSession ? (
                                         <>
-                                            <Link href={userSession.role === 'partner' ? '/partner-dashboard' : '/bookings'} onClick={() => setIsMenuOpen(false)} className="block">
-                                                <Button className="w-full rounded-2xl bg-primary h-14 font-black uppercase tracking-widest text-[10px] shadow-lg shadow-primary/20">Dashboard</Button>
-                                            </Link>
-                                            <Link href="/profile" onClick={() => setIsMenuOpen(false)} className="block">
-                                                <Button variant="ghost" className="w-full rounded-2xl h-14 font-black uppercase tracking-widest text-[10px] text-gray-500">My Profile</Button>
-                                            </Link>
+                                            <Button asChild className="w-full rounded-2xl bg-primary h-14 font-black uppercase tracking-widest text-[10px] shadow-lg shadow-primary/20" onClick={() => setIsMenuOpen(false)}>
+                                                <Link href={userSession.role === 'partner' ? '/partner-dashboard' : '/bookings'}>Dashboard</Link>
+                                            </Button>
+                                            <Button asChild variant="ghost" className="w-full rounded-2xl h-14 font-black uppercase tracking-widest text-[10px] text-gray-500" onClick={() => setIsMenuOpen(false)}>
+                                                <Link href="/profile">My Profile</Link>
+                                            </Button>
                                             <Button
                                                 variant="outline"
                                                 className="w-full rounded-2xl h-14 border-rose-100 text-rose-500 font-black uppercase tracking-widest text-[10px] gap-2 hover:bg-rose-50"
@@ -190,12 +190,12 @@ export default function Navbar({ isAuth, userSession }: { isAuth: boolean, userS
                                         </>
                                     ) : (
                                         <>
-                                            <Link href="/login" onClick={() => setIsMenuOpen(false)} className="block">
-                                                <Button className="w-full rounded-2xl bg-primary h-14 font-black uppercase tracking-widest text-[10px] shadow-xl shadow-primary/30">Login / Join Now</Button>
-                                            </Link>
-                                            <Link href="/admin/login" onClick={() => setIsMenuOpen(false)} className="block">
-                                                <Button variant="ghost" className="w-full rounded-2xl h-14 text-gray-400 font-black uppercase tracking-widest text-[9px] opacity-60">Admin Management</Button>
-                                            </Link>
+                                            <Button asChild className="w-full rounded-2xl bg-primary h-14 font-black uppercase tracking-widest text-[10px] shadow-xl shadow-primary/30" onClick={() => setIsMenuOpen(false)}>
+                                                <Link href="/login">Login / Join Now</Link>
+                                            </Button>
+                                            <Button asChild variant="ghost" className="w-full rounded-2xl h-14 text-gray-400 font-black uppercase tracking-widest text-[9px] opacity-60" onClick={() => setIsMenuOpen(false)}>
+                                                <Link href="/admin/login">Admin Management</Link>
+                                            </Button>
                                         </>
                                     )}
                                 </div>

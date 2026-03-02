@@ -140,11 +140,11 @@ export default async function ServicesPage({
                             <p className="text-gray-500">
                                 We couldn't find any services matching "{query}".
                             </p>
-                            <Link href="/services">
-                                <Button variant="outline" className="mt-6 rounded-xl">
+                            <Button asChild variant="outline" className="mt-6 rounded-xl">
+                                <Link href="/services">
                                     Clear Search
-                                </Button>
-                            </Link>
+                                </Link>
+                            </Button>
                         </div>
                     )}
                 </div>
@@ -159,11 +159,11 @@ export default async function ServicesPage({
                             <p className="text-lg text-gray-600 mb-10 font-medium">
                                 Our team is always expanding our service catalog. Contact us for custom requirements.
                             </p>
-                            <Link href="tel:+918904777090">
-                                <Button size="lg" className="h-16 px-10 rounded-full font-black uppercase tracking-widest text-base shadow-xl hover:shadow-primary/20 transition-all">
+                            <Button asChild size="lg" className="h-16 px-10 rounded-full font-black uppercase tracking-widest text-base shadow-xl hover:shadow-primary/20 transition-all">
+                                <Link href="tel:+918904777090">
                                     Talk To An Expert
-                                </Button>
-                            </Link>
+                                </Link>
+                            </Button>
                         </div>
                         {/* Decorative Elements */}
                         <div className="absolute top-0 left-0 w-32 h-32 bg-primary/10 rounded-full -translate-x-1/2 -translate-y-1/2" />

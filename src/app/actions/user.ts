@@ -3,7 +3,9 @@
 import dbConnect from '@/lib/mongodb';
 import User from '@/models/User';
 import { cookies } from 'next/headers';
+import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
+import { sendPartnerRegistrationEmail } from '@/lib/notifications';
 
 const SESSION_COOKIE_NAME = 'user_session';
 
@@ -17,6 +19,8 @@ export async function registerUser(formData: FormData) {
     // Partner specific
     const serviceCategory = formData.get('serviceCategory') as string;
     const experience = formData.get('experience') as string;
+    const avatar = formData.get('avatar') as string;
+    const proofOfAddress = formData.get('proofOfAddress') as string;
 
     try {
         await dbConnect();
@@ -37,11 +41,18 @@ export async function registerUser(formData: FormData) {
         if (role === 'partner') {
             userData.serviceCategory = serviceCategory;
             userData.experience = experience;
+            userData.avatar = avatar;
+            userData.proofOfAddress = proofOfAddress;
         }
 
         const user = await User.create(userData);
 
         if (user) {
+            // If it's a partner, send a welcome/confirmation email
+            if (user.role === 'partner') {
+                sendPartnerRegistrationEmail(user).catch(e => console.error('Delayed Welcome Email Error:', e));
+            }
+
             const cookieStore = await cookies();
             cookieStore.set(SESSION_COOKIE_NAME, JSON.stringify({
                 id: user._id,

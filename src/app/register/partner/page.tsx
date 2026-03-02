@@ -11,7 +11,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { User, Mail, Phone, Lock, Eye, EyeOff, Briefcase, Award } from 'lucide-react';
+import { User, Mail, Phone, Lock, Eye, EyeOff, Briefcase, Award, Camera, FileText, Upload } from 'lucide-react';
 import Link from 'next/link';
 
 const categories = [
@@ -29,7 +29,50 @@ export default function PartnerRegister() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [category, setCategory] = useState('');
+    const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+    const [avatarBase64, setAvatarBase64] = useState<string>('');
+    const [proofBase64, setProofBase64] = useState<string>('');
+    const [proofFileName, setProofFileName] = useState<string>('');
     const router = useRouter();
+
+    const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            if (file.size > 200 * 1024) {
+                toast.error('File size too large', {
+                    description: 'Please upload a photo smaller than 200KB'
+                });
+                e.target.value = '';
+                return;
+            }
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                const base64String = reader.result as string;
+                setAvatarPreview(base64String);
+                setAvatarBase64(base64String);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    const handleProofChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            if (file.size > 200 * 1024) {
+                toast.error('File size too large', {
+                    description: 'Please upload a document smaller than 200KB'
+                });
+                e.target.value = '';
+                return;
+            }
+            setProofFileName(file.name);
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setProofBase64(reader.result as string);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
 
     async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
@@ -43,6 +86,8 @@ export default function PartnerRegister() {
         const formData = new FormData(event.currentTarget);
         formData.append('role', 'partner');
         formData.append('serviceCategory', category);
+        if (avatarBase64) formData.append('avatar', avatarBase64);
+        if (proofBase64) formData.append('proofOfAddress', proofBase64);
 
         try {
             const result = await registerUser(formData);
@@ -73,6 +118,23 @@ export default function PartnerRegister() {
                 </CardHeader>
                 <CardContent className="p-8">
                     <form onSubmit={handleSubmit} className="space-y-6">
+                        {/* Avatar Upload */}
+                        <div className="flex flex-col items-center mb-8">
+                            <div className="relative group">
+                                <div className="w-32 h-32 rounded-[2rem] bg-gray-100 border-4 border-white shadow-xl overflow-hidden flex items-center justify-center">
+                                    {avatarPreview ? (
+                                        <img src={avatarPreview} alt="Preview" className="w-full h-full object-cover aspect-square" />
+                                    ) : (
+                                        <User className="w-12 h-12 text-gray-300" />
+                                    )}
+                                </div>
+                                <label className="absolute bottom-0 right-0 bg-orange-600 text-white p-2 rounded-xl shadow-lg cursor-pointer hover:bg-orange-700 transition-colors">
+                                    <Camera size={20} />
+                                    <input type="file" className="hidden" accept="image/*" onChange={handleAvatarChange} />
+                                </label>
+                            </div>
+                            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 mt-4">Profile Photo (1:1 Ratio)</p>
+                        </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="space-y-2">
                                 <Label htmlFor="name" className="text-xs font-bold uppercase tracking-widest text-gray-500">Full Name</Label>
@@ -125,9 +187,29 @@ export default function PartnerRegister() {
                         </div>
 
                         <div className="space-y-2">
-                            <Label htmlFor="password" className="text-xs font-bold uppercase tracking-widest text-gray-500">Create Password</Label>
+                            <Label className="text-xs font-bold uppercase tracking-widest text-gray-500">Proof of Address (Aadhar / ID)</Label>
+                            <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-200 rounded-[2rem] cursor-pointer hover:bg-gray-50 hover:border-orange-500 transition-all">
+                                <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                                    {proofFileName ? (
+                                        <>
+                                            <FileText className="w-8 h-8 text-orange-600 mb-2" />
+                                            <p className="text-xs font-bold text-gray-600">{proofFileName}</p>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Upload className="w-8 h-8 text-gray-400 mb-2" />
+                                            <p className="text-xs font-bold text-gray-500 uppercase tracking-widest">Click to upload document</p>
+                                        </>
+                                    )}
+                                </div>
+                                <input type="file" className="hidden" accept=".jpg,.jpeg,.png,.pdf" onChange={handleProofChange} />
+                            </label>
+                        </div>
+
+                        <div className="space-y-2">
+                            <Label htmlFor="password" title="Create Password" className="text-xs font-bold uppercase tracking-widest text-gray-500">Create Password</Label>
                             <div className="relative">
-                                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                                <Lock title="Password Icon" className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
                                 <Input
                                     id="password"
                                     name="password"

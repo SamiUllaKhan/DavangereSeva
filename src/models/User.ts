@@ -14,6 +14,8 @@ const UserSchema = new Schema({
     bio: { type: String },
     isVerified: { type: Boolean, default: false },
     partnerStatus: { type: String, enum: ['active', 'inactive', 'hold'], default: 'active' },
+    avatar: { type: String },
+    proofOfAddress: { type: String },
 }, { timestamps: true });
 
 // In development, clear the model from mongoose cache to pick up schema changes
