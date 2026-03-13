@@ -9,6 +9,35 @@ import { SearchBar } from '@/components/layout/SearchBar';
 import * as Icons from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { Metadata } from 'next';
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+    const slug = (await params).slug;
+    const data = await getData(slug);
+    
+    if (!data) return { title: 'Service Not Found | Davanagere Seva' };
+    
+    const categories = data.categories;
+    const activeCategory = categories.find((c: any) => c._id.toString() === data.initialCategoryId);
+    
+    // If it's a specific service being highlighted
+    if (data.highlightedServiceId) {
+        const service = data.services.find((s: any) => s._id.toString() === data.highlightedServiceId);
+        if (service) {
+            return {
+                title: `${service.name} in Davanagere | Professional ${activeCategory?.name}`,
+                description: service.description || `Book ${service.name} in Davanagere. Professional quality, verified experts, and transparent pricing.`,
+                keywords: `${service.name}, ${activeCategory?.name}, Davanagere, home services, professional ${service.name.toLowerCase()}`
+            };
+        }
+    }
+
+    return {
+        title: `${activeCategory?.name} Services in Davanagere | Davanagere Seva`,
+        description: activeCategory?.description || `Professional ${activeCategory?.name} services at your doorstep in Davanagere. Verified experts and quality guarantee.`,
+        keywords: `${activeCategory?.name}, Davanagere, door-step services, professional ${activeCategory?.name?.toLowerCase()}`
+    };
+}
 
 async function getData(slug: string) {
     try {
@@ -72,8 +101,8 @@ export default async function ServiceCategoryPage({ params }: { params: Promise<
                             <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 mt-1">Davanagere Seva • Guaranteed Results</p>
                         </div>
                     </div>
-                    <div className="w-full md:w-96">
-                        <SearchBar variant="services" placeholder="Search within category..." className="shadow-none border border-gray-100 bg-gray-50" />
+                    <div className="w-full">
+                        <SearchBar variant="services" placeholder="Search within category..." className="shadow-none border border-gray-100 bg-gray-50 max-w-none" />
                     </div>
                 </div>
             </section>

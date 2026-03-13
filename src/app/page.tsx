@@ -48,15 +48,7 @@ export default async function Home() {
             Book professional services for your home and office in Davanagere.
           </p>
 
-          <div className="max-w-3xl mx-auto flex flex-col md:flex-row gap-2 bg-white p-2 rounded-lg shadow-2xl">
-            <div className="flex-1 flex items-center px-4 gap-2 border-b border-gray-100 md:border-b-0 md:border-r py-2 md:py-0">
-              <Icons.MapPin className="text-primary" size={20} />
-              <Input
-                className="border-none focus-visible:ring-0 text-black placeholder:text-gray-400"
-                placeholder="Davanagere, Karnataka"
-                readOnly
-              />
-            </div>
+          <div className="max-w-4xl mx-auto">
             <SearchBar variant="home" />
           </div>
         </div>
@@ -84,6 +76,13 @@ export default async function Home() {
                   </Link>
                 );
               })}
+            </div>
+            <div className="mt-10 pt-6 border-t border-gray-50 flex justify-center">
+              <Button asChild variant="outline" className="rounded-2xl px-10 h-14 font-black uppercase tracking-widest border-primary/20 text-primary hover:bg-primary hover:text-white transition-all">
+                <Link href="/services">
+                  View All Services
+                </Link>
+              </Button>
             </div>
           </CardContent>
         </Card>
@@ -156,9 +155,11 @@ export default async function Home() {
           </div>
 
           <div className="mt-20 text-center">
-            <Button size="lg" className="rounded-full px-12 h-14 font-black uppercase tracking-widest gap-2 bg-gray-950 hover:bg-primary transition-all shadow-xl hover:shadow-primary/20">
-              Ready to start? <Icons.ArrowRight size={20} />
-            </Button>
+            <Link href="/services">
+              <Button size="lg" className="rounded-full px-12 h-14 font-black uppercase tracking-widest gap-2 bg-gray-950 hover:bg-primary transition-all shadow-xl hover:shadow-primary/20">
+                Ready to start? <Icons.ArrowRight size={20} />
+              </Button>
+            </Link>
           </div>
         </div>
 
