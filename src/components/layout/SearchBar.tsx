@@ -37,64 +37,66 @@ function SearchBarContent({ className, placeholder = "Search for a service...", 
 
     if (variant === 'home') {
         return (
-            <div className={`flex flex-col md:flex-row items-stretch bg-white rounded-[32px] shadow-[0_32px_96px_-12px_rgba(0,0,0,0.15)] p-2 gap-2 group ${className || ''}`}>
-                {/* Location Picker (Visual only for now) */}
-                <div className="flex-1 flex items-center px-6 gap-4 py-4 md:py-0 border-b md:border-b-0 md:border-r border-gray-100 min-w-[200px]">
-                    <div className="w-10 h-10 bg-primary/5 rounded-2xl flex items-center justify-center text-primary">
-                        <Icons.MapPin size={22} className="stroke-[2.5]" />
+            <div className={`relative w-full max-w-4xl mx-auto group ${className || ''}`}>
+                {/* Decorative glow behind the card */}
+                <div className="absolute -inset-1 bg-gradient-to-r from-blue-400/10 to-primary/10 rounded-[30px] blur-xl opacity-0 group-hover:opacity-100 transition duration-700" />
+                
+                <div className="relative flex flex-col md:flex-row items-stretch bg-white rounded-[24px] shadow-[0_20px_70px_-15px_rgba(0,0,0,0.1)] p-1.5 border border-white transition-all duration-500">
+                    {/* Location Part */}
+                    <div className="flex items-center px-4 py-3 md:py-0 gap-4 border-b md:border-b-0 md:border-r border-gray-100 min-w-[180px]">
+                        <div className="w-10 h-10 bg-primary/5 rounded-xl flex items-center justify-center text-primary transition-transform group-hover:scale-105">
+                            <Icons.MapPin size={20} className="stroke-[2.5]" />
+                        </div>
+                        <div className="flex-1">
+                            <p className="text-[9px] font-black uppercase tracking-widest text-gray-400 leading-none mb-1">Your Location</p>
+                            <span className="text-gray-900 font-bold text-base leading-tight block">Davanagere, KA</span>
+                        </div>
                     </div>
-                    <div className="flex-1">
-                        <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 leading-none mb-1">Service City</p>
-                        <Input
-                            className="border-none focus-visible:ring-0 text-gray-900 font-black p-0 h-auto bg-transparent text-sm md:text-base leading-none"
-                            placeholder="Davanagere, KA"
-                            readOnly
-                            value="Davanagere, KA"
-                        />
+
+                    {/* Search Input Part */}
+                    <form onSubmit={handleSearch} className="flex-[3] flex items-center px-4 py-3 md:py-0 gap-4 min-w-0">
+                        <div className="w-10 h-10 bg-primary/5 rounded-xl flex items-center justify-center text-primary transition-all group-focus-within:bg-primary group-focus-within:text-white">
+                            <Icons.Search size={20} className="stroke-[2.5]" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                            <p className="text-[9px] font-black uppercase tracking-widest text-gray-400 leading-none mb-1 opacity-0 group-focus-within:opacity-100 transition-opacity">Find Services</p>
+                            <Input
+                                className="border-none focus-visible:ring-0 text-gray-900 font-bold p-0 h-auto bg-transparent text-base md:text-lg placeholder:text-gray-300 transition-all"
+                                placeholder="Search for AC Repair, Cleaning..."
+                                value={query}
+                                onChange={(e) => setQuery(e.target.value)}
+                            />
+                        </div>
+                        
+                        {query && (
+                            <button
+                                type="button"
+                                onClick={handleClear}
+                                className="p-1.5 hover:bg-rose-50 rounded-full text-gray-200 hover:text-rose-500 transition-all"
+                            >
+                                <Icons.XCircle size={18} />
+                            </button>
+                        )}
+
+                        <Button 
+                            type="submit" 
+                            className="hidden md:flex h-12 px-8 rounded-[18px] bg-primary hover:bg-primary-dark text-white font-black uppercase tracking-[0.2em] text-[10px] shadow-lg shadow-primary/20 transition-all hover:scale-[1.02] active:scale-95 gap-2 ml-2"
+                        >
+                            Find Service
+                            <Icons.ArrowRight size={16} />
+                        </Button>
+                    </form>
+
+                    {/* Mobile Only Button */}
+                    <div className="md:hidden p-1.5 pt-0">
+                        <Button 
+                            onClick={handleSearch}
+                            className="w-full h-12 rounded-[18px] bg-primary text-white font-black uppercase tracking-[0.2em] text-[10px]"
+                        >
+                            Find Service
+                        </Button>
                     </div>
                 </div>
-
-                {/* Service Search */}
-                <form onSubmit={handleSearch} className="flex-[2] flex items-center px-6 gap-4 py-4 md:py-0">
-                    <div className="w-10 h-10 bg-primary/5 rounded-2xl flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
-                        <Icons.Search size={22} className="stroke-[2.5]" />
-                    </div>
-                    <div className="flex-1 relative">
-                        <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 leading-none mb-1">Looking for</p>
-                        <Input
-                            className="border-none focus-visible:ring-0 text-gray-900 font-black p-0 h-auto bg-transparent text-sm md:text-base leading-none placeholder:text-gray-300"
-                            placeholder="Home cleaning, AC Repair..."
-                            value={query}
-                            onChange={(e) => setQuery(e.target.value)}
-                        />
-                    </div>
-                    {query && (
-                        <button
-                            type="button"
-                            onClick={handleClear}
-                            className="p-1.5 hover:bg-rose-50 rounded-full text-gray-200 hover:text-rose-500 transition-all"
-                        >
-                            <Icons.XCircle size={18} />
-                        </button>
-                    )}
-                    <Button 
-                        type="submit" 
-                        size="lg" 
-                        className="hidden md:flex items-center gap-2 px-10 h-16 rounded-[24px] font-black uppercase tracking-[0.2em] text-[11px] bg-gray-950 hover:bg-primary transition-all shadow-xl hover:shadow-primary/30 ml-4 group/btn"
-                    >
-                        Find Service
-                        <Icons.ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-                    </Button>
-                </form>
-
-                {/* Mobile Button */}
-                <Button 
-                    onClick={handleSearch}
-                    size="lg" 
-                    className="md:hidden w-full h-16 rounded-[24px] font-black uppercase tracking-[0.2em] text-[11px] bg-gray-950 hover:bg-primary transition-all mt-2"
-                >
-                    Find Service
-                </Button>
             </div>
         );
     }
