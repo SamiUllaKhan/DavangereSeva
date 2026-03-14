@@ -90,19 +90,19 @@ export default async function ServiceCategoryPage({ params }: { params: Promise<
     return (
         <div className="min-h-screen bg-gray-50/50">
             {/* Minimal Header with Search */}
-            <section className="bg-white border-b border-gray-100 pt-24 pb-12 mb-8 sticky top-0 z-40 shadow-sm shadow-gray-100/50">
-                <div className="container px-4 md:px-8 mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-                    <div className="flex items-center gap-4">
-                        <Link href="/services" className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center hover:bg-primary hover:text-white transition-all text-gray-500">
-                            <Icons.ArrowLeft size={20} />
+            <section className="bg-white border-b border-gray-100 pt-[68px] md:pt-24 pb-2 md:pb-12 mb-2 md:mb-8 sticky top-0 md:top-0 z-40 shadow-sm shadow-gray-100/50">
+                <div className="container px-4 md:px-8 mx-auto">
+                    <div className="flex items-center gap-2 md:gap-6">
+                        <Link href="/services" className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-gray-100 flex items-center justify-center hover:bg-primary hover:text-white transition-all text-gray-500 shrink-0">
+                            <Icons.ArrowLeft size={16} className="md:w-5 md:h-5" />
                         </Link>
-                        <div>
+                        <div className="hidden md:block shrink-0">
                             <h1 className="text-2xl font-black uppercase tracking-tight text-gray-900 leading-none">Book Service</h1>
                             <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 mt-1">Davanagere Seva • Guaranteed Results</p>
                         </div>
-                    </div>
-                    <div className="w-full">
-                        <SearchBar variant="services" placeholder="Search within category..." className="shadow-none border border-gray-100 bg-gray-50 max-w-none" />
+                        <div className="flex-1">
+                            <SearchBar variant="services" placeholder="Search service..." className="shadow-none border border-gray-100 bg-gray-50 max-w-none" />
+                        </div>
                     </div>
                 </div>
             </section>

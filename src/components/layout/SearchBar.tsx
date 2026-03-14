@@ -106,35 +106,35 @@ function SearchBarContent({ className, placeholder = "Search for a service...", 
             {/* Outer Glow Effect */}
             <div className="absolute -inset-1 bg-gradient-to-r from-primary/10 via-primary/20 to-primary/10 rounded-[30px] blur-xl opacity-0 group-hover:opacity-100 transition-all duration-700 pointer-events-none" />
             
-            <div className="relative flex items-center bg-white/70 backdrop-blur-2xl border border-white rounded-[26px] shadow-[0_4px_24px_-4px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_48px_-12px_rgba(0,0,0,0.08)] transition-all duration-500 p-2 overflow-hidden">
-                <div className="flex items-center px-6 gap-5 flex-1">
+            <div className="relative flex items-center bg-white/70 backdrop-blur-2xl border border-white rounded-xl md:rounded-[26px] shadow-[0_4px_24px_-4px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_48px_-12px_rgba(0,0,0,0.08)] transition-all duration-500 p-1 md:p-2 overflow-hidden">
+                <div className="flex items-center px-2 md:px-6 gap-2 md:gap-5 flex-1">
                     <div className="relative">
-                        <Icons.Search size={22} className="text-primary stroke-[2.5] relative z-10" />
+                        <Icons.Search size={16} className="text-primary md:w-[22px] md:h-[22px] stroke-[2.5] relative z-10" />
                         <div className="absolute inset-0 bg-primary/20 blur-md rounded-full scale-150 opacity-0 group-focus-within:opacity-100 transition-opacity" />
                     </div>
                     <Input
                         placeholder={placeholder}
-                        className="border-none focus-visible:ring-0 text-gray-900 placeholder:text-gray-500/60 bg-transparent h-14 text-base md:text-lg font-black tracking-tight p-0 w-full"
+                        className="border-none focus-visible:ring-0 text-gray-900 placeholder:text-gray-500/60 bg-transparent h-8 md:h-14 text-[13px] md:text-lg font-black tracking-tight p-0 w-full"
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
                     />
                 </div>
                 
-                <div className="flex items-center gap-3 px-2">
+                <div className="flex items-center gap-1.5 md:gap-3 px-1 md:px-2">
                     {query && (
                         <Button
                             type="button"
                             variant="ghost"
                             size="icon"
                             onClick={handleClear}
-                            className="h-10 w-10 text-gray-400 hover:text-rose-500 hover:bg-rose-50 rounded-full transition-all"
+                            className="h-7 w-7 md:h-10 md:w-10 text-gray-400 hover:text-rose-500 hover:bg-rose-50 rounded-full transition-all"
                         >
-                            <Icons.XCircle size={20} className="stroke-[2]" />
+                            <Icons.XCircle size={14} className="md:w-5 md:h-5 stroke-[2]" />
                         </Button>
                     )}
                     <Button
                         type="submit"
-                        className="rounded-[20px] px-8 h-12 font-black uppercase tracking-[0.2em] text-[10px] bg-primary text-white hover:bg-primary-dark transition-all shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95"
+                        className="rounded-lg md:rounded-[20px] px-3 md:px-8 h-8 md:h-12 font-black uppercase tracking-[0.2em] text-[7px] md:text-[10px] bg-primary text-white hover:bg-primary-dark transition-all shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95"
                     >
                         Search
                     </Button>

@@ -44,7 +44,7 @@ function ServicesPageContent() {
     return (
         <div className="min-h-screen bg-white">
             {/* Header Section - Premium & Immersive */}
-            <section className="relative pt-32 pb-20 mb-12 overflow-hidden bg-primary">
+            <section className="relative pt-18 md:pt-32 pb-6 md:pb-20 mb-4 md:mb-12 overflow-hidden bg-primary overflow-x-hidden">
                 {/* Decorative background elements */}
                 <div className="absolute inset-0 opacity-10">
                     <div className="absolute top-0 left-0 w-96 h-96 bg-white rounded-full blur-[120px] -translate-x-1/2 -translate-y-1/2" />
@@ -58,21 +58,21 @@ function ServicesPageContent() {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.6 }}
                         >
-                            <h1 className="text-4xl md:text-6xl font-black mb-6 tracking-tight uppercase text-white leading-[1.1]">
-                                WHAT CAN WE <span className="text-blue-200">FIX</span> FOR YOU TODAY?
+                            <h1 className="text-xl md:text-6xl font-black mb-2 md:mb-6 tracking-tight uppercase text-white leading-tight">
+                                WHAT CAN WE <span className="text-blue-200">FIX</span>?
                             </h1>
-                            <p className="text-lg md:text-xl text-blue-100/80 font-medium mb-10 max-w-2xl mx-auto uppercase tracking-widest">
+                            <p className="text-[8px] md:text-xl text-blue-100/80 font-medium mb-4 md:mb-10 max-w-2xl mx-auto uppercase tracking-widest">
                                 Reliable. Professional. Guaranteed.
                             </p>
                         </motion.div>
-
+ 
                         <motion.div
                             initial={{ opacity: 0, scale: 0.95 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ duration: 0.5, delay: 0.2 }}
-                            className="max-w-3xl mx-auto"
+                            className="max-w-2xl mx-auto px-1"
                         >
-                            <SearchBar variant="services" placeholder="Search for cleaning, repair, plumber..." className="shadow-2xl shadow-black/20" />
+                            <SearchBar variant="services" placeholder="Search for service..." className="shadow-2xl shadow-black/20" />
                         </motion.div>
                     </div>
                 </div>

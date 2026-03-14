@@ -126,24 +126,24 @@ export function ServiceSelectionListing({
     if (!mounted) return null;
 
     return (
-        <div className="min-h-screen bg-[#F8FAFC] py-8">
+        <div className="min-h-screen bg-[#F8FAFC] py-4 md:py-8">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Header Section */}
-                <div className="mb-12">
+                <div className="mb-6 md:mb-12">
                     <motion.div 
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="flex flex-col md:flex-row md:items-end justify-between gap-6"
+                        className="flex flex-col md:flex-row md:items-end justify-between gap-4 md:gap-6"
                     >
                         <div>
-                            <div className="flex items-center gap-3 mb-4">
-                                <div className="w-12 h-1 bg-primary rounded-full" />
-                                <span className="text-primary font-black uppercase tracking-[0.3em] text-[10px]">Booking Services</span>
+                            <div className="flex items-center gap-3 mb-1 md:mb-4">
+                                <div className="w-12 h-0.5 bg-primary rounded-full" />
+                                <span className="text-primary font-black uppercase tracking-[0.3em] text-[7px] md:text-[10px]">Booking Services</span>
                             </div>
-                            <h1 className="text-5xl md:text-6xl font-black text-slate-900 uppercase tracking-tighter leading-none mb-4">
+                            <h1 className="text-2xl md:text-6xl font-black text-slate-900 uppercase tracking-tighter leading-none mb-2 md:mb-4">
                                 {activeCategory?.name}
                             </h1>
-                            <p className="text-slate-500 font-medium text-lg max-w-2xl leading-relaxed">
+                            <p className="text-slate-500 font-medium text-xs md:text-lg max-w-2xl leading-relaxed">
                                 Professional {activeCategory?.name?.toLowerCase()} services delivered to your doorstep by verified experts.
                             </p>
                         </div>
@@ -264,15 +264,18 @@ export function ServiceSelectionListing({
                                                 <div className="w-1.5 h-6 bg-primary rounded-full" />
                                                 <h4 className="text-[11px] font-black uppercase tracking-[0.3em] text-slate-400">Personalize Your Service</h4>
                                             </div>
-                                            <div className="grid grid-cols-1 gap-3">
+                                            <div className="grid grid-cols-1 gap-4">
                                                 {service.addOns.map((addOn: any) => {
-                                                    const isAddonInCart = cart.find(item => item.id === addOn._id);
+                                                    const cartItem = cart.find(item => item.id === addOn._id);
+                                                    const AddonIcon = (Icons as any)[addOn.icon] || Icons.PlusCircle;
+                                                    
                                                     return (
-                                                        <div 
+                                                        <motion.div 
                                                             key={addOn._id} 
-                                                            className={`flex items-center gap-5 p-5 rounded-[28px] border transition-all group/addon cursor-pointer ${
-                                                                isAddonInCart 
-                                                                    ? 'bg-primary/5 border-primary/20 shadow-lg shadow-primary/5' 
+                                                            whileHover={{ scale: 1.01 }}
+                                                            className={`flex items-center gap-4 md:gap-6 p-4 md:p-6 rounded-[32px] border transition-all cursor-pointer ${
+                                                                cartItem 
+                                                                    ? 'bg-primary/5 border-primary/20 shadow-xl shadow-primary/5' 
                                                                     : 'bg-slate-50/50 hover:bg-white border-transparent hover:border-slate-100 hover:shadow-xl hover:shadow-slate-200/50'
                                                             }`}
                                                             onClick={(e) => {
@@ -280,23 +283,51 @@ export function ServiceSelectionListing({
                                                                 addToCart(addOn);
                                                             }}
                                                         >
-                                                            <div className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-all shadow-sm ${
-                                                                isAddonInCart ? 'bg-primary text-white' : 'bg-white text-slate-400 group-hover/addon:text-primary'
+                                                            <div className={`w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center transition-all shadow-sm shrink-0 ${
+                                                                cartItem ? 'bg-primary text-white' : 'bg-white text-slate-400'
                                                             }`}>
-                                                                <Icons.PlusCircle size={22} />
+                                                                <AddonIcon size={22} className="md:w-6 md:h-6" />
                                                             </div>
                                                             <div className="flex-1 min-w-0">
-                                                                <p className={`text-xs font-black tracking-tight mb-0.5 ${isAddonInCart ? 'text-primary' : 'text-slate-800'}`}>
+                                                                <h4 className={`text-sm md:text-lg font-black tracking-tight ${cartItem ? 'text-primary' : 'text-slate-900'}`}>
                                                                     {addOn.name}
+                                                                </h4>
+                                                                <p className="text-[10px] md:text-xs text-slate-500 font-bold mt-0.5">
+                                                                    {addOn.description || 'Professional addition to your service'}
                                                                 </p>
-                                                                <p className="text-[11px] font-black text-slate-900">₹{addOn.price}</p>
+                                                                <div className="flex items-center gap-2 mt-1.5 md:mt-2">
+                                                                    <span className="text-xs md:text-base font-black text-slate-900">₹{addOn.price}</span>
+                                                                    {cartItem && (
+                                                                        <Badge className="bg-emerald-500 text-white border-none text-[7px] md:text-[8px] font-black uppercase px-2 py-0">
+                                                                            Selected
+                                                                        </Badge>
+                                                                    )}
+                                                                </div>
                                                             </div>
-                                                            <div className={`w-9 h-9 rounded-full flex items-center justify-center transition-all ${
-                                                                isAddonInCart ? 'bg-primary text-white scale-110' : 'bg-white text-primary border border-slate-100 group-hover/addon:bg-primary group-hover/addon:text-white'
-                                                            }`}>
-                                                                {isAddonInCart ? <Icons.Check size={16} /> : <Icons.Plus size={16} />}
+                                                            <div className="shrink-0" onClick={(e) => e.stopPropagation()}>
+                                                                {cartItem ? (
+                                                                    <div className="flex items-center gap-2 md:gap-4 bg-primary px-1.5 md:px-2 py-1.5 md:py-2 rounded-xl md:rounded-2xl text-white shadow-xl shadow-primary/20">
+                                                                        <button 
+                                                                            onClick={() => removeFromCart(addOn._id)}
+                                                                            className="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center hover:bg-white/20 rounded-lg md:rounded-xl transition-colors"
+                                                                        >
+                                                                            <Icons.Minus size={14} className="md:w-[18px] md:h-[18px]" />
+                                                                        </button>
+                                                                        <span className="font-black text-sm md:text-lg w-4 md:w-6 text-center">{cartItem.quantity}</span>
+                                                                        <button 
+                                                                            onClick={() => addToCart(addOn)}
+                                                                            className="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center hover:bg-white/20 rounded-lg md:rounded-xl transition-colors"
+                                                                        >
+                                                                            <Icons.Plus size={14} className="md:w-[18px] md:h-[18px]" />
+                                                                        </button>
+                                                                    </div>
+                                                                ) : (
+                                                                    <div className="w-10 h-10 md:w-12 md:h-12 bg-white rounded-xl md:rounded-2xl flex items-center justify-center text-primary border border-slate-100 transition-all shadow-sm group-hover/addon:bg-primary group-hover/addon:text-white">
+                                                                        <Icons.Plus size={18} className="md:w-5 md:h-5" />
+                                                                    </div>
+                                                                )}
                                                             </div>
-                                                        </div>
+                                                        </motion.div>
                                                     );
                                                 })}
                                             </div>
@@ -518,44 +549,62 @@ export function ServiceSelectionListing({
                                             {selectedService.addOns.map((addOn: any) => {
                                                 const cartItem = cart.find(item => item.id === addOn._id);
                                                 const AddonIcon = (Icons as any)[addOn.icon] || Icons.PlusCircle;
+                                                
                                                 return (
                                                     <motion.div 
                                                         key={addOn._id} 
                                                         whileHover={{ scale: 1.01 }}
-                                                        className={`flex items-center gap-6 p-6 rounded-[32px] border transition-all cursor-pointer ${cartItem ? 'bg-primary/5 border-primary/20 shadow-xl shadow-primary/5' : 'bg-slate-50 border-slate-100 hover:bg-white hover:border-slate-200'}`}
-                                                        onClick={() => addToCart(addOn)}
+                                                        className={`flex items-center gap-4 md:gap-6 p-4 md:p-6 rounded-[32px] border transition-all cursor-pointer ${
+                                                            cartItem 
+                                                                ? 'bg-primary/5 border-primary/20 shadow-xl shadow-primary/5' 
+                                                                : 'bg-slate-50 border-slate-100 hover:bg-white hover:border-slate-200'
+                                                        }`}
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            addToCart(addOn);
+                                                        }}
                                                     >
-                                                        <div className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all shadow-sm ${cartItem ? 'bg-primary text-white' : 'bg-white text-slate-400'}`}>
-                                                            <AddonIcon size={24} />
+                                                        <div className={`w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center transition-all shadow-sm shrink-0 ${
+                                                            cartItem ? 'bg-primary text-white' : 'bg-white text-slate-400'
+                                                        }`}>
+                                                            <AddonIcon size={22} className="md:w-6 md:h-6" />
                                                         </div>
-                                                        <div className="flex-1">
-                                                            <h4 className={`text-lg font-black tracking-tight ${cartItem ? 'text-primary' : 'text-slate-900'}`}>{addOn.name}</h4>
-                                                            <p className="text-xs text-slate-500 font-bold mt-0.5 line-clamp-1">{addOn.description || 'One of our most popular additions'}</p>
-                                                            <div className="flex items-center gap-2 mt-2">
-                                                                <span className="text-base font-black text-slate-900">₹{addOn.price}</span>
-                                                                {cartItem && <Badge className="bg-emerald-500 text-white border-none text-[8px] font-black uppercase">Selected</Badge>}
+                                                        <div className="flex-1 min-w-0">
+                                                            <h4 className={`text-sm md:text-lg font-black tracking-tight ${cartItem ? 'text-primary' : 'text-slate-900'}`}>
+                                                                {addOn.name}
+                                                            </h4>
+                                                            <p className="text-[10px] md:text-xs text-slate-500 font-bold mt-0.5">
+                                                                {addOn.description || 'Professional addition to your service'}
+                                                            </p>
+                                                            <div className="flex items-center gap-2 mt-1.5 md:mt-2">
+                                                                <span className="text-xs md:text-base font-black text-slate-900">₹{addOn.price}</span>
+                                                                {cartItem && (
+                                                                    <Badge className="bg-emerald-500 text-white border-none text-[7px] md:text-[8px] font-black uppercase px-2 py-0">
+                                                                        Selected
+                                                                    </Badge>
+                                                                )}
                                                             </div>
                                                         </div>
-                                                        <div className="shrink-0">
+                                                        <div className="shrink-0" onClick={(e) => e.stopPropagation()}>
                                                             {cartItem ? (
-                                                                <div className="flex items-center gap-4 bg-primary px-2 py-2 rounded-2xl text-white shadow-xl shadow-primary/20">
+                                                                <div className="flex items-center gap-2 md:gap-4 bg-primary px-1.5 md:px-2 py-1.5 md:py-2 rounded-xl md:rounded-2xl text-white shadow-xl shadow-primary/20">
                                                                     <button 
-                                                                        onClick={(e) => { e.stopPropagation(); removeFromCart(addOn._id); }}
-                                                                        className="w-8 h-8 flex items-center justify-center hover:bg-white/20 rounded-xl"
+                                                                        onClick={() => removeFromCart(addOn._id)}
+                                                                        className="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center hover:bg-white/20 rounded-lg md:rounded-xl transition-colors"
                                                                     >
-                                                                        <Icons.Minus size={18} />
+                                                                        <Icons.Minus size={14} className="md:w-[18px] md:h-[18px]" />
                                                                     </button>
-                                                                    <span className="font-black text-lg w-6 text-center">{cartItem.quantity}</span>
+                                                                    <span className="font-black text-sm md:text-lg w-4 md:w-6 text-center">{cartItem.quantity}</span>
                                                                     <button 
-                                                                        onClick={(e) => { e.stopPropagation(); addToCart(addOn); }}
-                                                                        className="w-8 h-8 flex items-center justify-center hover:bg-white/20 rounded-xl"
+                                                                        onClick={() => addToCart(addOn)}
+                                                                        className="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center hover:bg-white/20 rounded-lg md:rounded-xl transition-colors"
                                                                     >
-                                                                        <Icons.Plus size={18} />
+                                                                        <Icons.Plus size={14} className="md:w-[18px] md:h-[18px]" />
                                                                     </button>
                                                                 </div>
                                                             ) : (
-                                                                <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-primary border border-slate-100 group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
-                                                                    <Icons.Plus size={20} />
+                                                                <div className="w-10 h-10 md:w-12 md:h-12 bg-white rounded-xl md:rounded-2xl flex items-center justify-center text-primary border border-slate-100 transition-all shadow-sm hover:bg-primary hover:text-white">
+                                                                    <Icons.Plus size={18} className="md:w-5 md:h-5" />
                                                                 </div>
                                                             )}
                                                         </div>
