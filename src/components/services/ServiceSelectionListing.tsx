@@ -120,7 +120,7 @@ export function ServiceSelectionListing({
         cart.reduce((sum, item) => sum + item.quantity, 0),
         [cart]);
 
-    const freeVisitationThreshold = 499;
+    const freeVisitationThreshold = 500;
     const remainingForFreeVisitation = Math.max(0, freeVisitationThreshold - cartTotal);
 
     if (!mounted) return null;
@@ -170,9 +170,9 @@ export function ServiceSelectionListing({
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ delay: index * 0.1 }}
                                     id={`service-${service._id}`}
-                                    className={`relative group bg-white rounded-[40px] p-8 border border-slate-100 shadow-sm transition-all duration-500 hover:shadow-2xl hover:shadow-primary/5 hover:-translate-y-1 ${isHighlighted ? 'ring-2 ring-primary ring-offset-4 ring-offset-[#F8FAFC]' : ''}`}
+                                    className={`relative group bg-white rounded-[32px] md:rounded-[40px] p-4 md:p-8 border border-slate-100 shadow-sm transition-all duration-500 hover:shadow-2xl hover:shadow-primary/5 hover:-translate-y-1 ${isHighlighted ? 'ring-2 ring-primary ring-offset-4 ring-offset-[#F8FAFC]' : ''}`}
                                 >
-                                    <div className="flex flex-col md:flex-row gap-8 items-start">
+                                    <div className="flex flex-col md:flex-row gap-4 md:gap-8 items-start">
                                         {/* Service Image Section */}
                                         <div className="w-full md:w-56 shrink-0 relative">
                                             <div className="aspect-square rounded-[32px] overflow-hidden bg-slate-100 shadow-inner group-hover:scale-[1.02] transition-transform duration-700">
@@ -191,7 +191,7 @@ export function ServiceSelectionListing({
                                         </div>
 
                                         {/* Service Details Section */}
-                                        <div className="flex-1 space-y-6">
+                                        <div className="flex-1 space-y-4 md:space-y-6">
                                             <div className="space-y-2">
                                                 <div className="flex items-center justify-between">
                                                     <h3 className="text-2xl font-black text-slate-900 group-hover:text-primary transition-colors tracking-tight">{service.name}</h3>
@@ -217,7 +217,7 @@ export function ServiceSelectionListing({
                                                 </div>
                                             </div>
 
-                                            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-6 border-t border-slate-50">
+                                            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-4 md:pt-6 border-t border-slate-50">
                                                 <Link
                                                     href={`/services/${service.slug}`}
                                                     className="h-14 sm:h-12 px-6 rounded-2xl bg-slate-50 hover:bg-slate-100 text-slate-600 font-black text-[10px] uppercase tracking-widest transition-all flex items-center justify-center gap-2 group/btn"
@@ -259,7 +259,7 @@ export function ServiceSelectionListing({
 
                                     {/* Add-ons Section - Now Full Width */}
                                     {service.addOns && service.addOns.length > 0 && (
-                                        <div className="mt-10 pt-10 border-t border-slate-100">
+                                        <div className="mt-6 md:mt-10 pt-6 md:pt-10 border-t border-slate-100 text-left">
                                             <div className="flex items-center gap-3 mb-6 px-2">
                                                 <div className="w-1.5 h-6 bg-primary rounded-full" />
                                                 <h4 className="text-[11px] font-black uppercase tracking-[0.3em] text-slate-400">Personalize Your Service</h4>
@@ -272,7 +272,7 @@ export function ServiceSelectionListing({
                                                         <motion.div 
                                                             key={addOn._id} 
                                                             whileHover={{ y: -2 }}
-                                                            className={`flex flex-col gap-3 p-4 rounded-[32px] border transition-all cursor-pointer ${
+                                                            className={`flex flex-col gap-3 p-3 md:p-4 rounded-xl md:rounded-2xl border transition-all cursor-pointer ${
                                                                 cartItem 
                                                                     ? 'bg-white border-primary/20 shadow-xl shadow-primary/5 ring-1 ring-primary/5' 
                                                                     : 'bg-white border-slate-100 hover:border-slate-200'
@@ -282,13 +282,20 @@ export function ServiceSelectionListing({
                                                                 addToCart(addOn);
                                                             }}
                                                         >
-                                                            <div className="flex-1 min-w-0">
-                                                                <h4 className={`text-xs md:text-base font-black tracking-tight leading-tight truncate ${cartItem ? 'text-primary' : 'text-slate-900'}`}>
-                                                                    {addOn.name}
-                                                                </h4>
-                                                                <p className="text-[10px] md:text-xs text-slate-400 font-medium mt-1 truncate">
-                                                                    {addOn.description || 'Professional addition'}
-                                                                </p>
+                                                            <div className="flex gap-4 items-center">
+                                                                {addOn.image && (
+                                                                    <div className="w-16 h-16 shrink-0 rounded-2xl overflow-hidden bg-slate-50 border border-slate-100">
+                                                                        <img src={addOn.image} alt={addOn.name} className="w-full h-full object-cover" />
+                                                                    </div>
+                                                                )}
+                                                                <div className="flex-1 min-w-0">
+                                                                    <h4 className={`text-xs md:text-base font-black tracking-tight leading-tight truncate ${cartItem ? 'text-primary' : 'text-slate-900'}`}>
+                                                                        {addOn.name}
+                                                                    </h4>
+                                                                    <p className="text-[10px] md:text-xs text-slate-400 font-medium mt-1 truncate">
+                                                                        {addOn.description || 'Professional addition'}
+                                                                    </p>
+                                                                </div>
                                                             </div>
                                                             
                                                             <div className="flex items-center justify-between mt-1">
@@ -322,6 +329,7 @@ export function ServiceSelectionListing({
                                                                         <Button 
                                                                             size="sm"
                                                                             className="h-8 rounded-xl bg-white text-primary border border-primary/20 hover:bg-primary hover:text-white font-black text-[10px] uppercase tracking-wider px-4"
+                                                                            onClick={() => addToCart(addOn)}
                                                                         >
                                                                             Add
                                                                         </Button>
@@ -509,7 +517,7 @@ export function ServiceSelectionListing({
                                 </div>
                             </div>
 
-                            <div className="px-10 pb-12 pt-4 space-y-12">
+                            <div className="px-6 md:px-10 pb-10 md:pb-12 pt-4 space-y-8 md:space-y-12 text-left">
                                 <div className="space-y-4">
                                     <div className="flex items-center gap-3">
                                         <div className="w-2 h-8 bg-primary/20 rounded-full" />
@@ -551,10 +559,10 @@ export function ServiceSelectionListing({
                                                 const cartItem = cart.find(item => item.id === addOn._id);
                                                 
                                                 return (
-                                                    <motion.div 
-                                                        key={addOn._id} 
-                                                        whileHover={{ y: -2 }}
-                                                        className={`flex flex-col gap-3 p-4 rounded-[32px] border transition-all cursor-pointer ${
+                                                        <motion.div 
+                                                            key={addOn._id} 
+                                                            whileHover={{ y: -2 }}
+                                                            className={`flex flex-col gap-3 p-3 md:p-4 rounded-xl md:rounded-2xl border transition-all cursor-pointer ${
                                                             cartItem 
                                                                 ? 'bg-white border-primary/20 shadow-xl shadow-primary/5 ring-1 ring-primary/5' 
                                                                 : 'bg-white border-slate-100 hover:border-slate-200'
@@ -564,14 +572,21 @@ export function ServiceSelectionListing({
                                                             addToCart(addOn);
                                                         }}
                                                     >
-                                                        <div className="flex-1 min-w-0">
-                                                            <h4 className={`text-xs md:text-base font-black tracking-tight leading-tight truncate ${cartItem ? 'text-primary' : 'text-slate-900'}`}>
-                                                                {addOn.name}
-                                                            </h4>
-                                                            <p className="text-[10px] md:text-xs text-slate-400 font-medium mt-1 truncate">
-                                                                {addOn.description || 'Professional addition'}
-                                                            </p>
-                                                        </div>
+                                                            <div className="flex gap-4 items-center">
+                                                                {addOn.image && (
+                                                                    <div className="w-16 h-16 shrink-0 rounded-2xl overflow-hidden bg-slate-50 border border-slate-100">
+                                                                        <img src={addOn.image} alt={addOn.name} className="w-full h-full object-cover" />
+                                                                    </div>
+                                                                )}
+                                                                <div className="flex-1 min-w-0">
+                                                                    <h4 className={`text-xs md:text-base font-black tracking-tight leading-tight truncate ${cartItem ? 'text-primary' : 'text-slate-900'}`}>
+                                                                        {addOn.name}
+                                                                    </h4>
+                                                                    <p className="text-[10px] md:text-xs text-slate-400 font-medium mt-1 truncate">
+                                                                        {addOn.description || 'Professional addition'}
+                                                                    </p>
+                                                                </div>
+                                                            </div>
                                                         
                                                         <div className="flex items-center justify-between mt-1">
                                                             <div className="flex items-center gap-2">
@@ -604,6 +619,7 @@ export function ServiceSelectionListing({
                                                                     <Button 
                                                                         size="sm"
                                                                         className="h-8 rounded-xl bg-white text-primary border border-primary/20 hover:bg-primary hover:text-white font-black text-[10px] uppercase tracking-wider px-4"
+                                                                        onClick={() => addToCart(addOn)}
                                                                     >
                                                                         Add
                                                                     </Button>

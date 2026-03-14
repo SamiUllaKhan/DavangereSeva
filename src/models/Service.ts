@@ -5,6 +5,7 @@ const AddOnSchema = new Schema({
     price: { type: Number, required: true },
     description: { type: String },
     icon: { type: String },
+    image: { type: String },
     isActive: { type: Boolean, default: true }
 });
 

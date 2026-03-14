@@ -7,27 +7,38 @@ async function seedAddons() {
         await dbConnect();
         console.log('Connected to MongoDB');
 
-        const acRepair = await Service.findOne({ name: /AC Repair/i });
+        const acService = await Service.findOne({ name: /AC Installation/i });
         
-        if (acRepair) {
+        if (acService) {
+            acService.name = 'AC Service & Repair';
+            acService.image = '/images/ac-repair.png';
+            
             const addOns = [
                 {
                     name: 'Deep Cleaning of Filters & Coils',
                     price: 299,
                     description: 'Professional cleaning of AC filters and indoor/outdoor coils',
-                    icon: 'Layers'
+                    icon: 'Layers',
+                    image: '/images/ac-deep-cleaning.png'
                 },
                 {
-                    name: 'Electrical Component Check',
-                    price: 199,
-                    description: 'Full diagnostic check of all electrical parts and wiring',
-                    icon: 'Zap'
+                    name: 'Split AC Installation',
+                    price: 1599,
+                    description: 'Professional installation by verified Indian technicians',
+                    icon: 'Settings',
+                    image: '/images/ac-installation.png'
                 },
                 {
                     name: 'Gas Charging & Leak Fix',
                     price: 1499,
                     description: 'Refrigerant top-up and repair of minor leakages',
                     icon: 'Wind'
+                },
+                {
+                    name: 'Electrical Component Check',
+                    price: 199,
+                    description: 'Full diagnostic check of all electrical parts and wiring',
+                    icon: 'Zap'
                 },
                 {
                     name: 'Drainage Pipe Cleaning',
@@ -43,11 +54,11 @@ async function seedAddons() {
                 }
             ];
 
-            acRepair.addOns = addOns;
-            await acRepair.save();
-            console.log('Successfully added add-ons to AC Repair service');
+            acService.addOns = addOns;
+            await acService.save();
+            console.log('Successfully updated AC Service & Repair with image and Indian-themed add-ons');
         } else {
-            console.log('AC Repair service not found');
+            console.log('AC Service & Repair service not found');
         }
 
         process.exit(0);

@@ -80,24 +80,24 @@ function ServicesPageContent() {
 
             {/* Main Content Area */}
             <section className="container px-4 md:px-8 mx-auto pb-24">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-8">
                     {categories.map((category: any, index: number) => {
                         const IconComponent = (Icons as any)[category.icon] || Icons.Grid;
                         return (
                             <Link 
                                 key={category._id} 
                                 href={`/services/${category.slug}`}
-                                className="group bg-white rounded-[40px] p-10 border border-gray-100 shadow-sm transition-all duration-500 hover:shadow-2xl hover:shadow-primary/5 hover:-translate-y-2 text-center flex flex-col items-center"
+                                className="group bg-white rounded-[32px] md:rounded-[40px] p-6 md:p-10 border border-gray-100 shadow-sm transition-all duration-500 hover:shadow-2xl hover:shadow-primary/5 hover:-translate-y-2 text-center flex flex-col items-center"
                             >
                                 <motion.div
                                     initial={{ opacity: 0, scale: 0.9 }}
                                     animate={{ opacity: 1, scale: 1 }}
                                     transition={{ delay: index * 0.05 }}
-                                    className="w-24 h-24 bg-primary/5 rounded-[32px] flex items-center justify-center mb-8 group-hover:scale-110 group-hover:bg-primary group-hover:text-white transition-all duration-500 text-primary"
+                                    className="w-12 h-12 md:w-24 md:h-24 bg-primary/5 rounded-2xl md:rounded-[32px] flex items-center justify-center mb-4 md:mb-8 group-hover:scale-110 group-hover:bg-primary group-hover:text-white transition-all duration-500 text-primary"
                                 >
-                                    <IconComponent size={48} />
+                                    <IconComponent size={24} className="md:w-12 md:h-12" />
                                 </motion.div>
-                                <h3 className="text-2xl font-black text-gray-900 group-hover:text-primary transition-colors tracking-tighter uppercase mb-2">
+                                <h3 className="text-sm md:text-2xl font-black text-gray-900 group-hover:text-primary transition-colors tracking-tighter uppercase mb-2">
                                     {category.name}
                                 </h3>
                                 <p className="text-gray-400 text-[10px] font-black uppercase tracking-[0.2em] opacity-0 group-hover:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0">
