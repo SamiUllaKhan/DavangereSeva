@@ -7,7 +7,8 @@ import MobileNav from "@/components/layout/MobileNav";
 import { Toaster } from "@/components/ui/sonner";
 import { isAuthenticated } from "@/app/actions/auth";
 import { getUserSession } from "@/app/actions/user";
-import WhatsAppButton from "@/components/ui/WhatsAppButton";
+import FloatingSupport from "@/components/ui/FloatingSupport";
+import FloatingCartBar from "@/components/ui/FloatingCartBar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -43,7 +44,8 @@ export default async function RootLayout({
         </main>
         <Footer />
         <MobileNav isAuth={isAdmin} userSession={userSession} />
-        <WhatsAppButton />
+        <FloatingCartBar />
+        <FloatingSupport />
         <Toaster position="top-center" />
       </body>
     </html>

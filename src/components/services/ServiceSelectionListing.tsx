@@ -79,37 +79,41 @@ export function ServiceSelectionListing({
     }, [activeCategoryId, services]);
 
     const addToCart = (item: any) => {
-        setCart(prev => {
-            const id = item._id || item.id;
-            const existing = prev.find(cartItem => cartItem.id === id);
-            let nextCart;
-            if (existing) {
-                nextCart = prev.map(cartItem =>
-                    cartItem.id === id ? { ...cartItem, quantity: cartItem.quantity + 1 } : cartItem
-                );
-            } else {
-                nextCart = [...prev, { id: id, name: item.name, price: item.price, quantity: 1 }];
-            }
-            localStorage.setItem('davanagere_seva_cart', JSON.stringify(nextCart));
-            return nextCart;
-        });
+        const id = item._id || item.id;
+        const currentCart = [...cart];
+        const existing = currentCart.find(cartItem => cartItem.id === id);
+        let nextCart;
+        
+        if (existing) {
+            nextCart = currentCart.map(cartItem =>
+                cartItem.id === id ? { ...cartItem, quantity: cartItem.quantity + 1 } : cartItem
+            );
+        } else {
+            nextCart = [...currentCart, { id: id, name: item.name, price: item.price, quantity: 1 }];
+        }
+        
+        setCart(nextCart);
+        localStorage.setItem('davanagere_seva_cart', JSON.stringify(nextCart));
+        setTimeout(() => window.dispatchEvent(new Event('cart-updated')), 0);
         toast.success(`Added ${item.name} to cart`);
     };
 
     const removeFromCart = (serviceId: string) => {
-        setCart(prev => {
-            const existing = prev.find(item => item.id === serviceId);
-            let nextCart;
-            if (existing && existing.quantity > 1) {
-                nextCart = prev.map(item =>
-                    item.id === serviceId ? { ...item, quantity: item.quantity - 1 } : item
-                );
-            } else {
-                nextCart = prev.filter(item => item.id !== serviceId);
-            }
-            localStorage.setItem('davanagere_seva_cart', JSON.stringify(nextCart));
-            return nextCart;
-        });
+        const currentCart = [...cart];
+        const existing = currentCart.find(item => item.id === serviceId);
+        let nextCart;
+        
+        if (existing && existing.quantity > 1) {
+            nextCart = currentCart.map(item =>
+                item.id === serviceId ? { ...item, quantity: item.quantity - 1 } : item
+            );
+        } else {
+            nextCart = currentCart.filter(item => item.id !== serviceId);
+        }
+        
+        setCart(nextCart);
+        localStorage.setItem('davanagere_seva_cart', JSON.stringify(nextCart));
+        setTimeout(() => window.dispatchEvent(new Event('cart-updated')), 0);
     };
 
     const cartTotal = useMemo(() =>
@@ -127,9 +131,9 @@ export function ServiceSelectionListing({
 
     return (
         <div className="min-h-screen bg-[#F8FAFC] py-4 md:py-8">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="max-w-7xl mx-auto px-0 sm:px-6 lg:px-8">
                 {/* Header Section */}
-                <div className="mb-6 md:mb-12">
+                <div className="mb-6 md:mb-12 px-4 md:px-0">
                     <motion.div 
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}

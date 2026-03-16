@@ -42,6 +42,7 @@ export default function CartPage() {
     const saveCart = (newCart: CartItem[]) => {
         setCart(newCart);
         localStorage.setItem('davanagere_seva_cart', JSON.stringify(newCart));
+        setTimeout(() => window.dispatchEvent(new Event('cart-updated')), 0);
     };
 
     const updateQuantity = (id: string, delta: number) => {
@@ -74,6 +75,7 @@ export default function CartPage() {
         toast.success("Booking placed successfully!");
         setCart([]);
         localStorage.removeItem('davanagere_seva_cart');
+        setTimeout(() => window.dispatchEvent(new Event('cart-updated')), 0);
         setSubmitted(true);
     };
 
