@@ -7,7 +7,7 @@ async function seedAddons() {
         await dbConnect();
         console.log('Connected to MongoDB');
 
-        const acService = await Service.findOne({ name: /AC Installation/i });
+        const acService = await Service.findOne({ name: { $in: [/AC Installation/i, /AC Service & Repair/i] } });
         
         if (acService) {
             acService.name = 'AC Service & Repair';
@@ -55,8 +55,15 @@ async function seedAddons() {
             ];
 
             acService.addOns = addOns;
+            acService.brandLogos = [
+                'https://upload.wikimedia.org/wikipedia/commons/b/bf/LG_logo_%282015%29.svg',
+                'https://upload.wikimedia.org/wikipedia/commons/2/24/Samsung_Logo.svg',
+                'https://upload.wikimedia.org/wikipedia/commons/e/e0/Panasonic_logo.svg',
+                'https://upload.wikimedia.org/wikipedia/commons/b/be/Daikin_logo.svg',
+                'https://upload.wikimedia.org/wikipedia/commons/0/07/Whirlpool_Logo.svg'
+            ];
             await acService.save();
-            console.log('Successfully updated AC Service & Repair with image and Indian-themed add-ons');
+            console.log('Successfully updated AC Service & Repair with image, Indian-themed add-ons and brand logos');
         } else {
             console.log('AC Service & Repair service not found');
         }

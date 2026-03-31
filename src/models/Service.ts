@@ -21,6 +21,7 @@ const ServiceSchema = new Schema({
     features: [{ type: String }],
     addOns: [AddOnSchema],
     whyChooseUs: [{ type: String }],
+    brandLogos: [{ type: String }],
     isActive: { type: Boolean, default: true },
     rating: { type: Number, default: 0 },
     reviewCount: { type: Number, default: 0 },

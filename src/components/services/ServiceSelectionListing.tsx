@@ -221,6 +221,27 @@ export function ServiceSelectionListing({
                                                 </div>
                                             </div>
 
+                                            {/* Brand Logos - Supported Brands */}
+                                            {service.brandLogos && service.brandLogos.length > 0 && (
+                                                <div className="pt-2">
+                                                    <div className="flex items-center gap-2 mb-2">
+                                                        <div className="w-1 h-3 bg-primary/20 rounded-full" />
+                                                        <span className="text-[8px] font-black uppercase tracking-widest text-slate-400">Trusted Repairs For All Brands</span>
+                                                    </div>
+                                                    <div className="flex flex-wrap gap-3">
+                                                        {service.brandLogos.map((logo: string, idx: number) => (
+                                                            <div key={idx} className="h-8 w-auto px-3 py-1 bg-white border border-slate-100 rounded-xl shadow-[0_2px_10px_-4px_rgba(0,0,0,0.1)] flex items-center justify-center hover:border-primary/20 transition-all group/logo">
+                                                                <img 
+                                                                    src={logo} 
+                                                                    alt="Brand" 
+                                                                    className="h-full w-auto object-contain brightness-0 opacity-40 group-hover/logo:brightness-100 group-hover/logo:opacity-100 transition-all" 
+                                                                />
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            )}
+
                                             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-4 md:pt-6 border-t border-slate-50">
                                                 <Link
                                                     href={`/services/${service.slug}`}
@@ -547,6 +568,26 @@ export function ServiceSelectionListing({
                                                     </div>
                                                     <span className="text-sm font-black text-emerald-900 tracking-tight">{feature}</span>
                                                 </motion.div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {selectedService.brandLogos && selectedService.brandLogos.length > 0 && (
+                                    <div className="space-y-6">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-2 h-8 bg-primary/20 rounded-full" />
+                                            <h3 className="text-sm font-black uppercase tracking-[0.3em] text-slate-400">Supported Brands</h3>
+                                        </div>
+                                        <div className="flex flex-wrap gap-4 p-6 bg-slate-50/50 rounded-[32px] border border-slate-100/50">
+                                            {selectedService.brandLogos.map((logo: string, idx: number) => (
+                                                <div key={idx} className="h-10 w-auto px-4 py-2 bg-white border border-slate-100 rounded-2xl shadow-sm flex items-center justify-center hover:scale-105 transition-transform group/logo">
+                                                    <img 
+                                                        src={logo} 
+                                                        alt="Brand" 
+                                                        className="h-full w-auto object-contain brightness-0 opacity-40 group-hover/logo:brightness-100 group-hover/logo:opacity-100 transition-all" 
+                                                    />
+                                                </div>
                                             ))}
                                         </div>
                                     </div>

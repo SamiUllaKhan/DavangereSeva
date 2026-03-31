@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { SearchBar } from '@/components/layout/SearchBar';
+import { SpotlightCarousel } from './SpotlightCarousel';
 
 interface HomeClientWrapperProps {
   categories: any[];
@@ -53,11 +54,11 @@ export default function HomeClientWrapper({ categories, isConnected }: HomeClien
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <h1 className="text-4xl md:text-7xl font-black mb-6 tracking-tighter uppercase leading-[0.9]">
-              Premium Home <br /> <span className="text-blue-200">Services</span> in Davanagere
+            <h1 className="text-4xl md:text-7xl font-black mb-4 tracking-tighter uppercase leading-[0.9]">
+              Home services <br /> <span className="text-blue-200">at your doorstep</span>
             </h1>
-            <p className="text-lg md:text-xl mb-12 text-blue-100/80 max-w-xl mx-auto font-medium uppercase tracking-[0.2em]">
-              Reliable Professionals • Guaranteed Results
+            <p className="text-lg md:text-xl mb-8 text-blue-100/80 max-w-2xl mx-auto font-medium uppercase tracking-[0.2em]">
+              Professional • Reliable • Expert Care in Davanagere
             </p>
           </motion.div>
 
@@ -68,54 +69,96 @@ export default function HomeClientWrapper({ categories, isConnected }: HomeClien
             className="max-w-4xl mx-auto"
           >
             <SearchBar variant="home" />
+
+            {/* Trending Services */}
+            <div className="mt-6 flex flex-wrap justify-center gap-3 md:gap-4 overflow-hidden px-4">
+              <span className="text-blue-200/60 text-xs font-bold uppercase tracking-widest self-center mr-2 hidden md:inline">Trending:</span>
+              {['AC Repair', 'Cleaning', 'Electrician', 'Plumber'].map((term) => (
+                <Link 
+                  key={term}
+                  href={`/services?q=${encodeURIComponent(term)}`}
+                  className="bg-white/10 hover:bg-white/20 backdrop-blur-md px-4 py-1.5 rounded-full text-[10px] md:text-xs font-black uppercase tracking-widest text-white border border-white/10 transition-all hover:scale-105"
+                >
+                  {term}
+                </Link>
+              ))}
+            </div>
           </motion.div>
         </div>
       </section>
 
-      {/* Category Grid */}
-      <section className="container px-4 md:px-8 mx-auto -mt-16 relative z-20">
-        <Card className="border-none shadow-xl">
-          <CardContent className="p-8">
-            <h2 className="text-2xl font-bold mb-8 text-center text-gray-800 tracking-tight">Browse by Category</h2>
-            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-6">
-              {categories.map((cat: any) => {
+      {/* Category Grid - Brought Higher and cleaner */}
+      <section className="container px-4 md:px-8 mx-auto -mt-24 relative z-20">
+        <Card className="border-none shadow-2xl bg-white/80 backdrop-blur-xl">
+          <CardContent className="p-8 md:p-12">
+            <div className="flex flex-col md:flex-row justify-between items-end mb-10 gap-4">
+              <div className="max-w-md">
+                <h2 className="text-3xl md:text-4xl font-black mb-2 text-gray-900 tracking-tighter uppercase leading-none">What can we <br /> help you with?</h2>
+                <p className="text-gray-500 font-medium text-sm md:text-base italic">"Select from our top-rated home services"</p>
+              </div>
+              <Button asChild variant="ghost" className="rounded-full font-black uppercase tracking-widest text-[10px] text-primary hover:bg-primary/5 px-6">
+                <Link href="/services" className="flex items-center gap-2">
+                  View All Services <Icons.ArrowRight size={14} />
+                </Link>
+              </Button>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-6 md:gap-8">
+              {categories.slice(0, 8).map((cat: any) => {
                 const IconComponent = (Icons as any)[cat.icon] || Icons.HelpCircle;
                 return (
-                  <Link key={cat.slug} href={`/services/${cat.slug}`} className="group flex flex-col items-center gap-3 relative">
+                  <Link key={cat.slug} href={`/services/${cat.slug}`} className="group flex flex-col items-center gap-4 relative">
                     {cat.status === 'coming-soon' && (
-		      <span className="absolute -top-2 -right-2 bg-amber-500 text-white text-[8px] font-black px-1.5 py-0.5 rounded-full z-10 shadow-sm uppercase tracking-tighter">Soon</span>
+		                  <span className="absolute -top-2 -right-2 bg-amber-500 text-white text-[8px] font-black px-1.5 py-0.5 rounded-full z-10 shadow-sm uppercase tracking-tighter">Soon</span>
                     )}
-                    <div className={`w-16 h-16 rounded-2xl bg-primary/5 flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:shadow-md`}>
-                      <IconComponent className="w-8 h-8 text-primary" />
+                    <div className={`w-16 h-16 md:w-20 md:h-20 rounded-[28px] bg-gray-50 flex items-center justify-center transition-all duration-500 group-hover:bg-primary group-hover:text-white group-hover:shadow-2xl group-hover:shadow-primary/20 group-hover:-translate-y-2 ring-1 ring-gray-100 group-hover:ring-primary/20`}>
+                      <IconComponent className="w-8 h-8 md:w-10 md:h-10 text-primary group-hover:text-white transition-colors duration-500" />
                     </div>
-                    <span className="text-sm font-semibold text-gray-700 text-center group-hover:text-primary transition-colors">
+                    <span className="text-[11px] md:text-xs font-black text-gray-600 text-center group-hover:text-primary transition-colors uppercase tracking-widest leading-tight px-1">
                       {cat.name}
                     </span>
                   </Link>
                 );
               })}
             </div>
-            <div className="mt-10 pt-6 border-t border-gray-50 flex justify-center">
-              <Button asChild variant="outline" className="rounded-2xl px-10 h-14 font-black uppercase tracking-widest border-primary/20 text-primary hover:bg-primary hover:text-white transition-all">
-                <Link href="/services">
-                  View All Services
-                </Link>
-              </Button>
-            </div>
           </CardContent>
         </Card>
       </section>
+
+      {/* Trust Stats Section (New) */}
+      <section className="container px-4 md:px-8 mx-auto -mt-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 text-center px-4 md:px-8 py-10 bg-gray-900 rounded-[40px] text-white shadow-2xl">
+          {[
+            { val: "500+", label: "Verified Experts", sub: "Skilled professionals" },
+            { val: "10k+", label: "Happy Homes", sub: "Services delivered" },
+            { val: "4.8★", label: "Average Rating", sub: "User satisfaction" },
+            { val: "24/7", label: "Local Support", sub: "Always here to help" }
+          ].map((stat, idx) => (
+            <div key={idx} className="relative group">
+              <div className="text-3xl md:text-5xl font-black mb-1 group-hover:scale-110 transition-transform duration-500">{stat.val}</div>
+              <div className="text-[10px] md:text-xs font-black uppercase tracking-[0.2em] text-blue-200 mb-1">{stat.label}</div>
+              <div className="text-[8px] md:text-[9px] font-medium text-gray-400/80 uppercase tracking-widest">{stat.sub}</div>
+              {idx < 3 && <div className="hidden md:absolute right-0 top-1/2 -translate-y-1/2 w-[1px] h-12 bg-white/10" />}
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Spotlight Slider (New) */}
+      <div className="-mt-12 relative z-30">
+        <SpotlightCarousel />
+      </div>
 
       {/* Modern How it Works */}
       <section className="py-24 relative overflow-hidden bg-white">
         <div className="container px-4 md:px-8 mx-auto relative z-10">
           <div className="max-w-3xl mb-20">
-            <h2 className="text-sm font-black uppercase tracking-[0.3em] text-primary mb-4">The Process</h2>
+            <h2 className="text-sm font-black uppercase tracking-[0.3em] text-primary mb-4 italic">Step-by-step Guide</h2>
             <h3 className="text-4xl md:text-5xl font-black tracking-tighter mb-6 text-gray-900 leading-[1.1]">
-              HOW WE MAKE YOUR <br /> LIFE <span className="text-primary">EASIER</span>
+              HOW IT <span className="text-primary italic underline decoration-blue-200 underline-offset-8">WORKS</span>
             </h3>
             <p className="text-lg text-gray-500 font-medium max-w-xl">
-              From choosing your expert to getting the job done, we've streamlined everything for speed and quality.
+              Davanagere Seva simplifies your home maintenance. Just follow these 3 easy steps to get your job done.
             </p>
           </div>
 
@@ -186,40 +229,67 @@ export default function HomeClientWrapper({ categories, isConnected }: HomeClien
         <div className="absolute bottom-0 right-0 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl translate-y-1/2 translate-x-1/2" />
       </section>
 
-      {/* Trust Section */}
-      <section className="bg-gray-50 py-20">
+      {/* Promise Section */}
+      <section className="bg-white py-24 border-t border-gray-50">
         <div className="container px-4 md:px-8 mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            <div>
-              <h2 className="text-3xl md:text-4xl font-bold mb-6 tracking-tight">Why Choose Davanagere Seva?</h2>
-              <div className="space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+            <div className="relative">
+              <div className="absolute -top-10 -left-10 w-40 h-40 bg-primary/5 rounded-full blur-3xl" />
+              <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-blue-500/5 rounded-full blur-3xl" />
+              
+              <div className="relative aspect-square md:aspect-video bg-gray-50 rounded-[60px] overflow-hidden border border-gray-100 group shadow-2xl">
+                <div className="absolute inset-0 bg-gradient-to-tr from-primary/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                <div className="flex flex-col items-center justify-center h-full p-12 text-center">
+                  <div className="w-24 h-24 rounded-[40px] bg-white shadow-xl flex items-center justify-center mb-8 transform -rotate-6 group-hover:rotate-0 transition-transform duration-700">
+                    <Icons.ShieldCheck className="w-12 h-12 text-primary" />
+                  </div>
+                  <h3 className="text-3xl font-black mb-4 tracking-tighter text-gray-900 leading-none">THE DAVANAGERE SEVA <br /> <span className="text-primary italic">PROMISE</span></h3>
+                  <p className="text-gray-500 font-medium max-w-xs mx-auto italic">"We don't just provide services, we provide peace of mind."</p>
+                </div>
+              </div>
+
+              {/* Float Rating Badge */}
+              <div className="absolute -bottom-8 -left-8 md:bottom-12 md:-left-12 bg-white p-6 rounded-[32px] shadow-2xl border border-gray-50 flex items-center gap-4 animate-bounce-slow">
+                <div className="bg-amber-400 p-3 rounded-2xl text-white">
+                  <Icons.Star size={24} fill="currentColor" />
+                </div>
+                <div>
+                  <p className="text-2xl font-black text-gray-900 leading-none">4.8</p>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-gray-400">User Rating</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-12">
+              <div className="max-w-md">
+                <h2 className="text-sm font-black uppercase tracking-[0.3em] text-primary mb-4">Why we are different</h2>
+                <h3 className="text-4xl md:text-5xl font-black tracking-tighter mb-6 text-gray-900 leading-none uppercase">
+                  Service you can <br /> <span className="text-primary underline decoration-blue-100 underline-offset-8">depend on.</span>
+                </h3>
+              </div>
+              
+              <div className="grid gap-8">
                 {[
-                  { title: 'Verified Professionals', desc: 'Every service provider is strictly background-checked.', icon: Icons.ShieldCheck },
-                  { title: 'Transparent Pricing', desc: 'Know exactly what you pay before you book. No hidden costs.', icon: Icons.Sparkles },
-                  { title: 'Quality Guarantee', desc: 'We take full responsibility for the quality of work.', icon: Icons.Star }
+                  { title: 'Verified Professionals', desc: 'Every service provider is background-checked and expert-vetted.', icon: Icons.UserCheck, color: 'bg-emerald-50 text-emerald-600' },
+                  { title: 'Transparent Pricing', desc: 'No hidden costs. Pay only what was agreed upfront.', icon: Icons.CreditCard, color: 'bg-blue-50 text-blue-600' },
+                  { title: 'Customer Satisfaction', desc: 'We take full responsibility for the quality of work delivered.', icon: Icons.Heart, color: 'bg-rose-50 text-rose-600' }
                 ].map((item, idx) => (
-                  <div key={idx} className="flex gap-4">
-                    <div className="mt-1">
-                      <item.icon className="text-primary w-6 h-6" />
+                  <div key={idx} className="flex gap-6 group">
+                    <div className={`mt-1 w-14 h-14 shrink-0 rounded-2xl ${item.color} flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:shadow-lg`}>
+                      <item.icon size={24} className="stroke-[2.5]" />
                     </div>
                     <div>
-                      <h4 className="font-bold text-lg mb-1">{item.title}</h4>
-                      <p className="text-gray-600 text-sm">{item.desc}</p>
+                      <h4 className="font-black text-xl mb-1 tracking-tight text-gray-900 group-hover:text-primary transition-colors uppercase">{item.title}</h4>
+                      <p className="text-gray-500 font-medium text-sm leading-relaxed">{item.desc}</p>
                     </div>
                   </div>
                 ))}
               </div>
-              <Button className="mt-10 px-8 py-6 text-lg font-bold uppercase tracking-wide">Book a Service Now</Button>
-            </div>
-            <div className="relative">
-              <div className="aspect-square bg-blue-200 rounded-[3rem] rotate-3 absolute inset-0 -z-10 opacity-30"></div>
-              <div className="aspect-square bg-primary/10 rounded-[3rem] -rotate-3 absolute inset-0 -z-10"></div>
-              <div className="relative aspect-square bg-gray-200 rounded-[3rem] overflow-hidden flex items-center justify-center text-gray-400 italic">
-                {/* Visual Placeholder for high quality service image */}
-                <div className="text-center group p-8">
-                  <Icons.Star className="w-16 h-16 mx-auto mb-4 text-primary/50" />
-                  <p className="font-semibold text-lg">Premium Service Guaranteed</p>
-                </div>
+
+              <div className="pt-8">
+                <Button size="lg" className="rounded-full px-12 h-16 font-black uppercase tracking-widest gap-2 bg-gray-900 hover:bg-primary transition-all shadow-2xl hover:shadow-primary/20">
+                  Join our community <Icons.ArrowRight size={20} />
+                </Button>
               </div>
             </div>
           </div>
