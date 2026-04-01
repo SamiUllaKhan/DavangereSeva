@@ -7,6 +7,8 @@ import Category from '@/models/Category';
 import Booking from '@/models/Booking';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
+import { writeFile, mkdir } from 'fs/promises';
+import { join } from 'path';
 
 const SESSION_COOKIE_NAME = 'admin_session';
 
@@ -14,6 +16,24 @@ async function checkAdmin() {
     const cookieStore = await cookies();
     if (!cookieStore.has(SESSION_COOKIE_NAME)) {
         throw new Error('Not authorized');
+    }
+}
+
+const UPLOAD_DIR = join(process.cwd(), 'public', 'images', 'uploads');
+
+async function uploadFile(file: File | null): Promise<string | null> {
+    if (!file || file.size === 0) return null;
+    try {
+        await mkdir(UPLOAD_DIR, { recursive: true });
+        const bytes = await file.arrayBuffer();
+        const buffer = Buffer.from(bytes);
+        const fileName = `${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
+        const filePath = join(UPLOAD_DIR, fileName);
+        await writeFile(filePath, buffer);
+        return `/images/uploads/${fileName}`;
+    } catch (error) {
+        console.error('Error uploading file:', error);
+        return null;
     }
 }
 
@@ -81,10 +101,49 @@ export async function saveService(formData: FormData) {
         const name = formData.get('name') as string;
         const slug = formData.get('slug') as string;
         const categoryId = formData.get('category') as string;
+
+        if (!name || !slug || !categoryId) {
+            return { success: false, error: 'Name, Slug, and Category are required' };
+        }
+
         const description = formData.get('description') as string;
         const price = Number(formData.get('price'));
-        const features = (formData.get('features') as string).split(',').map(f => f.trim());
-        const whyChooseUs = (formData.get('whyChooseUs') as string).split(',').map(f => f.trim());
+        const features = (formData.get('features') as string || '').split(',').map(f => f.trim()).filter(Boolean);
+        const whyChooseUs = (formData.get('whyChooseUs') as string || '').split(',').map(f => f.trim()).filter(Boolean);
+        
+        // Handle image upload
+        const imageFile = formData.get('imageFile') as File;
+        let image = formData.get('image') as string;
+        const uploadedImage = await uploadFile(imageFile);
+        if (uploadedImage) image = uploadedImage;
+
+        // Handle brand logos (comma separated URLs or files? let's do URLs for now with an easy way to paste)
+        const brandLogos = (formData.get('brandLogos') as string || '').split(',').map(l => l.trim()).filter(Boolean);
+
+        // Handle Add-ons
+        const addonCount = Number(formData.get('addonCount') || 0);
+        const addOns = [];
+        for (let i = 0; i < addonCount; i++) {
+            const addonName = formData.get(`addon_name_${i}`) as string;
+            if (!addonName) continue;
+
+            const addonPrice = Number(formData.get(`addon_price_${i}`));
+            const addonDescription = formData.get(`addon_description_${i}`) as string;
+            
+            // Add-on Image
+            const addonImageFile = formData.get(`addon_image_file_${i}`) as File;
+            let addonImage = formData.get(`addon_image_${i}`) as string;
+            const uploadedAddonImage = await uploadFile(addonImageFile);
+            if (uploadedAddonImage) addonImage = uploadedAddonImage;
+
+            addOns.push({
+                name: addonName,
+                price: addonPrice,
+                description: addonDescription,
+                image: addonImage,
+                isActive: true
+            });
+        }
 
         const serviceData = {
             name,
@@ -93,7 +152,10 @@ export async function saveService(formData: FormData) {
             description,
             price,
             features,
-            whyChooseUs
+            whyChooseUs,
+            image,
+            brandLogos,
+            addOns
         };
 
         if (id) {
@@ -102,8 +164,9 @@ export async function saveService(formData: FormData) {
             await Service.create(serviceData);
         }
 
-        revalidatePath('/admin/dashboard');
+        revalidatePath('/admin');
         revalidatePath('/services');
+        revalidatePath(`/services/${slug}`);
         return { success: true };
     } catch (error: any) {
         console.error('Error saving service:', error);
@@ -135,12 +198,19 @@ export async function saveCategory(formData: FormData) {
         const description = formData.get('description') as string;
         const status = formData.get('status') as string || 'active';
 
+        // Handle category image/icon upload
+        const imageFile = formData.get('imageFile') as File;
+        let image = formData.get('image') as string;
+        const uploadedImage = await uploadFile(imageFile);
+        if (uploadedImage) image = uploadedImage;
+
         const categoryData = {
             name,
             slug,
             icon,
             description,
-            status
+            status,
+            image: image || icon // Some themes use icon but schema can handle image
         };
 
         if (id) {

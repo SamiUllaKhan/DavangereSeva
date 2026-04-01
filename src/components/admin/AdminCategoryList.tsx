@@ -46,10 +46,11 @@ export default function AdminCategoryList({ categories: initialCategories }: { c
     const [loading, setLoading] = useState(false);
 
     const filteredCategories = useMemo(() => {
-        return categories.filter(c =>
-            c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            c.slug.toLowerCase().includes(searchQuery.toLowerCase())
-        );
+        return categories.filter(c => {
+            if (!c || !c.name || !c.slug) return false;
+            return c.name.toLowerCase().includes((searchQuery || '').toLowerCase()) ||
+                   c.slug.toLowerCase().includes((searchQuery || '').toLowerCase());
+        });
     }, [categories, searchQuery]);
 
     const handleSave = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -320,6 +321,20 @@ export default function AdminCategoryList({ categories: initialCategories }: { c
                                 ))}
                             </div>
                             <Input name="icon" defaultValue={editingCategory?.icon} placeholder="Or type any Lucide icon name..." className="mt-4 h-12 rounded-xl border-gray-100 bg-gray-50 focus:bg-white transition-all font-bold text-center" />
+                        </div>
+
+                        <div className="space-y-4 pt-4 border-t border-gray-50">
+                            <Label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 px-1">Category Image (Banner/Display)</Label>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                    <Label className="text-[9px] font-bold text-gray-400">Current/Manual URL</Label>
+                                    <Input name="image" defaultValue={editingCategory?.image || editingCategory?.icon} placeholder="URL to category image" className="h-12 rounded-xl border-gray-100 bg-gray-50 focus:bg-white transition-all font-medium text-xs" />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label className="text-[9px] font-bold text-gray-400">Upload New File</Label>
+                                    <Input name="imageFile" type="file" accept="image/*" className="h-12 rounded-xl border-gray-100 bg-gray-50 focus:bg-white transition-all font-medium text-xs cursor-pointer" />
+                                </div>
+                            </div>
                         </div>
 
                         <div className="space-y-2">

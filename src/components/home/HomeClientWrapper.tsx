@@ -90,12 +90,11 @@ export default function HomeClientWrapper({ categories, isConnected }: HomeClien
       {/* Category Grid - Brought Higher and cleaner */}
       <section className="container px-4 md:px-8 mx-auto -mt-24 relative z-20">
         <Card className="border-none shadow-2xl bg-white/80 backdrop-blur-xl">
-          <CardContent className="p-8 md:p-12">
-            <div className="flex flex-col md:flex-row justify-between items-end mb-10 gap-4">
-              <div className="max-w-md">
-                <h2 className="text-3xl md:text-4xl font-black mb-2 text-gray-900 tracking-tighter uppercase leading-none">What can we <br /> help you with?</h2>
-                <p className="text-gray-500 font-medium text-sm md:text-base italic">"Select from our top-rated home services"</p>
-              </div>
+          <CardContent className="p-4 md:p-8">
+            <div className="flex flex-col items-center text-center mb-8 gap-1">
+              <h2 className="text-2xl md:text-3xl font-extrabold text-gray-900 tracking-tight">
+                What can we help you with?
+              </h2>
               <Button asChild variant="ghost" className="rounded-full font-black uppercase tracking-widest text-[10px] text-primary hover:bg-primary/5 px-6">
                 <Link href="/services" className="flex items-center gap-2">
                   View All Services <Icons.ArrowRight size={14} />
@@ -103,7 +102,7 @@ export default function HomeClientWrapper({ categories, isConnected }: HomeClien
               </Button>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-6 md:gap-8">
+            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-4 md:gap-6">
               {categories.slice(0, 8).map((cat: any) => {
                 const IconComponent = (Icons as any)[cat.icon] || Icons.HelpCircle;
                 return (

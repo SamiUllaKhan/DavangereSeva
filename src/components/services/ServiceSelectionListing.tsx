@@ -40,6 +40,7 @@ export function ServiceSelectionListing({
     const [cart, setCart] = useState<CartItem[]>([]);
     const [mounted, setMounted] = useState(false);
     const [selectedService, setSelectedService] = useState<any>(null);
+    const [selectedAddOn, setSelectedAddOn] = useState<any>(null);
 
     useEffect(() => {
         setMounted(true);
@@ -317,9 +318,19 @@ export function ServiceSelectionListing({
                                                                     <h4 className={`text-xs md:text-base font-black tracking-tight leading-tight truncate ${cartItem ? 'text-primary' : 'text-slate-900'}`}>
                                                                         {addOn.name}
                                                                     </h4>
-                                                                    <p className="text-[10px] md:text-xs text-slate-400 font-medium mt-1 truncate">
+                                                                    <p className="text-[10px] md:text-xs text-slate-400 font-medium mt-1">
                                                                         {addOn.description || 'Professional addition'}
                                                                     </p>
+                                                                    <button 
+                                                                        onClick={(e) => {
+                                                                            e.stopPropagation();
+                                                                            setSelectedAddOn(addOn);
+                                                                        }}
+                                                                        className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-primary/5 text-primary hover:bg-primary/10 transition-all mt-2 w-fit group/detail"
+                                                                    >
+                                                                        <Icons.Info size={10} className="stroke-[3]" />
+                                                                        <span className="text-[9px] font-black uppercase tracking-widest">View Details</span>
+                                                                    </button>
                                                                 </div>
                                                             </div>
                                                             
@@ -627,9 +638,19 @@ export function ServiceSelectionListing({
                                                                     <h4 className={`text-xs md:text-base font-black tracking-tight leading-tight truncate ${cartItem ? 'text-primary' : 'text-slate-900'}`}>
                                                                         {addOn.name}
                                                                     </h4>
-                                                                    <p className="text-[10px] md:text-xs text-slate-400 font-medium mt-1 truncate">
+                                                                    <p className="text-[10px] md:text-xs text-slate-400 font-medium mt-1">
                                                                         {addOn.description || 'Professional addition'}
                                                                     </p>
+                                                                    <button 
+                                                                        onClick={(e) => {
+                                                                            e.stopPropagation();
+                                                                            setSelectedAddOn(addOn);
+                                                                        }}
+                                                                        className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-primary/5 text-primary hover:bg-primary/10 transition-all mt-2 w-fit group/detail"
+                                                                    >
+                                                                        <Icons.Info size={10} className="stroke-[3]" />
+                                                                        <span className="text-[9px] font-black uppercase tracking-widest">View Details</span>
+                                                                    </button>
                                                                 </div>
                                                             </div>
                                                         
@@ -691,6 +712,98 @@ export function ServiceSelectionListing({
                                         {cart.find(i => i.id === selectedService._id) ? 'Continue Booking' : `Add Base Service • ₹${selectedService.price}`}
                                     </Button>
                                     <p className="text-center text-[10px] text-slate-400 font-black uppercase tracking-widest mt-4">Free cancellation anytime before pro arrival</p>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </DialogContent>
+            </Dialog>
+ 
+            {/* Add-on Detail Dialog */}
+            <Dialog 
+                open={!!selectedAddOn} 
+                onOpenChange={(open) => !open && setSelectedAddOn(null)}
+            >
+                <DialogContent className="sm:max-w-[500px] max-h-[85vh] overflow-y-auto rounded-[32px] p-0 border-none shadow-2xl bg-white overflow-x-hidden">
+                    {selectedAddOn && (
+                        <div className="relative">
+                            {selectedAddOn.image ? (
+                                <div className="relative h-[250px] w-full">
+                                    <img
+                                        src={selectedAddOn.image}
+                                        alt={selectedAddOn.name}
+                                        className="w-full h-full object-cover"
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-black/20" />
+                                    <button 
+                                        onClick={() => setSelectedAddOn(null)}
+                                        className="absolute top-4 right-4 w-10 h-10 bg-white/20 backdrop-blur-md rounded-xl flex items-center justify-center text-white hover:bg-white hover:text-slate-900 transition-all z-20"
+                                    >
+                                        <Icons.X size={20} />
+                                    </button>
+                                </div>
+                            ) : (
+                                <div className="p-6 pb-0 flex justify-end">
+                                    <button 
+                                        onClick={() => setSelectedAddOn(null)}
+                                        className="w-10 h-10 bg-slate-100 rounded-xl flex items-center justify-center text-slate-500 hover:bg-primary hover:text-white transition-all"
+                                    >
+                                        <Icons.X size={20} />
+                                    </button>
+                                </div>
+                            )}
+
+                            <div className="p-6 md:p-8 space-y-6 text-left">
+                                <div className="space-y-2">
+                                    <DialogHeader>
+                                        <DialogTitle className="text-2xl font-black text-slate-900 tracking-tight uppercase">
+                                            {selectedAddOn.name}
+                                        </DialogTitle>
+                                    </DialogHeader>
+                                    <div className="flex items-center gap-3">
+                                        <span className="text-xl font-black text-primary">₹{selectedAddOn.price}</span>
+                                        <Badge variant="outline" className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-3 py-1 rounded-lg">
+                                            Add-on Service
+                                        </Badge>
+                                    </div>
+                                </div>
+
+                                <div className="space-y-4">
+                                    <div className="flex items-center gap-2">
+                                        <div className="w-1 h-4 bg-primary/20 rounded-full" />
+                                        <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-400">Description</h4>
+                                    </div>
+                                    <p className="text-slate-600 text-sm leading-relaxed font-medium">
+                                        {selectedAddOn.description || "Enhance your primary service with this professional addition. Our experts ensure seamless integration with your main booking for the best results."}
+                                    </p>
+                                </div>
+
+                                {/* Common Benefits for all add-ons */}
+                                <div className="grid grid-cols-1 gap-3 pt-2">
+                                    {[
+                                        { title: 'Verified Expert', icon: Icons.UserCheck },
+                                        { title: 'Quality Guarantee', icon: Icons.ShieldCheck },
+                                        { title: 'Transparent Pricing', icon: Icons.CreditCard }
+                                    ].map((benefit, idx) => (
+                                        <div key={idx} className="flex items-center gap-3 p-3 bg-slate-50 rounded-2xl border border-slate-100/50">
+                                            <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center text-primary shadow-sm">
+                                                <benefit.icon size={16} />
+                                            </div>
+                                            <span className="text-[10px] font-black uppercase tracking-widest text-slate-600">{benefit.title}</span>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                <div className="pt-6">
+                                    <Button
+                                        onClick={() => {
+                                            addToCart(selectedAddOn);
+                                            setSelectedAddOn(null);
+                                        }}
+                                        className="w-full h-14 rounded-2xl font-black uppercase tracking-widest text-xs shadow-xl shadow-primary/20 transition-all hover:scale-[1.02] active:scale-95 bg-primary text-white"
+                                    >
+                                        {cart.find(i => i.id === selectedAddOn._id) ? 'Add Another' : `Add to Cart • ₹${selectedAddOn.price}`}
+                                    </Button>
                                 </div>
                             </div>
                         </div>
