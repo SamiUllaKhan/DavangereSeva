@@ -1,8 +1,14 @@
 import mongoose, { Schema, model, models } from 'mongoose';
 
 const BookingSchema = new Schema({
-    // Changed to Mixed to allow both mock strings and real ObjectIds during transition
-    service: { type: Schema.Types.Mixed, required: true },
+    // Store array of services from the cart
+    items: [{
+        serviceId: { type: Schema.Types.ObjectId, ref: 'Service' },
+        name: { type: String, required: true },
+        price: { type: Number, required: true },
+        quantity: { type: Number, default: 1 }
+    }],
+    totalAmount: { type: Number, required: true },
     customerId: { type: Schema.Types.ObjectId, ref: 'User' },
     assignedPartnerId: { type: Schema.Types.ObjectId, ref: 'User' },
     customerName: { type: String, required: true },
@@ -11,6 +17,7 @@ const BookingSchema = new Schema({
     customerAddress: { type: String, required: true },
     bookingDate: { type: Date, required: true },
     status: { type: String, enum: ['Pending', 'Confirmed', 'Completed', 'Cancelled'], default: 'Pending' },
+    paymentStatus: { type: String, enum: ['Pending', 'Paid', 'Failed'], default: 'Pending' },
     notes: { type: String },
     rating: { type: Number, min: 1, max: 5 },
     review: { type: String },

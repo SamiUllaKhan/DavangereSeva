@@ -6,6 +6,7 @@ const CategorySchema = new Schema({
     icon: { type: String }, // Name of the Lucide icon
     description: { type: String },
     status: { type: String, enum: ['active', 'inactive', 'coming-soon'], default: 'active' },
+    brandLogos: [{ type: String }],
 }, { timestamps: true });
 
 export default models.Category || model('Category', CategorySchema);

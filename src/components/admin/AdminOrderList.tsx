@@ -100,8 +100,9 @@ export default function AdminOrderList({ initialBookings, partners }: { initialB
 
     const filteredBookings = useMemo(() => {
         return initialBookings.filter(b => {
+            const serviceNames = (b.items || []).map((i: any) => i.name).join(', ');
             const matchesSearch = b.customerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                (typeof b.service === 'object' ? b.service.name : b.service).toLowerCase().includes(searchQuery.toLowerCase()) ||
+                serviceNames.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 b.customerPhone.includes(searchQuery);
 
             const matchesStatus = filterStatus === 'all' || b.status === filterStatus;
@@ -124,7 +125,7 @@ export default function AdminOrderList({ initialBookings, partners }: { initialB
             const row = [
                 b.customerName,
                 b.customerPhone,
-                typeof b.service === 'object' ? b.service.name : b.service,
+                (b.items || []).map((i: any) => i.name).join('; '),
                 new Date(b.bookingDate).toLocaleDateString(),
                 b.status,
                 partners.find(p => p._id === b.assignedPartnerId)?.name || 'Unassigned'
@@ -278,10 +279,18 @@ export default function AdminOrderList({ initialBookings, partners }: { initialB
                                                 </div>
                                             </TableCell>
                                             <TableCell>
-                                                <div className="space-y-1">
-                                                    <Badge variant="outline" className="bg-white border-primary/20 text-primary font-bold text-[10px] uppercase px-2 py-0.5 rounded-lg">
-                                                        {typeof booking.service === 'object' ? booking.service.name : booking.service}
-                                                    </Badge>
+                                                <div className="flex flex-col gap-1">
+                                                    {(booking.items && booking.items.length > 0) ? (
+                                                        booking.items.map((item: any, idx: number) => (
+                                                            <Badge key={idx} variant="outline" className="bg-white border-primary/20 text-primary font-bold text-[9px] uppercase px-2 py-0.5 rounded-lg w-fit">
+                                                                {item.name} {item.quantity > 1 ? `(x${item.quantity})` : ''}
+                                                            </Badge>
+                                                        ))
+                                                    ) : (
+                                                        <Badge variant="outline" className="bg-red-50 border-red-100 text-red-400 font-bold text-[9px] uppercase px-2 py-0.5 rounded-lg w-fit">
+                                                            No items
+                                                        </Badge>
+                                                    )}
                                                     <div className="flex items-center gap-2">
                                                         <Calendar size={10} className="text-gray-400" />
                                                         <span className="text-[10px] font-bold text-gray-500 uppercase">
@@ -371,7 +380,9 @@ export default function AdminOrderList({ initialBookings, partners }: { initialB
                                     <div className="space-y-1">
                                         <p className="text-[9px] font-black uppercase text-gray-400 tracking-wider">Service Requested</p>
                                         <p className="text-xs font-bold text-gray-700 uppercase truncate">
-                                            {typeof booking.service === 'object' ? booking.service.name : booking.service}
+                                            {booking.items?.length > 1 
+                                                ? `${booking.items[0].name} + ${booking.items.length - 1} more` 
+                                                : booking.items?.[0]?.name || 'No Service'}
                                         </p>
                                     </div>
                                     <div className="space-y-1">

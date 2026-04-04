@@ -108,6 +108,7 @@ export async function saveService(formData: FormData) {
 
         const description = formData.get('description') as string;
         const price = Number(formData.get('price'));
+        const isActive = formData.get('isActive') === 'true';
         const features = (formData.get('features') as string || '').split(',').map(f => f.trim()).filter(Boolean);
         const whyChooseUs = (formData.get('whyChooseUs') as string || '').split(',').map(f => f.trim()).filter(Boolean);
         
@@ -116,34 +117,6 @@ export async function saveService(formData: FormData) {
         let image = formData.get('image') as string;
         const uploadedImage = await uploadFile(imageFile);
         if (uploadedImage) image = uploadedImage;
-
-        // Handle brand logos (comma separated URLs or files? let's do URLs for now with an easy way to paste)
-        const brandLogos = (formData.get('brandLogos') as string || '').split(',').map(l => l.trim()).filter(Boolean);
-
-        // Handle Add-ons
-        const addonCount = Number(formData.get('addonCount') || 0);
-        const addOns = [];
-        for (let i = 0; i < addonCount; i++) {
-            const addonName = formData.get(`addon_name_${i}`) as string;
-            if (!addonName) continue;
-
-            const addonPrice = Number(formData.get(`addon_price_${i}`));
-            const addonDescription = formData.get(`addon_description_${i}`) as string;
-            
-            // Add-on Image
-            const addonImageFile = formData.get(`addon_image_file_${i}`) as File;
-            let addonImage = formData.get(`addon_image_${i}`) as string;
-            const uploadedAddonImage = await uploadFile(addonImageFile);
-            if (uploadedAddonImage) addonImage = uploadedAddonImage;
-
-            addOns.push({
-                name: addonName,
-                price: addonPrice,
-                description: addonDescription,
-                image: addonImage,
-                isActive: true
-            });
-        }
 
         const serviceData = {
             name,
@@ -154,8 +127,7 @@ export async function saveService(formData: FormData) {
             features,
             whyChooseUs,
             image,
-            brandLogos,
-            addOns
+            isActive
         };
 
         if (id) {
@@ -204,13 +176,17 @@ export async function saveCategory(formData: FormData) {
         const uploadedImage = await uploadFile(imageFile);
         if (uploadedImage) image = uploadedImage;
 
+        // Handle brand logos (comma separated URLs)
+        const brandLogos = (formData.get('brandLogos') as string || '').split(',').map(l => l.trim()).filter(Boolean);
+
         const categoryData = {
             name,
             slug,
             icon,
             description,
             status,
-            image: image || icon // Some themes use icon but schema can handle image
+            image: image || icon, // Some themes use icon but schema can handle image
+            brandLogos
         };
 
         if (id) {
@@ -219,7 +195,7 @@ export async function saveCategory(formData: FormData) {
             await Category.create(categoryData);
         }
 
-        revalidatePath('/admin/dashboard');
+        revalidatePath('/admin');
         revalidatePath('/services');
         revalidatePath('/');
         return { success: true };

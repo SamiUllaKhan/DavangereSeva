@@ -40,7 +40,6 @@ export function ServiceSelectionListing({
     const [cart, setCart] = useState<CartItem[]>([]);
     const [mounted, setMounted] = useState(false);
     const [selectedService, setSelectedService] = useState<any>(null);
-    const [selectedAddOn, setSelectedAddOn] = useState<any>(null);
 
     useEffect(() => {
         setMounted(true);
@@ -159,6 +158,49 @@ export function ServiceSelectionListing({
                         </div>
                     </motion.div>
                 </div>
+                
+                {/* Brand Showcase Carousel */}
+                {activeCategory?.brandLogos && activeCategory.brandLogos.length > 0 && (
+                    <motion.div 
+                        initial={{ opacity: 0, scale: 0.98 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        className="mb-10 px-4 md:px-0"
+                    >
+                        <div className="bg-white rounded-[48px] p-6 md:p-10 border border-slate-100 shadow-xl shadow-primary/5 relative overflow-hidden group">
+                            {/* Animated Background Accent */}
+                            <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2 group-hover:bg-primary/10 transition-colors duration-700" />
+                            
+                            <div className="flex flex-col md:flex-row items-center justify-between gap-8 relative z-10">
+                                <div className="space-y-1 shrink-0 text-center md:text-left">
+                                    <div className="flex items-center justify-center md:justify-start gap-2 mb-2">
+                                        <div className="w-1.5 h-1.5 bg-primary rounded-full animate-pulse" />
+                                        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Certified Repairs</span>
+                                    </div>
+                                    <h4 className="text-xl font-black text-slate-900 uppercase tracking-tight">Top Brands Serviced</h4>
+                                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest italic">All models & issues handled by verified experts</p>
+                                </div>
+
+                                <div className="flex-1 w-full overflow-hidden">
+                                    <div className="flex flex-wrap md:flex-nowrap items-center justify-center md:justify-end gap-4 md:gap-8 overflow-x-auto pb-2 no-scrollbar">
+                                        {activeCategory.brandLogos.map((logo: string, idx: number) => (
+                                            <motion.div 
+                                                key={idx} 
+                                                whileHover={{ y: -5, scale: 1.05 }}
+                                                className="h-14 md:h-16 w-24 md:w-32 px-4 py-3 bg-slate-50/50 hover:bg-white rounded-3xl border border-slate-100 hover:border-primary/20 shadow-sm hover:shadow-xl hover:shadow-primary/5 transition-all flex items-center justify-center group/logo shrink-0"
+                                            >
+                                                <img 
+                                                    src={logo} 
+                                                    alt="Repair Brand" 
+                                                    className="max-h-full w-full object-contain brightness-0 opacity-40 group-hover/logo:brightness-100 group-hover/logo:opacity-100 transition-all duration-500" 
+                                                />
+                                            </motion.div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </motion.div>
+                )}
 
                 {/* Content with Sidebar */}
                 <div className="flex flex-col lg:flex-row gap-10 items-start">
@@ -222,27 +264,6 @@ export function ServiceSelectionListing({
                                                 </div>
                                             </div>
 
-                                            {/* Brand Logos - Supported Brands */}
-                                            {service.brandLogos && service.brandLogos.length > 0 && (
-                                                <div className="pt-2">
-                                                    <div className="flex items-center gap-2 mb-2">
-                                                        <div className="w-1 h-3 bg-primary/20 rounded-full" />
-                                                        <span className="text-[8px] font-black uppercase tracking-widest text-slate-400">Trusted Repairs For All Brands</span>
-                                                    </div>
-                                                    <div className="flex flex-wrap gap-3">
-                                                        {service.brandLogos.map((logo: string, idx: number) => (
-                                                            <div key={idx} className="h-8 w-auto px-3 py-1 bg-white border border-slate-100 rounded-xl shadow-[0_2px_10px_-4px_rgba(0,0,0,0.1)] flex items-center justify-center hover:border-primary/20 transition-all group/logo">
-                                                                <img 
-                                                                    src={logo} 
-                                                                    alt="Brand" 
-                                                                    className="h-full w-auto object-contain brightness-0 opacity-40 group-hover/logo:brightness-100 group-hover/logo:opacity-100 transition-all" 
-                                                                />
-                                                            </div>
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                            )}
-
                                             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-4 md:pt-6 border-t border-slate-50">
                                                 <Link
                                                     href={`/services/${service.slug}`}
@@ -279,105 +300,8 @@ export function ServiceSelectionListing({
                                                     )}
                                                 </div>
                                             </div>
-
                                         </div>
                                     </div>
-
-                                    {/* Add-ons Section - Now Full Width */}
-                                    {service.addOns && service.addOns.length > 0 && (
-                                        <div className="mt-6 md:mt-10 pt-6 md:pt-10 border-t border-slate-100 text-left">
-                                            <div className="flex items-center gap-3 mb-6 px-2">
-                                                <div className="w-1.5 h-6 bg-primary rounded-full" />
-                                                <h4 className="text-[11px] font-black uppercase tracking-[0.3em] text-slate-400">Personalize Your Service</h4>
-                                            </div>
-                                            <div className="grid grid-cols-1 gap-3">
-                                                {service.addOns.map((addOn: any) => {
-                                                    const cartItem = cart.find(item => item.id === addOn._id);
-                                                    
-                                                    return (
-                                                        <motion.div 
-                                                            key={addOn._id} 
-                                                            whileHover={{ y: -2 }}
-                                                            className={`flex flex-col gap-3 p-3 md:p-4 rounded-xl md:rounded-2xl border transition-all cursor-pointer ${
-                                                                cartItem 
-                                                                    ? 'bg-white border-primary/20 shadow-xl shadow-primary/5 ring-1 ring-primary/5' 
-                                                                    : 'bg-white border-slate-100 hover:border-slate-200'
-                                                            }`}
-                                                            onClick={(e) => {
-                                                                e.stopPropagation();
-                                                                addToCart(addOn);
-                                                            }}
-                                                        >
-                                                            <div className="flex gap-4 items-center">
-                                                                {addOn.image && (
-                                                                    <div className="w-16 h-16 shrink-0 rounded-2xl overflow-hidden bg-slate-50 border border-slate-100">
-                                                                        <img src={addOn.image} alt={addOn.name} className="w-full h-full object-cover" />
-                                                                    </div>
-                                                                )}
-                                                                <div className="flex-1 min-w-0">
-                                                                    <h4 className={`text-xs md:text-base font-black tracking-tight leading-tight truncate ${cartItem ? 'text-primary' : 'text-slate-900'}`}>
-                                                                        {addOn.name}
-                                                                    </h4>
-                                                                    <p className="text-[10px] md:text-xs text-slate-400 font-medium mt-1">
-                                                                        {addOn.description || 'Professional addition'}
-                                                                    </p>
-                                                                    <button 
-                                                                        onClick={(e) => {
-                                                                            e.stopPropagation();
-                                                                            setSelectedAddOn(addOn);
-                                                                        }}
-                                                                        className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-primary/5 text-primary hover:bg-primary/10 transition-all mt-2 w-fit group/detail"
-                                                                    >
-                                                                        <Icons.Info size={10} className="stroke-[3]" />
-                                                                        <span className="text-[9px] font-black uppercase tracking-widest">View Details</span>
-                                                                    </button>
-                                                                </div>
-                                                            </div>
-                                                            
-                                                            <div className="flex items-center justify-between mt-1">
-                                                                <div className="flex items-center gap-2">
-                                                                    <span className="text-sm font-black text-slate-900">₹{addOn.price}</span>
-                                                                    {cartItem && (
-                                                                        <Badge className="bg-emerald-500 text-white border-none text-[8px] font-black uppercase px-2 py-0.5 rounded-lg shrink-0">
-                                                                            Selected
-                                                                        </Badge>
-                                                                    )}
-                                                                </div>
-                                                                
-                                                                <div className="shrink-0" onClick={(e) => e.stopPropagation()}>
-                                                                    {cartItem ? (
-                                                                        <div className="flex items-center gap-3 bg-slate-50 border border-slate-200 p-0.5 rounded-xl h-9">
-                                                                            <button 
-                                                                                onClick={() => removeFromCart(addOn._id)}
-                                                                                className="w-8 h-8 flex items-center justify-center hover:bg-white text-slate-400 hover:text-primary rounded-lg transition-colors"
-                                                                            >
-                                                                                <Icons.Minus size={12} />
-                                                                            </button>
-                                                                            <span className="font-black text-xs text-slate-700 min-w-[16px] text-center">{cartItem.quantity}</span>
-                                                                            <button 
-                                                                                onClick={() => addToCart(addOn)}
-                                                                                className="w-8 h-8 flex items-center justify-center hover:bg-white text-slate-400 hover:text-primary rounded-lg transition-colors"
-                                                                            >
-                                                                                <Icons.Plus size={12} />
-                                                                            </button>
-                                                                        </div>
-                                                                    ) : (
-                                                                        <Button 
-                                                                            size="sm"
-                                                                            className="h-8 rounded-xl bg-white text-primary border border-primary/20 hover:bg-primary hover:text-white font-black text-[10px] uppercase tracking-wider px-4"
-                                                                            onClick={() => addToCart(addOn)}
-                                                                        >
-                                                                            Add
-                                                                        </Button>
-                                                                    )}
-                                                                </div>
-                                                            </div>
-                                                        </motion.div>
-                                                    );
-                                                })}
-                                            </div>
-                                        </div>
-                                    )}
                                 </motion.div>
                             );
                         })}
@@ -584,120 +508,7 @@ export function ServiceSelectionListing({
                                     </div>
                                 )}
 
-                                {selectedService.brandLogos && selectedService.brandLogos.length > 0 && (
-                                    <div className="space-y-6">
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-2 h-8 bg-primary/20 rounded-full" />
-                                            <h3 className="text-sm font-black uppercase tracking-[0.3em] text-slate-400">Supported Brands</h3>
-                                        </div>
-                                        <div className="flex flex-wrap gap-4 p-6 bg-slate-50/50 rounded-[32px] border border-slate-100/50">
-                                            {selectedService.brandLogos.map((logo: string, idx: number) => (
-                                                <div key={idx} className="h-10 w-auto px-4 py-2 bg-white border border-slate-100 rounded-2xl shadow-sm flex items-center justify-center hover:scale-105 transition-transform group/logo">
-                                                    <img 
-                                                        src={logo} 
-                                                        alt="Brand" 
-                                                        className="h-full w-auto object-contain brightness-0 opacity-40 group-hover/logo:brightness-100 group-hover/logo:opacity-100 transition-all" 
-                                                    />
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
 
-                                {selectedService.addOns && selectedService.addOns.length > 0 && (
-                                    <div className="space-y-8">
-                                        <div className="flex items-center justify-between">
-                                            <h3 className="text-sm font-black uppercase tracking-[0.3em] text-slate-400">Tailor your experience</h3>
-                                            <Badge variant="outline" className="border-primary/10 text-primary font-black uppercase tracking-widest text-[9px] px-3 py-1 rounded-full">Personalize</Badge>
-                                        </div>
-                                        <div className="grid grid-cols-1 gap-3">
-                                            {selectedService.addOns.map((addOn: any) => {
-                                                const cartItem = cart.find(item => item.id === addOn._id);
-                                                
-                                                return (
-                                                        <motion.div 
-                                                            key={addOn._id} 
-                                                            whileHover={{ y: -2 }}
-                                                            className={`flex flex-col gap-3 p-3 md:p-4 rounded-xl md:rounded-2xl border transition-all cursor-pointer ${
-                                                            cartItem 
-                                                                ? 'bg-white border-primary/20 shadow-xl shadow-primary/5 ring-1 ring-primary/5' 
-                                                                : 'bg-white border-slate-100 hover:border-slate-200'
-                                                        }`}
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            addToCart(addOn);
-                                                        }}
-                                                    >
-                                                            <div className="flex gap-4 items-center">
-                                                                {addOn.image && (
-                                                                    <div className="w-16 h-16 shrink-0 rounded-2xl overflow-hidden bg-slate-50 border border-slate-100">
-                                                                        <img src={addOn.image} alt={addOn.name} className="w-full h-full object-cover" />
-                                                                    </div>
-                                                                )}
-                                                                <div className="flex-1 min-w-0">
-                                                                    <h4 className={`text-xs md:text-base font-black tracking-tight leading-tight truncate ${cartItem ? 'text-primary' : 'text-slate-900'}`}>
-                                                                        {addOn.name}
-                                                                    </h4>
-                                                                    <p className="text-[10px] md:text-xs text-slate-400 font-medium mt-1">
-                                                                        {addOn.description || 'Professional addition'}
-                                                                    </p>
-                                                                    <button 
-                                                                        onClick={(e) => {
-                                                                            e.stopPropagation();
-                                                                            setSelectedAddOn(addOn);
-                                                                        }}
-                                                                        className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-primary/5 text-primary hover:bg-primary/10 transition-all mt-2 w-fit group/detail"
-                                                                    >
-                                                                        <Icons.Info size={10} className="stroke-[3]" />
-                                                                        <span className="text-[9px] font-black uppercase tracking-widest">View Details</span>
-                                                                    </button>
-                                                                </div>
-                                                            </div>
-                                                        
-                                                        <div className="flex items-center justify-between mt-1">
-                                                            <div className="flex items-center gap-2">
-                                                                <span className="text-sm font-black text-slate-900">₹{addOn.price}</span>
-                                                                {cartItem && (
-                                                                    <Badge className="bg-emerald-500 text-white border-none text-[8px] font-black uppercase px-2 py-0.5 rounded-lg shrink-0">
-                                                                        Selected
-                                                                    </Badge>
-                                                                )}
-                                                            </div>
-                                                            
-                                                            <div className="shrink-0" onClick={(e) => e.stopPropagation()}>
-                                                                {cartItem ? (
-                                                                    <div className="flex items-center gap-3 bg-slate-50 border border-slate-200 p-0.5 rounded-xl h-9">
-                                                                        <button 
-                                                                            onClick={() => removeFromCart(addOn._id)}
-                                                                            className="w-8 h-8 flex items-center justify-center hover:bg-white text-slate-400 hover:text-primary rounded-lg transition-colors"
-                                                                        >
-                                                                            <Icons.Minus size={12} />
-                                                                        </button>
-                                                                        <span className="font-black text-xs text-slate-700 min-w-[16px] text-center">{cartItem.quantity}</span>
-                                                                        <button 
-                                                                            onClick={() => addToCart(addOn)}
-                                                                            className="w-8 h-8 flex items-center justify-center hover:bg-white text-slate-400 hover:text-primary rounded-lg transition-colors"
-                                                                        >
-                                                                            <Icons.Plus size={12} />
-                                                                        </button>
-                                                                    </div>
-                                                                ) : (
-                                                                    <Button 
-                                                                        size="sm"
-                                                                        className="h-8 rounded-xl bg-white text-primary border border-primary/20 hover:bg-primary hover:text-white font-black text-[10px] uppercase tracking-wider px-4"
-                                                                        onClick={() => addToCart(addOn)}
-                                                                    >
-                                                                        Add
-                                                                    </Button>
-                                                                )}
-                                                            </div>
-                                                        </div>
-                                                    </motion.div>
-                                                );
-                                            })}
-                                        </div>
-                                    </div>
-                                )}
 
                                 <div className="sticky bottom-0 bg-white/80 backdrop-blur-xl pt-6 pb-2 mt-auto">
                                     <Button
@@ -709,7 +520,7 @@ export function ServiceSelectionListing({
                                         }}
                                         className="w-full h-20 rounded-[28px] font-black uppercase tracking-[0.2em] text-sm shadow-2xl shadow-primary/30 transition-all hover:scale-[1.02] active:scale-95 bg-primary text-white"
                                     >
-                                        {cart.find(i => i.id === selectedService._id) ? 'Continue Booking' : `Add Base Service • ₹${selectedService.price}`}
+                                        {cart.find(i => i.id === selectedService._id) ? 'Continue Booking' : `Add Service • ₹${selectedService.price}`}
                                     </Button>
                                     <p className="text-center text-[10px] text-slate-400 font-black uppercase tracking-widest mt-4">Free cancellation anytime before pro arrival</p>
                                 </div>
@@ -719,97 +530,6 @@ export function ServiceSelectionListing({
                 </DialogContent>
             </Dialog>
  
-            {/* Add-on Detail Dialog */}
-            <Dialog 
-                open={!!selectedAddOn} 
-                onOpenChange={(open) => !open && setSelectedAddOn(null)}
-            >
-                <DialogContent className="sm:max-w-[500px] max-h-[85vh] overflow-y-auto rounded-[32px] p-0 border-none shadow-2xl bg-white overflow-x-hidden">
-                    {selectedAddOn && (
-                        <div className="relative">
-                            {selectedAddOn.image ? (
-                                <div className="relative h-[250px] w-full">
-                                    <img
-                                        src={selectedAddOn.image}
-                                        alt={selectedAddOn.name}
-                                        className="w-full h-full object-cover"
-                                    />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-black/20" />
-                                    <button 
-                                        onClick={() => setSelectedAddOn(null)}
-                                        className="absolute top-4 right-4 w-10 h-10 bg-white/20 backdrop-blur-md rounded-xl flex items-center justify-center text-white hover:bg-white hover:text-slate-900 transition-all z-20"
-                                    >
-                                        <Icons.X size={20} />
-                                    </button>
-                                </div>
-                            ) : (
-                                <div className="p-6 pb-0 flex justify-end">
-                                    <button 
-                                        onClick={() => setSelectedAddOn(null)}
-                                        className="w-10 h-10 bg-slate-100 rounded-xl flex items-center justify-center text-slate-500 hover:bg-primary hover:text-white transition-all"
-                                    >
-                                        <Icons.X size={20} />
-                                    </button>
-                                </div>
-                            )}
-
-                            <div className="p-6 md:p-8 space-y-6 text-left">
-                                <div className="space-y-2">
-                                    <DialogHeader>
-                                        <DialogTitle className="text-2xl font-black text-slate-900 tracking-tight uppercase">
-                                            {selectedAddOn.name}
-                                        </DialogTitle>
-                                    </DialogHeader>
-                                    <div className="flex items-center gap-3">
-                                        <span className="text-xl font-black text-primary">₹{selectedAddOn.price}</span>
-                                        <Badge variant="outline" className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-3 py-1 rounded-lg">
-                                            Add-on Service
-                                        </Badge>
-                                    </div>
-                                </div>
-
-                                <div className="space-y-4">
-                                    <div className="flex items-center gap-2">
-                                        <div className="w-1 h-4 bg-primary/20 rounded-full" />
-                                        <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-400">Description</h4>
-                                    </div>
-                                    <p className="text-slate-600 text-sm leading-relaxed font-medium">
-                                        {selectedAddOn.description || "Enhance your primary service with this professional addition. Our experts ensure seamless integration with your main booking for the best results."}
-                                    </p>
-                                </div>
-
-                                {/* Common Benefits for all add-ons */}
-                                <div className="grid grid-cols-1 gap-3 pt-2">
-                                    {[
-                                        { title: 'Verified Expert', icon: Icons.UserCheck },
-                                        { title: 'Quality Guarantee', icon: Icons.ShieldCheck },
-                                        { title: 'Transparent Pricing', icon: Icons.CreditCard }
-                                    ].map((benefit, idx) => (
-                                        <div key={idx} className="flex items-center gap-3 p-3 bg-slate-50 rounded-2xl border border-slate-100/50">
-                                            <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center text-primary shadow-sm">
-                                                <benefit.icon size={16} />
-                                            </div>
-                                            <span className="text-[10px] font-black uppercase tracking-widest text-slate-600">{benefit.title}</span>
-                                        </div>
-                                    ))}
-                                </div>
-
-                                <div className="pt-6">
-                                    <Button
-                                        onClick={() => {
-                                            addToCart(selectedAddOn);
-                                            setSelectedAddOn(null);
-                                        }}
-                                        className="w-full h-14 rounded-2xl font-black uppercase tracking-widest text-xs shadow-xl shadow-primary/20 transition-all hover:scale-[1.02] active:scale-95 bg-primary text-white"
-                                    >
-                                        {cart.find(i => i.id === selectedAddOn._id) ? 'Add Another' : `Add to Cart • ₹${selectedAddOn.price}`}
-                                    </Button>
-                                </div>
-                            </div>
-                        </div>
-                    )}
-                </DialogContent>
-            </Dialog>
 
             {/* Custom Scrollbar Styles */}
             <style jsx global>{`

@@ -40,6 +40,11 @@ export default function AdminCategoryList({ categories: initialCategories }: { c
     const [mounted, setMounted] = useState(false);
     useEffect(() => { setMounted(true); }, []);
     const [categories, setCategories] = useState(initialCategories);
+    
+    useEffect(() => {
+        setCategories(initialCategories);
+    }, [initialCategories]);
+
     const [searchQuery, setSearchQuery] = useState('');
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [editingCategory, setEditingCategory] = useState<any>(null);
@@ -340,6 +345,29 @@ export default function AdminCategoryList({ categories: initialCategories }: { c
                         <div className="space-y-2">
                             <Label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 px-1">Description</Label>
                             <Textarea name="description" defaultValue={editingCategory?.description} required placeholder="Brief description of segments in this category..." className="rounded-2xl border-gray-100 bg-gray-50 focus:bg-white transition-all font-medium min-h-[100px]" />
+                        </div>
+
+                        <div className="space-y-4 pt-4 border-t border-gray-50">
+                            <div className="flex items-center gap-2">
+                                <Icons.Briefcase className="text-primary" size={18} />
+                                <Label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-900 px-1">Supported Brands & Partners</Label>
+                            </div>
+                            <div className="bg-slate-50 p-6 rounded-[32px] border border-gray-100 space-y-4">
+                                <Label className="text-[9px] font-bold text-gray-400 uppercase tracking-widest pl-1">Brand Logo URLs (Comma separated)</Label>
+                                <Textarea 
+                                    name="brandLogos" 
+                                    defaultValue={editingCategory?.brandLogos?.join(', ')} 
+                                    placeholder="https://brand1.com/logo.png, https://brand2.com/logo.png" 
+                                    className="rounded-2xl border-gray-100 bg-white focus:bg-white transition-all font-medium min-h-[100px] text-xs" 
+                                />
+                                <div className="flex flex-wrap gap-3 mt-2">
+                                    {editingCategory?.brandLogos?.map((logo: string, i: number) => (
+                                        <div key={i} className="h-10 w-16 bg-white rounded-xl border border-gray-100 p-2 flex items-center justify-center">
+                                            <img src={logo} alt="brand" className="max-h-full max-w-full object-contain brightness-0 opacity-40" />
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
                         </div>
 
                         <DialogFooter className="pt-4 border-t border-gray-50 flex flex-col sm:flex-row gap-3">

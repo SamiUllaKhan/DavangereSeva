@@ -11,22 +11,22 @@ import { sendBookingNotifications } from '@/lib/notifications';
 export async function createBooking(formData: any) {
     try {
         await dbConnect();
-
-        console.log('Attempting to create booking for service:', formData.serviceName);
-        console.log('Customer Email to save:', formData.customerEmail);
-
+        
         const session = await getUserSession();
 
         const newBookingDTO: any = {
-            service: {
-                id: formData.serviceId,
-                name: formData.serviceName
-            },
+            items: formData.items.map((item: any) => ({
+                serviceId: item.id || item.serviceId,
+                name: item.name,
+                price: item.price,
+                quantity: item.quantity || 1
+            })),
+            totalAmount: formData.totalAmount,
             customerName: formData.customerName,
             customerPhone: formData.customerPhone,
             customerEmail: formData.customerEmail,
             customerAddress: formData.customerAddress,
-            bookingDate: new Date(formData.bookingDate),
+            bookingDate: new Date(formData.bookingDate || Date.now()),
             notes: formData.notes,
         };
 
@@ -35,24 +35,18 @@ export async function createBooking(formData: any) {
         }
 
         const newBooking = new Booking(newBookingDTO);
-
         const savedBooking = await newBooking.save();
-        console.log('Booking saved successfully:', savedBooking._id);
 
-        // Send Email/SMS notifications asynchronously (don't block user feedback)
+        // Send Email/SMS notifications asynchronously
         sendBookingNotifications({
             ...newBookingDTO,
             _id: savedBooking._id
         }).catch(err => console.error('Delayed Notification Error:', err));
 
         revalidatePath('/admin');
-        return { success: true };
+        return { success: true, bookingId: savedBooking._id };
     } catch (error: any) {
-        console.error('Detailed Booking Error:', {
-            message: error.message,
-            stack: error.stack,
-            formData: formData
-        });
+        console.error('Booking Creation Error:', error);
         return { success: false, error: error.message || 'Failed to create booking' };
     }
 }
@@ -60,7 +54,7 @@ export async function createBooking(formData: any) {
 export async function getBookings() {
     try {
         await dbConnect();
-        const bookings = await Booking.find({}).sort({ createdAt: -1 }).populate('service').lean();
+        const bookings = await Booking.find({}).sort({ createdAt: -1 }).populate('items.serviceId').lean();
         return JSON.parse(JSON.stringify(bookings));
     } catch (error) {
         console.error('Database Error:', error);

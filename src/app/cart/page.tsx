@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import { ArrowLeft, Trash2, Minus, Plus } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { createBooking } from '@/app/actions/booking';
 
 interface CartItem {
     id: string;
@@ -24,7 +25,9 @@ export default function CartPage() {
     // User details state
     const [name, setName] = useState('');
     const [phone, setPhone] = useState('');
+    const [email, setEmail] = useState('');
     const [address, setAddress] = useState('');
+    const [loading, setLoading] = useState(false);
     const [submitted, setSubmitted] = useState(false);
 
     useEffect(() => {
@@ -64,19 +67,40 @@ export default function CartPage() {
 
     const cartTotal = useMemo(() => cart.reduce((sum, item) => sum + (item.price * item.quantity), 0), [cart]);
 
-    const handleCheckout = (e: React.FormEvent) => {
+    const handleCheckout = async (e: React.FormEvent) => {
         e.preventDefault();
         if (cart.length === 0) {
             toast.error("Your cart is empty");
             return;
         }
         
-        // This would connect to an API to actually place an order
-        toast.success("Booking placed successfully!");
-        setCart([]);
-        localStorage.removeItem('davanagere_seva_cart');
-        setTimeout(() => window.dispatchEvent(new Event('cart-updated')), 0);
-        setSubmitted(true);
+        setLoading(true);
+        const bookingData = {
+            items: cart,
+            totalAmount: cartTotal,
+            customerName: name,
+            customerPhone: phone,
+            customerEmail: email,
+            customerAddress: address,
+            bookingDate: new Date(),
+        };
+
+        try {
+            const result = await createBooking(bookingData);
+            if (result.success) {
+                toast.success("Booking placed successfully!");
+                setCart([]);
+                localStorage.removeItem('davanagere_seva_cart');
+                setTimeout(() => window.dispatchEvent(new Event('cart-updated')), 0);
+                setSubmitted(true);
+            } else {
+                toast.error(result.error || "Failed to place booking");
+            }
+        } catch (error) {
+            toast.error("An unexpected error occurred");
+        } finally {
+            setLoading(false);
+        }
     };
 
     if (!mounted) return null;
@@ -218,6 +242,18 @@ export default function CartPage() {
                                         />
                                     </div>
                                     <div className="space-y-2">
+                                        <Label htmlFor="email" className="text-xs font-black uppercase tracking-widest text-slate-500">Email Address</Label>
+                                        <Input 
+                                            id="email" 
+                                            required 
+                                            type="email"
+                                            value={email} 
+                                            onChange={(e) => setEmail(e.target.value)} 
+                                            placeholder="john@example.com"
+                                            className="h-12 rounded-xl border-slate-200 bg-slate-50/50"
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
                                         <Label htmlFor="address" className="text-xs font-black uppercase tracking-widest text-slate-500">Service Address</Label>
                                         <textarea
                                             id="address"
@@ -249,10 +285,10 @@ export default function CartPage() {
                                 <Button 
                                     type="submit" 
                                     form="checkout-form"
-                                    disabled={cart.length === 0}
+                                    disabled={cart.length === 0 || loading}
                                     className="w-full h-16 rounded-2xl bg-primary hover:bg-primary/90 text-white font-black uppercase tracking-widest text-sm shadow-xl shadow-primary/20 transition-all hover:scale-[1.02] active:scale-95 disabled:opacity-50 disabled:hover:scale-100"
                                 >
-                                    Confirm Booking
+                                    {loading ? "Processing..." : "Confirm Booking"}
                                 </Button>
                             </CardFooter>
                         </Card>
