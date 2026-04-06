@@ -30,6 +30,7 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { Plus, Edit2, Trash2, Hammer, Loader2, Search, Camera } from 'lucide-react';
+import * as Icons from 'lucide-react';
 import { saveService, deleteService } from '@/app/actions/admin';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
@@ -262,7 +263,6 @@ export default function AdminServiceList({ initialServices, categories }: { init
                                         </div>
                                     </div>
                                 </div>
-
                                 <div className={activeTab === 'media' ? 'space-y-8' : 'hidden'}>
                                     <div className="space-y-4">
                                         <div className="flex items-center gap-2">
@@ -276,7 +276,7 @@ export default function AdminServiceList({ initialServices, categories }: { init
                                             </div>
                                             <div className="space-y-2">
                                                 <Label className="text-[9px] font-bold text-gray-400 uppercase tracking-widest pl-1">Or Upload Locally</Label>
-                                                <Input name="imageFile" type="file" accept="image/*" className="h-12 rounded-xl border-gray-100 bg-white focus:bg-white transition-all font-medium text-xs cursor-pointer pt-3 pl-4" />
+                                                <Input name="imageFile" type="file" accept="image/*, image/webp" className="h-12 rounded-xl border-gray-100 bg-white focus:bg-white transition-all font-medium text-xs cursor-pointer pt-3 pl-4" />
                                             </div>
                                         </div>
                                     </div>

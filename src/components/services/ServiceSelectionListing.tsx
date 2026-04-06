@@ -69,7 +69,14 @@ export function ServiceSelectionListing({
     }, [highlightedServiceId]);
 
     const activeCategory = useMemo(() => {
-        if (activeCategoryId === 'all') return { name: 'All Services', description: 'Browse our full range of professional services for your home and office.' };
+        if (activeCategoryId === 'all') {
+            const allBrands = Array.from(new Set(categories.flatMap(c => c.brandLogos || [])));
+            return { 
+                name: 'All Services', 
+                description: 'Browse our full range of professional services for your home and office.',
+                brandLogos: allBrands 
+            };
+        }
         return categories.find(c => c._id === activeCategoryId) || categories[0];
     }, [activeCategoryId, categories]);
 
@@ -186,12 +193,12 @@ export function ServiceSelectionListing({
                                             <motion.div 
                                                 key={idx} 
                                                 whileHover={{ y: -5, scale: 1.05 }}
-                                                className="h-14 md:h-16 w-24 md:w-32 px-4 py-3 bg-slate-50/50 hover:bg-white rounded-3xl border border-slate-100 hover:border-primary/20 shadow-sm hover:shadow-xl hover:shadow-primary/5 transition-all flex items-center justify-center group/logo shrink-0"
+                                                className="h-16 md:h-20 min-w-[120px] md:min-w-[160px] px-3 py-2 bg-slate-50/50 hover:bg-white rounded-3xl border border-slate-100 hover:border-primary/20 shadow-sm hover:shadow-xl hover:shadow-primary/5 transition-all flex items-center justify-center group/logo shrink-0"
                                             >
                                                 <img 
                                                     src={logo} 
                                                     alt="Repair Brand" 
-                                                    className="max-h-full w-full object-contain brightness-0 opacity-40 group-hover/logo:brightness-100 group-hover/logo:opacity-100 transition-all duration-500" 
+                                                    className="max-h-full max-w-full w-auto object-contain transition-all duration-500" 
                                                 />
                                             </motion.div>
                                         ))}
@@ -478,6 +485,22 @@ export function ServiceSelectionListing({
                             </div>
 
                             <div className="px-6 md:px-10 pb-10 md:pb-12 pt-4 space-y-8 md:space-y-12 text-left">
+                                {activeCategory?.brandLogos && activeCategory.brandLogos.length > 0 && (
+                                    <div className="space-y-4">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-2 h-8 bg-primary/20 rounded-full" />
+                                            <h3 className="text-sm font-black uppercase tracking-[0.3em] text-slate-400">Supported Brands</h3>
+                                        </div>
+                                        <div className="flex flex-wrap gap-4">
+                                            {activeCategory.brandLogos.map((logo: string, idx: number) => (
+                                                <div key={idx} className="h-12 w-20 px-3 py-2 bg-slate-50 rounded-2xl border border-slate-100 flex items-center justify-center shrink-0 shadow-sm transition-transform hover:scale-110">
+                                                    <img src={logo} alt="Brand Supported" className="max-h-full max-w-full object-contain" />
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
                                 <div className="space-y-4">
                                     <div className="flex items-center gap-3">
                                         <div className="w-2 h-8 bg-primary/20 rounded-full" />

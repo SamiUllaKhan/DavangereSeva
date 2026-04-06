@@ -337,7 +337,7 @@ export default function AdminCategoryList({ categories: initialCategories }: { c
                                 </div>
                                 <div className="space-y-2">
                                     <Label className="text-[9px] font-bold text-gray-400">Upload New File</Label>
-                                    <Input name="imageFile" type="file" accept="image/*" className="h-12 rounded-xl border-gray-100 bg-gray-50 focus:bg-white transition-all font-medium text-xs cursor-pointer" />
+                                    <Input name="imageFile" type="file" accept="image/*, image/webp" className="h-12 rounded-xl border-gray-100 bg-gray-50 focus:bg-white transition-all font-medium text-xs cursor-pointer" />
                                 </div>
                             </div>
                         </div>
@@ -353,17 +353,21 @@ export default function AdminCategoryList({ categories: initialCategories }: { c
                                 <Label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-900 px-1">Supported Brands & Partners</Label>
                             </div>
                             <div className="bg-slate-50 p-6 rounded-[32px] border border-gray-100 space-y-4">
-                                <Label className="text-[9px] font-bold text-gray-400 uppercase tracking-widest pl-1">Brand Logo URLs (Comma separated)</Label>
+                                <div className="space-y-2">
+                                    <Label className="text-[9px] font-bold text-gray-400 uppercase tracking-widest pl-1">Upload Brand Logos (Images)</Label>
+                                    <Input name="brandLogoFiles" type="file" multiple accept="image/*, image/webp" className="h-12 rounded-xl border-gray-100 bg-white focus:bg-white transition-all font-medium text-xs cursor-pointer" />
+                                </div>
+                                <Label className="text-[9px] font-bold text-gray-400 uppercase tracking-widest pl-1">Brand Logo URLs (One per line)</Label>
                                 <Textarea 
                                     name="brandLogos" 
-                                    defaultValue={editingCategory?.brandLogos?.join(', ')} 
-                                    placeholder="https://brand1.com/logo.png, https://brand2.com/logo.png" 
+                                    defaultValue={editingCategory?.brandLogos?.join('\n')} 
+                                    placeholder="https://brand1.com/logo.png&#13;&#10;https://brand2.com/logo.webp" 
                                     className="rounded-2xl border-gray-100 bg-white focus:bg-white transition-all font-medium min-h-[100px] text-xs" 
                                 />
                                 <div className="flex flex-wrap gap-3 mt-2">
                                     {editingCategory?.brandLogos?.map((logo: string, i: number) => (
                                         <div key={i} className="h-10 w-16 bg-white rounded-xl border border-gray-100 p-2 flex items-center justify-center">
-                                            <img src={logo} alt="brand" className="max-h-full max-w-full object-contain brightness-0 opacity-40" />
+                                            <img src={logo} alt="brand" className="max-h-full max-w-full object-contain opacity-80" />
                                         </div>
                                     ))}
                                 </div>

@@ -176,8 +176,17 @@ export async function saveCategory(formData: FormData) {
         const uploadedImage = await uploadFile(imageFile);
         if (uploadedImage) image = uploadedImage;
 
-        // Handle brand logos (comma separated URLs)
-        const brandLogos = (formData.get('brandLogos') as string || '').split(',').map(l => l.trim()).filter(Boolean);
+        // Handle brand logos (one per line URLs)
+        const brandLogosText = formData.get('brandLogos') as string || '';
+        const brandLogos = brandLogosText.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+
+        const brandLogoFiles = formData.getAll('brandLogoFiles') as File[];
+        for (const file of brandLogoFiles) {
+            const uploadedUrl = await uploadFile(file);
+            if (uploadedUrl) {
+                brandLogos.push(uploadedUrl);
+            }
+        }
 
         const categoryData = {
             name,
