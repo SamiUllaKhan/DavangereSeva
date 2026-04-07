@@ -2,92 +2,28 @@ import { useState, useRef, useEffect } from 'react';
 import { motion, useAnimation, useMotionValue } from 'framer-motion';
 import Link from 'next/link';
 import { Star, ChevronRight, ChevronLeft, Zap } from 'lucide-react';
-import { Card } from '@/components/ui/card';
 
-const spotlightItems = [
-    {
-        id: 1,
-        title: "AC Deep Cleaning",
-        desc: "Breathe fresh air. Special foam-based cleaning.",
-        price: "699",
-        rating: "4.9",
-        revCount: "2.4k",
-        image: "/images/ac-deep-cleaning.png",
-        gradient: "from-blue-600/10 to-indigo-600/10",
-        slug: "ac-service"
-    },
-    {
-        id: 2,
-        title: "AC Repair & Service",
-        desc: "Gas charging & leak fix. Expert technicians.",
-        price: "499",
-        rating: "4.8",
-        revCount: "1.8k",
-        image: "/images/ac-repair.png",
-        gradient: "from-cyan-600/10 to-blue-600/10",
-        slug: "ac-service"
-    },
-    {
-        id: 3,
-        title: "Full Home Cleaning",
-        desc: "Deep kitchen & bathroom cleaning experts.",
-        price: "1299",
-        rating: "4.7",
-        revCount: "3.2k",
-        image: null,
-        gradient: "from-amber-600/10 to-orange-600/10",
-        slug: "home-cleaning"
-    },
-    {
-        id: 4,
-        title: "Expert Electrician",
-        desc: "Wiring, fixtures & appliance repair.",
-        price: "199",
-        rating: "4.9",
-        revCount: "5.1k",
-        image: null,
-        gradient: "from-emerald-600/10 to-teal-600/10",
-        slug: "electrical"
-    },
-    {
-        id: 5,
-        title: "Kitchen Deep Clean",
-        desc: "Removal of oil, grease and tough stains.",
-        price: "899",
-        rating: "4.8",
-        revCount: "1.1k",
-        image: null,
-        gradient: "from-rose-600/10 to-pink-600/10",
-        slug: "home-cleaning"
-    },
-    {
-        id: 6,
-        title: "Bathroom Cleaning",
-        desc: "Water stain removal & sanitization.",
-        price: "449",
-        rating: "4.7",
-        revCount: "940",
-        image: null,
-        gradient: "from-violet-600/10 to-purple-600/10",
-        slug: "home-cleaning"
-    }
-];
+interface SpotlightCarouselProps {
+    services: any[];
+}
 
-export function SpotlightCarousel() {
+export function SpotlightCarousel({ services }: SpotlightCarouselProps) {
     const [width, setWidth] = useState(0);
     const carouselRef = useRef<HTMLDivElement>(null);
     const innerRef = useRef<HTMLDivElement>(null);
     const controls = useAnimation();
     const x = useMotionValue(0);
 
+    const items = services.length > 0 ? services : [];
+
     useEffect(() => {
         if (innerRef.current && carouselRef.current) {
             setWidth(innerRef.current.scrollWidth - carouselRef.current.offsetWidth);
         }
-    }, []);
+    }, [items]);
 
     const handleScroll = (direction: 'left' | 'right') => {
-        const itemWidth = innerRef.current ? innerRef.current.scrollWidth / spotlightItems.length : 300;
+        const itemWidth = innerRef.current ? innerRef.current.scrollWidth / items.length : 300;
         const currentX = x.get();
         let targetX = direction === 'left' ? currentX + (itemWidth * 2) : currentX - (itemWidth * 2);
         
@@ -98,26 +34,28 @@ export function SpotlightCarousel() {
         controls.start({ x: targetX, transition: { type: "spring", stiffness: 200, damping: 25 } });
     };
 
+    if (items.length === 0) return null;
+
     return (
-        <section className="py-24 bg-[#FAFAFA] overflow-hidden">
-            <div className="container px-6 md:px-12 mx-auto">
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 gap-8">
+        <section className="py-8 md:py-12 bg-[#FAFAFA] overflow-hidden">
+            <div className="container px-3 md:px-12 mx-auto">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-6 md:mb-10 gap-4 md:gap-8 px-3">
                     <div className="max-w-2xl">
                         <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] mb-6 animate-fade-in border border-primary/20">
                             <span className="relative flex h-2 w-2">
                                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
                                 <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
                             </span>
-                            Curated Selection
+                            Top Rated Services
                         </div>
-                        <h3 className="text-5xl md:text-7xl font-black tracking-[-0.04em] text-gray-900 leading-[0.9] uppercase">
+                        <h3 className="text-2xl md:text-7xl font-black tracking-[-0.04em] text-gray-900 leading-[0.9] uppercase">
                             In the <br /> 
                             <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary-600 italic">Spotlight</span>
                         </h3>
                     </div>
-                    <div className="flex flex-col items-start md:items-end gap-6 shrink-0">
-                        <p className="text-gray-500 font-medium text-sm md:text-base max-w-[320px] md:text-right leading-relaxed italic text-balance opacity-80">
-                            "Handpicked services with top-tier verified professionals, designed for the modern Davanagere home."
+                    <div className="flex flex-col items-start md:items-end gap-3 md:gap-6 shrink-0">
+                        <p className="text-gray-500 font-medium text-xs md:text-base max-w-[320px] md:text-right leading-relaxed italic text-balance opacity-80">
+                            "Featured services handpicked for quality and excellence, delivered by our top-rated local experts."
                         </p>
                         <Link href="/services" className="group flex items-center gap-3 text-[11px] font-black uppercase tracking-[0.15em] text-gray-900">
                             <span className="relative">
@@ -161,11 +99,11 @@ export function SpotlightCarousel() {
                             dragConstraints={{ right: 4, left: -width - 4 }}
                             className="flex gap-4 md:gap-8 py-8"
                         >
-                            {spotlightItems.map((item) => (
+                            {items.map((item) => (
                                 <motion.div
-                                    key={item.id}
-                                    whileHover={{ y: -12 }}
-                                    className="min-w-[calc(50%-8px)] md:min-w-[calc(25%-24px)] flex-shrink-0 group pointer-events-none self-stretch"
+                                    key={item._id}
+                                    whileHover={{ y: -8 }}
+                                    className="w-[calc(48%-8px)] md:w-[calc(33.33%-16px)] xl:w-[calc(20%-18px)] flex-shrink-0 group pointer-events-none self-stretch"
                                 >
                                     <Link 
                                         href={`/services/${item.slug}`} 
@@ -174,71 +112,75 @@ export function SpotlightCarousel() {
                                     >
                                         <div className="relative flex flex-col h-full bg-white rounded-[24px] md:rounded-[40px] shadow-[0_15px_30px_-10px_rgba(0,0,0,0.05)] group-hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.12)] transition-all duration-700 overflow-hidden border border-gray-100/50">
                                             {/* Top Visual Section */}
-                                            <div className="relative h-[160px] md:h-[240px] w-full overflow-hidden">
-                                                <div className={`absolute inset-0 bg-gradient-to-br ${item.gradient} opacity-40`} />
+                                            <div className="relative h-[120px] md:h-[180px] w-full overflow-hidden bg-gray-50">
                                                 <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent z-10" />
                                                 
                                                 {item.image ? (
                                                     <img 
                                                         src={item.image} 
-                                                        alt={item.title} 
+                                                        alt={item.name} 
                                                         className="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-[2.5s] ease-out pointer-events-none"
                                                     />
                                                 ) : (
-                                                    <div className="w-full h-full flex items-center justify-center bg-gray-50">
-                                                        <div className="relative scale-75 md:scale-100">
-                                                            <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full scale-[2.5] animate-pulse" />
+                                                    <div className="w-full h-full flex items-center justify-center">
+                                                        <div className="relative">
+                                                            <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full scale-[2.5]" />
                                                             <Zap size={64} className="text-primary/10 relative z-10" />
                                                         </div>
                                                     </div>
                                                 )}
 
-                                                {/* Rating Floating Badge */}
-                                                <div className="absolute top-3 right-3 md:top-6 md:right-6 z-20">
-                                                    <div className="flex items-center gap-1 bg-gray-900/90 backdrop-blur-md text-white px-2 md:px-3 py-1 md:py-1.5 rounded-xl md:rounded-2xl text-[9px] md:text-[11px] font-black border border-white/10 shadow-xl">
+                                                {/* Stacked Badges for Mobile / Shared for Tablet-Desktop */}
+                                                <div className="absolute top-3 left-3 md:top-6 md:left-6 z-20 flex flex-col items-start gap-1.5 md:gap-2">
+                                                    {/* Category Badge */}
+                                                    <div className="bg-white/95 backdrop-blur-md px-2 md:px-3 py-1 md:py-1.5 rounded-lg md:rounded-2xl text-[7px] md:text-[10px] font-black uppercase tracking-widest text-gray-950 border border-white/20 shadow-sm flex items-center gap-1.5">
+                                                        <div className="w-1 md:w-1.5 h-1 md:h-1.5 rounded-full bg-primary animate-pulse" />
+                                                        {item.category?.name || 'Service'}
+                                                    </div>
+
+                                                    {/* Rating Badge (Stacked on Mobile) */}
+                                                    <div className="flex md:hidden items-center gap-1 bg-gray-900/90 backdrop-blur-md text-white px-2 py-1 rounded-lg text-[8px] font-black border border-white/10 shadow-xl">
                                                         <Star size={8} fill="#f59e0b" className="text-amber-500" />
-                                                        {item.rating}
+                                                        {Number(item.rating || 4.5).toFixed(1)}
                                                     </div>
                                                 </div>
 
-                                                {/* Featured Badge */}
-                                                <div className="absolute top-3 left-3 md:top-6 md:left-6 z-20">
-                                                    <div className="bg-white/90 backdrop-blur-md px-2 md:px-3.5 py-1 md:py-1.5 rounded-xl md:rounded-2xl text-[7px] md:text-[9px] font-black uppercase tracking-widest text-gray-900 border border-gray-100 shadow-sm flex items-center gap-1 md:gap-2">
-                                                        <div className="w-1 md:w-1.5 h-1 md:h-1.5 rounded-full bg-primary animate-pulse" />
-                                                        Exclusive
+                                                {/* Desktop-only Rating Badge (Top Right) */}
+                                                <div className="hidden md:block absolute top-6 right-6 z-20">
+                                                    <div className="flex items-center gap-1 bg-gray-900/90 backdrop-blur-md text-white px-3 py-1.5 rounded-2xl text-[11px] font-black border border-white/10 shadow-xl">
+                                                        <Star size={10} fill="#f59e0b" className="text-amber-500" />
+                                                        {Number(item.rating || 4.5).toFixed(1)}
+                                                        <span className="text-gray-400 font-medium ml-1">({(item.reviewCount || 0) > 1000 ? `${(item.reviewCount / 1000).toFixed(1)}k` : item.reviewCount || 0})</span>
                                                     </div>
                                                 </div>
                                             </div>
 
                                             {/* Body Content */}
-                                            <div className="relative px-4 md:px-8 pb-6 md:pb-10 flex flex-col flex-1 -mt-8 md:-mt-12 z-20">
+                                            <div className="relative px-3 md:px-5 pb-5 md:pb-7 flex flex-col flex-1 -mt-6 md:-mt-10 z-20">
                                                 <div className="flex-1">
-                                                    <h4 className="text-sm md:text-2xl font-black tracking-tighter text-gray-900 group-hover:text-primary transition-colors duration-300 leading-tight uppercase mb-1 md:mb-2 line-clamp-1">
-                                                        {item.title}
+                                                    <h4 className="text-xs md:text-base font-black tracking-tighter text-gray-900 group-hover:text-primary transition-colors duration-300 leading-tight uppercase mb-1 line-clamp-1">
+                                                        {item.name}
                                                     </h4>
-                                                    <p className="text-gray-400 font-medium text-[10px] md:text-xs italic leading-relaxed line-clamp-1 md:line-clamp-2 mb-4 md:mb-8 pr-2">
-                                                        "{item.desc}"
+                                                    <p className="text-gray-500 font-medium text-[9px] md:text-xs italic leading-relaxed line-clamp-1 md:line-clamp-2 mb-3 opacity-80">
+                                                        {item.shortDescription || item.description || "Expert service at your doorstep."}
                                                     </p>
                                                 </div>
 
-                                                <div className="pt-3 md:pt-6 border-t border-gray-50 flex justify-between items-end">
+                                                <div className="pt-3 border-t border-gray-50 flex justify-between items-center">
                                                     <div className="flex flex-col">
-                                                        <span className="text-[8px] md:text-[10px] font-bold text-gray-300 uppercase tracking-widest mb-0.5 md:mb-1">Book Today</span>
-                                                        <span className="text-lg md:text-3xl font-black text-gray-950 tracking-tighter leading-none">
-                                                            <span className="text-[10px] md:text-sm font-bold text-primary mr-0.5 md:mr-1">₹</span>
-                                                            {item.price}
-                                                        </span>
+                                                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-1">Total Fee</span>
+                                                        <div className="flex items-baseline gap-1">
+                                                            <span className="text-sm font-bold text-primary">₹</span>
+                                                            <span className="text-sm md:text-xl font-black text-gray-950 tracking-tighter leading-none">
+                                                                {item.price}
+                                                            </span>
+                                                        </div>
                                                     </div>
                                                     
-                                                    <div className="relative flex items-center justify-center">
-                                                        <div className="absolute inset-0 bg-primary/20 blur-xl rounded-full scale-0 group-hover:scale-150 transition-transform duration-500" />
-                                                        <div className="h-8 w-8 md:h-14 md:w-14 rounded-full bg-gray-950 text-white flex items-center justify-center group-hover:bg-primary transition-all duration-300 shadow-xl group-hover:shadow-primary/40 relative z-10 scale-90 md:scale-100">
-                                                            <motion.div
-                                                                whileHover={{ rotate: 90 }}
-                                                                transition={{ type: "spring", stiffness: 300 }}
-                                                            >
-                                                                <ChevronRight size={16} className="md:size-[24px] stroke-[3]" />
-                                                            </motion.div>
+                                                    <div className="relative group/btn">
+                                                        <div className="absolute inset-0 bg-primary/20 blur-xl rounded-full scale-0 group-hover/btn:scale-150 transition-transform duration-500" />
+                                                        <div className="h-8 w-8 md:h-10 md:w-10 rounded-full bg-gray-950 text-white flex items-center justify-center group-hover:bg-primary transition-all duration-300 shadow-xl group-hover:shadow-primary/40 relative z-10">
+                                                            <ChevronRight size={14} className="md:size-[18px] stroke-[3] group-hover:translate-x-0.5 transition-transform" />
                                                         </div>
                                                     </div>
                                                 </div>
@@ -254,10 +196,10 @@ export function SpotlightCarousel() {
                     </motion.div>
                 </div>
 
-                <div className="lg:hidden mt-20 text-center">
+                <div className="lg:hidden mt-8 text-center">
                     <div className="inline-flex items-center gap-4 text-[10px] font-black uppercase tracking-[0.4em] text-gray-300">
                         <div className="w-12 h-[1px] bg-gray-200" />
-                        Explore Excellence
+                        Swipe to Explore
                         <div className="w-12 h-[1px] bg-gray-200" />
                     </div>
                 </div>

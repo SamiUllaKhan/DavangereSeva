@@ -92,6 +92,21 @@ export async function getCategories(all = false) {
     }
 }
 
+export async function getSpotlightServices() {
+    try {
+        await dbConnect();
+        const services = await Service.find({ isActive: true })
+            .populate('category')
+            .sort({ rating: -1, reviewCount: -1 })
+            .limit(10)
+            .lean();
+        return JSON.parse(JSON.stringify(services));
+    } catch (error) {
+        console.error('Error fetching spotlight services:', error);
+        return [];
+    }
+}
+
 export async function saveService(formData: FormData) {
     try {
         await checkAdmin();

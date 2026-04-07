@@ -10,12 +10,13 @@ import { SpotlightCarousel } from './SpotlightCarousel';
 
 interface HomeClientWrapperProps {
   categories: any[];
+  spotlightServices: any[];
   isConnected: boolean;
 }
 
-export default function HomeClientWrapper({ categories, isConnected }: HomeClientWrapperProps) {
+export default function HomeClientWrapper({ categories, spotlightServices, isConnected }: HomeClientWrapperProps) {
   return (
-    <div className="flex flex-col gap-12 pb-12">
+    <div className="flex flex-col gap-6 pb-12">
       {/* Database Connection Status (Internal/Dev Only) */}
       <div className="fixed top-4 right-4 z-[100] scale-75 origin-top-right">
         {isConnected ? (
@@ -32,20 +33,19 @@ export default function HomeClientWrapper({ categories, isConnected }: HomeClien
       </div>
 
       {/* Hero Section */}
-      <section className="relative h-[600px] flex items-center justify-center overflow-hidden bg-primary px-4 md:px-0">
-        <div className="absolute inset-0 opacity-20">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-400 via-transparent to-transparent"></div>
-          {/* Animated background blobs */}
-          <motion.div 
-            animate={{ scale: [1, 1.2, 1], x: [0, 50, 0] }}
-            transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-            className="absolute top-0 right-0 w-96 h-96 bg-blue-300/20 rounded-full blur-[100px]"
-          />
-          <motion.div 
-            animate={{ scale: [1.2, 1, 1.2], x: [0, -50, 0] }}
-            transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
-            className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-indigo-500/10 rounded-full blur-[120px]"
-          />
+      <section className="relative min-h-[450px] md:h-[700px] flex items-center justify-center overflow-hidden px-4 md:px-0 bg-gray-900 py-12 md:py-0">
+        <div 
+          className="absolute inset-0 z-0"
+          style={{
+            backgroundImage: "url('/images/hero-banner.png')",
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
+        >
+          {/* Subtle overlay for text readability */}
+          <div className="absolute inset-0 bg-gray-900/60 transition-opacity"></div>
+          {/* Top gradient to blend with the header if needed */}
+          <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/40 to-transparent"></div>
         </div>
         
         <div className="container px-4 md:px-8 relative z-10 text-center text-white mx-auto">
@@ -54,10 +54,10 @@ export default function HomeClientWrapper({ categories, isConnected }: HomeClien
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <h1 className="text-4xl md:text-7xl font-black mb-4 tracking-tighter uppercase leading-[0.9]">
+            <h1 className="text-3xl md:text-7xl font-black mb-3 tracking-tighter uppercase leading-[0.9]">
               Home services <br /> <span className="text-blue-200">at your doorstep</span>
             </h1>
-            <p className="text-lg md:text-xl mb-8 text-blue-100/80 max-w-2xl mx-auto font-medium uppercase tracking-[0.2em]">
+            <p className="text-sm md:text-xl mb-6 text-blue-100/80 max-w-2xl mx-auto font-medium uppercase tracking-[0.2em]">
               Professional • Reliable • Expert Care in Davanagere
             </p>
           </motion.div>
@@ -88,11 +88,11 @@ export default function HomeClientWrapper({ categories, isConnected }: HomeClien
       </section>
 
       {/* Category Grid - Brought Higher and cleaner */}
-      <section className="container px-4 md:px-8 mx-auto -mt-24 relative z-20">
+      <section className="container px-4 md:px-8 mx-auto mt-8 lg:-mt-24 relative z-20 pb-8">
         <Card className="border-none shadow-2xl bg-white/80 backdrop-blur-xl">
-          <CardContent className="p-4 md:p-8">
-            <div className="flex flex-col items-center text-center mb-8 gap-1">
-              <h2 className="text-2xl md:text-3xl font-extrabold text-gray-900 tracking-tight">
+          <CardContent className="p-3 md:p-8">
+            <div className="flex flex-col items-center text-center mb-6 gap-0.5">
+              <h2 className="text-lg md:text-3xl font-extrabold text-gray-900 tracking-tight uppercase">
                 What can we help you with?
               </h2>
               <Button asChild variant="ghost" className="rounded-full font-black uppercase tracking-widest text-[10px] text-primary hover:bg-primary/5 px-6">
@@ -110,8 +110,8 @@ export default function HomeClientWrapper({ categories, isConnected }: HomeClien
                     {cat.status === 'coming-soon' && (
 		                  <span className="absolute -top-2 -right-2 bg-amber-500 text-white text-[8px] font-black px-1.5 py-0.5 rounded-full z-10 shadow-sm uppercase tracking-tighter">Soon</span>
                     )}
-                    <div className={`w-16 h-16 md:w-20 md:h-20 rounded-[28px] bg-gray-50 flex items-center justify-center transition-all duration-500 group-hover:bg-primary group-hover:text-white group-hover:shadow-2xl group-hover:shadow-primary/20 group-hover:-translate-y-2 ring-1 ring-gray-100 group-hover:ring-primary/20`}>
-                      <IconComponent className="w-8 h-8 md:w-10 md:h-10 text-primary group-hover:text-white transition-colors duration-500" />
+                    <div className={`w-14 h-14 md:w-20 md:h-20 rounded-[22px] md:rounded-[28px] bg-gray-50 flex items-center justify-center transition-all duration-500 group-hover:bg-primary group-hover:text-white group-hover:shadow-2xl group-hover:shadow-primary/20 group-hover:-translate-y-2 ring-1 ring-gray-100 group-hover:ring-primary/20`}>
+                      <IconComponent className="w-7 h-7 md:w-10 md:h-10 text-primary group-hover:text-white transition-colors duration-500" />
                     </div>
                     <span className="text-[11px] md:text-xs font-black text-gray-600 text-center group-hover:text-primary transition-colors uppercase tracking-widest leading-tight px-1">
                       {cat.name}
@@ -125,8 +125,8 @@ export default function HomeClientWrapper({ categories, isConnected }: HomeClien
       </section>
 
       {/* Trust Stats Section (New) */}
-      <section className="container px-4 md:px-8 mx-auto -mt-6">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 text-center px-4 md:px-8 py-10 bg-gray-900 rounded-[40px] text-white shadow-2xl">
+      <section className="container px-4 md:px-8 mx-auto mt-4 lg:-mt-6 py-6 md:py-12">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-8 text-center px-4 md:px-8 py-6 md:py-10 bg-gray-900 rounded-[30px] md:rounded-[40px] text-white shadow-2xl">
           {[
             { val: "500+", label: "Verified Experts", sub: "Skilled professionals" },
             { val: "10k+", label: "Happy Homes", sub: "Services delivered" },
@@ -134,29 +134,29 @@ export default function HomeClientWrapper({ categories, isConnected }: HomeClien
             { val: "24/7", label: "Local Support", sub: "Always here to help" }
           ].map((stat, idx) => (
             <div key={idx} className="relative group">
-              <div className="text-3xl md:text-5xl font-black mb-1 group-hover:scale-110 transition-transform duration-500">{stat.val}</div>
-              <div className="text-[10px] md:text-xs font-black uppercase tracking-[0.2em] text-blue-200 mb-1">{stat.label}</div>
-              <div className="text-[8px] md:text-[9px] font-medium text-gray-400/80 uppercase tracking-widest">{stat.sub}</div>
+              <div className="text-2xl md:text-5xl font-black mb-0.5 group-hover:scale-110 transition-transform duration-500">{stat.val}</div>
+              <div className="text-[9px] md:text-xs font-black uppercase tracking-[0.2em] text-blue-200 mb-0.5">{stat.label}</div>
+              <div className="text-[7px] md:text-[9px] font-medium text-gray-400/80 uppercase tracking-widest">{stat.sub}</div>
               {idx < 3 && <div className="hidden md:absolute right-0 top-1/2 -translate-y-1/2 w-[1px] h-12 bg-white/10" />}
             </div>
           ))}
         </div>
       </section>
-
+ 
       {/* Spotlight Slider (New) */}
-      <div className="-mt-12 relative z-30">
-        <SpotlightCarousel />
+      <div className="relative z-30">
+        <SpotlightCarousel services={spotlightServices} />
       </div>
 
       {/* Modern How it Works */}
-      <section className="py-24 relative overflow-hidden bg-white">
+      <section className="py-12 relative overflow-hidden bg-white">
         <div className="container px-4 md:px-8 mx-auto relative z-10">
-          <div className="max-w-3xl mb-20">
-            <h2 className="text-sm font-black uppercase tracking-[0.3em] text-primary mb-4 italic">Step-by-step Guide</h2>
-            <h3 className="text-4xl md:text-5xl font-black tracking-tighter mb-6 text-gray-900 leading-[1.1]">
+          <div className="max-w-3xl mb-8 md:mb-12">
+            <h2 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary mb-2 md:mb-4 italic">Step-by-step Guide</h2>
+            <h3 className="text-2xl md:text-5xl font-black tracking-tighter mb-4 md:mb-6 text-gray-900 leading-[1.1]">
               HOW IT <span className="text-primary italic underline decoration-blue-200 underline-offset-8">WORKS</span>
             </h3>
-            <p className="text-lg text-gray-500 font-medium max-w-xl">
+            <p className="text-base md:text-lg text-gray-500 font-medium max-w-xl">
               Davanagere Seva simplifies your home maintenance. Just follow these 3 easy steps to get your job done.
             </p>
           </div>
@@ -190,16 +190,16 @@ export default function HomeClientWrapper({ categories, isConnected }: HomeClien
                 gradient: 'from-primary/90 to-primary/70'
               }
             ].map((item, idx) => (
-              <div key={idx} className="relative group p-4 md:p-8">
-                <div className="bg-white rounded-[40px] p-8 md:p-10 border border-gray-50 shadow-sm hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 group-hover:-translate-y-4 relative z-10">
-                  <div className="flex justify-between items-start mb-8">
-                    <div className={`w-16 h-16 rounded-3xl bg-gradient-to-br ${item.gradient} flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform duration-500`}>
-                      <item.icon size={32} />
+              <div key={idx} className="relative group p-0 md:p-8">
+                <div className="bg-white rounded-[32px] md:rounded-[40px] p-6 md:p-10 border border-gray-50 shadow-sm hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 group-hover:-translate-y-4 relative z-10">
+                  <div className="flex justify-between items-start mb-6 md:mb-8">
+                    <div className={`w-14 h-14 md:w-16 md:h-16 rounded-2xl md:rounded-3xl bg-gradient-to-br ${item.gradient} flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform duration-500`}>
+                      <item.icon size={28} />
                     </div>
-                    <span className="text-5xl font-black text-gray-100 group-hover:text-primary/10 transition-colors uppercase italic">{item.step}</span>
+                    <span className="text-4xl md:text-5xl font-black text-gray-100 group-hover:text-primary/10 transition-colors uppercase italic">{item.step}</span>
                   </div>
-                  <h4 className="text-xl font-black mb-4 tracking-tighter text-gray-900 group-hover:text-primary transition-colors">{item.title}</h4>
-                  <p className="text-gray-500 font-medium leading-relaxed mb-6 italic">"{item.desc}"</p>
+                  <h4 className="text-lg md:text-xl font-black mb-3 md:mb-4 tracking-tight text-gray-900 group-hover:text-primary transition-colors uppercase">{item.title}</h4>
+                  <p className="text-gray-500 font-medium leading-relaxed mb-4 md:mb-6 italic text-sm md:text-base">"{item.desc}"</p>
 
                   <div className="h-1 w-12 bg-gray-100 rounded-full group-hover:w-24 group-hover:bg-primary transition-all duration-500" />
                 </div>
@@ -214,7 +214,7 @@ export default function HomeClientWrapper({ categories, isConnected }: HomeClien
             ))}
           </div>
 
-          <div className="mt-20 text-center">
+          <div className="mt-12 text-center">
             <Link href="/services">
               <Button size="lg" className="rounded-full px-12 h-14 font-black uppercase tracking-widest gap-2 bg-gray-950 hover:bg-primary transition-all shadow-xl hover:shadow-primary/20">
                 Ready to start? <Icons.ArrowRight size={20} />
@@ -229,21 +229,28 @@ export default function HomeClientWrapper({ categories, isConnected }: HomeClien
       </section>
 
       {/* Promise Section */}
-      <section className="bg-white py-24 border-t border-gray-50">
+      <section className="bg-white py-16 border-t border-gray-50">
         <div className="container px-4 md:px-8 mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
-            <div className="relative">
-              <div className="absolute -top-10 -left-10 w-40 h-40 bg-primary/5 rounded-full blur-3xl" />
-              <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-blue-500/5 rounded-full blur-3xl" />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-stretch">
+            <div className="relative h-full">
+              <div className="absolute -top-10 -left-10 w-40 h-40 bg-primary/5 rounded-full blur-3xl hidden md:block" />
+              <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-blue-500/5 rounded-full blur-3xl hidden md:block" />
               
-              <div className="relative aspect-square md:aspect-video bg-gray-50 rounded-[60px] overflow-hidden border border-gray-100 group shadow-2xl">
-                <div className="absolute inset-0 bg-gradient-to-tr from-primary/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                <div className="flex flex-col items-center justify-center h-full p-12 text-center">
-                  <div className="w-24 h-24 rounded-[40px] bg-white shadow-xl flex items-center justify-center mb-8 transform -rotate-6 group-hover:rotate-0 transition-transform duration-700">
-                    <Icons.ShieldCheck className="w-12 h-12 text-primary" />
+              <div 
+                className="relative h-full w-full min-h-[300px] lg:min-h-full rounded-[30px] md:rounded-[60px] overflow-hidden border border-gray-100 group shadow-2xl"
+                style={{
+                  backgroundImage: "url('/images/promise-bg.png')",
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                }}
+              >
+                <div className="absolute inset-0 bg-gray-900/60 transition-opacity duration-700 group-hover:bg-gray-900/70" />
+                <div className="flex flex-col items-center justify-center h-full w-full p-8 md:p-12 text-center relative z-10">
+                  <div className="w-20 h-20 md:w-24 md:h-24 rounded-[30px] md:rounded-[40px] bg-white/10 backdrop-blur-md shadow-xl border border-white/20 flex items-center justify-center mb-6 md:mb-8 transform -rotate-6 group-hover:rotate-0 transition-transform duration-700">
+                    <Icons.ShieldCheck className="w-10 h-10 md:w-12 md:h-12 text-white" />
                   </div>
-                  <h3 className="text-3xl font-black mb-4 tracking-tighter text-gray-900 leading-none">THE DAVANAGERE SEVA <br /> <span className="text-primary italic">PROMISE</span></h3>
-                  <p className="text-gray-500 font-medium max-w-xs mx-auto italic">"We don't just provide services, we provide peace of mind."</p>
+                  <h3 className="text-xl md:text-3xl font-black mb-2 md:mb-4 tracking-tighter text-white leading-none shadow-sm capitalize md:uppercase">THE DAVANAGERE SEVA <br /> <span className="text-blue-300 italic">PROMISE</span></h3>
+                  <p className="text-gray-200 font-medium max-w-xs mx-auto italic text-sm md:text-base">"We don't just provide services, we provide peace of mind."</p>
                 </div>
               </div>
 
@@ -261,8 +268,8 @@ export default function HomeClientWrapper({ categories, isConnected }: HomeClien
 
             <div className="space-y-12">
               <div className="max-w-md">
-                <h2 className="text-sm font-black uppercase tracking-[0.3em] text-primary mb-4">Why we are different</h2>
-                <h3 className="text-4xl md:text-5xl font-black tracking-tighter mb-6 text-gray-900 leading-none uppercase">
+                <h2 className="text-[10px] md:text-sm font-black uppercase tracking-[0.3em] text-primary mb-3 md:mb-4">Why we are different</h2>
+                <h3 className="text-2xl md:text-5xl font-black tracking-tighter mb-4 md:mb-6 text-gray-900 leading-none uppercase">
                   Service you can <br /> <span className="text-primary underline decoration-blue-100 underline-offset-8">depend on.</span>
                 </h3>
               </div>
@@ -278,8 +285,8 @@ export default function HomeClientWrapper({ categories, isConnected }: HomeClien
                       <item.icon size={24} className="stroke-[2.5]" />
                     </div>
                     <div>
-                      <h4 className="font-black text-xl mb-1 tracking-tight text-gray-900 group-hover:text-primary transition-colors uppercase">{item.title}</h4>
-                      <p className="text-gray-500 font-medium text-sm leading-relaxed">{item.desc}</p>
+                      <h4 className="font-black text-lg md:text-xl mb-0.5 md:mb-1 tracking-tight text-gray-900 group-hover:text-primary transition-colors uppercase">{item.title}</h4>
+                      <p className="text-gray-500 font-medium text-xs md:text-sm leading-relaxed">{item.desc}</p>
                     </div>
                   </div>
                 ))}
