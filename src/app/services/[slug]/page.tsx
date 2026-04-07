@@ -90,7 +90,7 @@ export default async function ServiceCategoryPage({ params }: { params: Promise<
     return (
         <div className="min-h-screen bg-gray-50/50">
             {/* Minimal Header with Search */}
-            <section className="bg-white border-b border-gray-100 pt-[68px] md:pt-24 pb-2 md:pb-12 mb-2 md:mb-8 sticky top-0 md:top-0 z-40 shadow-sm shadow-gray-100/50">
+            <section className="bg-white border-b border-gray-100 pt-3 md:pt-8 pb-3 md:pb-10 mb-2 md:mb-6 sticky top-16 z-40 shadow-sm shadow-gray-100/50">
                 <div className="container px-0 md:px-8 mx-auto">
                     <div className="flex items-center gap-2 md:gap-6 px-4 md:px-0">
                         <Link href="/services" className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-gray-100 flex items-center justify-center hover:bg-primary hover:text-white transition-all text-gray-500 shrink-0">

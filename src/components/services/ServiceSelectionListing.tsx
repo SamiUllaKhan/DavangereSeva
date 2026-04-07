@@ -225,10 +225,10 @@ export function ServiceSelectionListing({
                                     id={`service-${service._id}`}
                                     className={`relative group bg-white rounded-[32px] md:rounded-[40px] p-4 md:p-8 border border-slate-100 shadow-sm transition-all duration-500 hover:shadow-2xl hover:shadow-primary/5 hover:-translate-y-1 ${isHighlighted ? 'ring-2 ring-primary ring-offset-4 ring-offset-[#F8FAFC]' : ''}`}
                                 >
-                                    <div className="flex flex-col md:flex-row gap-4 md:gap-8 items-start">
+                                    <div className="flex flex-row gap-4 md:gap-8 items-start">
                                         {/* Service Image Section */}
-                                        <div className="w-full md:w-56 shrink-0 relative">
-                                            <div className="aspect-square rounded-[32px] overflow-hidden bg-slate-100 shadow-inner transition-transform duration-700">
+                                        <div className="w-24 md:w-56 shrink-0 relative">
+                                            <div className="aspect-square rounded-2xl md:rounded-[32px] overflow-hidden bg-slate-100 shadow-inner transition-transform duration-700">
                                                 <img
                                                     src={service.image || '/images/placeholder-service.jpg'}
                                                     alt={service.name}
@@ -237,79 +237,76 @@ export function ServiceSelectionListing({
                                             </div>
                                             {/* Best Seller Badge */}
                                             {service.rating >= 4.8 && (
-                                                <div className="absolute -top-3 -right-3 bg-[#10B981] text-white text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-2xl shadow-lg border-2 border-white">
+                                                <div className="absolute -top-2 -right-2 bg-[#10B981] text-white text-[7px] md:text-[10px] font-black uppercase tracking-widest px-2 md:px-4 py-1 md:py-2 rounded-lg md:rounded-2xl shadow-lg border-2 border-white">
                                                     Best Rated
                                                 </div>
                                             )}
                                         </div>
 
                                         {/* Service Details Section */}
-                                        <div className="flex-1 space-y-4 md:space-y-6">
-                                            <div className="space-y-2">
-                                                <div className="flex items-center justify-between">
-                                                    <h3 className="text-2xl font-black text-slate-900 group-hover:text-primary transition-colors tracking-tight">{service.name}</h3>
-                                                    <div className="flex items-center gap-1.5 bg-yellow-50 text-yellow-700 px-3 py-1 rounded-xl text-xs font-black border border-yellow-100/50">
-                                                        <Icons.Star size={14} className="fill-current" />
+                                        <div className="flex-1 space-y-2 md:space-y-6 min-w-0">
+                                            <div className="space-y-1 md:space-y-2">
+                                                <div className="flex items-start md:items-center justify-between gap-2">
+                                                    <h3 className="text-base md:text-2xl font-black text-slate-900 group-hover:text-primary transition-colors tracking-tight line-clamp-1">{service.name}</h3>
+                                                    <div className="flex items-center gap-1 bg-yellow-50 text-yellow-700 px-1.5 md:px-3 py-0.5 md:py-1 rounded-lg text-[9px] md:text-xs font-black border border-yellow-100/50 shrink-0">
+                                                        <Icons.Star size={10} className="fill-current md:size-3.5" />
                                                         {service.rating?.toFixed(1) || '4.8'}
                                                     </div>
                                                 </div>
-                                                <p className="text-slate-500 text-sm font-medium line-clamp-2 leading-relaxed">
-                                                    {service.description || 'Professional grade service with guaranteed satisfaction and verified experts.'}
+                                                <p className="text-slate-500 text-[10px] md:text-sm font-medium line-clamp-1 md:line-clamp-2 leading-relaxed">
+                                                    {service.description || 'Professional grade service with guaranteed satisfaction.'}
                                                 </p>
                                             </div>
 
-                                            <div className="flex flex-wrap items-center gap-6">
+                                            <div className="flex items-center gap-4 md:gap-6">
                                                 <div className="flex flex-col">
-                                                    <span className="text-[10px] text-slate-400 font-black uppercase tracking-[0.2em]">Price</span>
-                                                    <span className="text-2xl font-black text-slate-900 leading-none mt-1">₹{service.price}</span>
+                                                    <span className="text-[8px] md:text-[10px] text-slate-400 font-black uppercase tracking-[0.2em]">Price</span>
+                                                    <span className="text-base md:text-2xl font-black text-slate-900 leading-none mt-0.5 md:mt-1">₹{service.price}</span>
                                                 </div>
-                                                <div className="w-px h-8 bg-slate-100 hidden sm:block" />
+                                                <div className="w-px h-4 md:h-8 bg-slate-100" />
                                                 <div className="flex flex-col">
-                                                    <span className="text-[10px] text-slate-400 font-black uppercase tracking-[0.2em]">Duration</span>
-                                                    <span className="text-sm font-bold text-slate-700 mt-1">45 - 60 Mins</span>
+                                                    <span className="text-[8px] md:text-[10px] text-slate-400 font-black uppercase tracking-[0.2em]">Duration</span>
+                                                    <span className="text-[10px] md:text-sm font-bold text-slate-700 mt-0.5 md:mt-1">45-60 min</span>
                                                 </div>
                                             </div>
 
-                                            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-4 md:pt-6 border-t border-slate-50">
+                                            <div className="flex flex-row items-center gap-2 md:gap-4 pt-2 md:pt-6 border-t border-slate-50">
                                                 <Link
                                                     href={`/services/${service.slug}`}
                                                     onClick={(e) => {
-                                                        // Prevent the full page navigation which might be optimized away
                                                         e.preventDefault();
-                                                        // Update URL manually without full page refresh
                                                         window.history.pushState(null, '', `/services/${service.slug}`);
-                                                        // Set active service immediately for state
                                                         setSelectedService(service);
                                                     }}
-                                                    className="h-14 sm:h-12 px-6 rounded-2xl bg-slate-50 hover:bg-slate-100 text-slate-600 font-black text-[10px] uppercase tracking-widest transition-all flex items-center justify-center gap-2 group/btn"
+                                                    className="h-8 md:h-12 px-3 md:px-6 rounded-lg md:rounded-2xl bg-slate-50 hover:bg-slate-100 text-slate-600 font-black text-[8px] md:text-[10px] uppercase tracking-widest transition-all flex items-center justify-center gap-1 group/btn shrink-0"
                                                 >
-                                                    View Details
-                                                    <Icons.ChevronRight size={14} className="group-hover/btn:translate-x-1 transition-transform" />
+                                                    Details
+                                                    <Icons.ChevronRight size={10} className="group-hover/btn:translate-x-1 transition-transform md:size-3.5" />
                                                 </Link>
                                                 
-                                                <div className="flex-1 sm:flex-initial">
+                                                <div className="flex-1">
                                                     {cartItem ? (
-                                                        <div className="flex items-center justify-between sm:justify-center gap-6 bg-primary px-4 py-2 rounded-2xl shadow-xl shadow-primary/20 text-white h-14 sm:h-12">
+                                                        <div className="flex items-center justify-between gap-2 md:gap-6 bg-primary px-2 md:px-4 py-1 md:py-2 rounded-lg md:rounded-2xl shadow-xl shadow-primary/20 text-white h-8 md:h-12">
                                                             <button 
                                                                 onClick={() => removeFromCart(service._id)}
-                                                                className="w-10 h-10 flex items-center justify-center hover:bg-white/20 rounded-xl transition-colors shrink-0"
+                                                                className="w-6 h-6 md:w-10 md:h-10 flex items-center justify-center hover:bg-white/20 rounded-md transition-colors shrink-0"
                                                             >
-                                                                <Icons.Minus size={20} />
+                                                                <Icons.Minus size={14} className="md:size-5" />
                                                             </button>
-                                                            <span className="font-black text-xl w-8 text-center">{cartItem.quantity}</span>
+                                                            <span className="font-black text-sm md:text-xl w-4 md:w-8 text-center">{cartItem.quantity}</span>
                                                             <button 
                                                                 onClick={() => addToCart(service)}
-                                                                className="w-10 h-10 flex items-center justify-center hover:bg-white/20 rounded-xl transition-colors shrink-0"
+                                                                className="w-6 h-6 md:w-10 md:h-10 flex items-center justify-center hover:bg-white/20 rounded-md transition-colors shrink-0"
                                                             >
-                                                                <Icons.Plus size={20} />
+                                                                <Icons.Plus size={14} className="md:size-5" />
                                                             </button>
                                                         </div>
                                                     ) : (
                                                         <Button
                                                             onClick={() => addToCart(service)}
-                                                            className="w-full sm:w-auto h-14 sm:h-12 px-10 rounded-2xl font-black uppercase tracking-widest text-xs shadow-xl shadow-primary/20 transition-all hover:scale-[1.02] active:scale-95 bg-primary text-white"
+                                                            className="w-full h-8 md:h-12 px-2 md:px-10 rounded-lg md:rounded-2xl font-black uppercase tracking-widest text-[8px] md:text-xs shadow-xl shadow-primary/20 bg-primary text-white"
                                                         >
-                                                            Add to Cart
+                                                            Add
                                                         </Button>
                                                     )}
                                                 </div>
