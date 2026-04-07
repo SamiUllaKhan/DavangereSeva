@@ -187,13 +187,12 @@ export function ServiceSelectionListing({
                                     <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest italic">All models & issues handled by verified experts</p>
                                 </div>
 
-                                <div className="flex-1 w-full overflow-hidden">
-                                    <div className="flex flex-wrap md:flex-nowrap items-center justify-center md:justify-end gap-4 md:gap-8 overflow-x-auto pb-2 no-scrollbar">
+                                <div className="flex-1 w-full">
+                                    <div className="flex flex-wrap items-center justify-center md:justify-end gap-3 md:gap-6">
                                         {activeCategory.brandLogos.map((logo: string, idx: number) => (
                                             <motion.div 
                                                 key={idx} 
-                                                whileHover={{ y: -5, scale: 1.05 }}
-                                                className="h-16 md:h-20 min-w-[120px] md:min-w-[160px] px-3 py-2 bg-slate-50/50 hover:bg-white rounded-3xl border border-slate-100 hover:border-primary/20 shadow-sm hover:shadow-xl hover:shadow-primary/5 transition-all flex items-center justify-center group/logo shrink-0"
+                                                className="h-16 md:h-20 min-w-[120px] md:min-w-[160px] px-3 py-2 bg-slate-50/50 hover:bg-white rounded-3xl border border-slate-100 hover:border-primary/20 shadow-sm transition-all flex items-center justify-center group/logo shrink-0"
                                             >
                                                 <img 
                                                     src={logo} 
@@ -229,11 +228,11 @@ export function ServiceSelectionListing({
                                     <div className="flex flex-col md:flex-row gap-4 md:gap-8 items-start">
                                         {/* Service Image Section */}
                                         <div className="w-full md:w-56 shrink-0 relative">
-                                            <div className="aspect-square rounded-[32px] overflow-hidden bg-slate-100 shadow-inner group-hover:scale-[1.02] transition-transform duration-700">
+                                            <div className="aspect-square rounded-[32px] overflow-hidden bg-slate-100 shadow-inner transition-transform duration-700">
                                                 <img
                                                     src={service.image || '/images/placeholder-service.jpg'}
                                                     alt={service.name}
-                                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                                                    className="w-full h-full object-cover transition-transform duration-700"
                                                 />
                                             </div>
                                             {/* Best Seller Badge */}
@@ -274,6 +273,14 @@ export function ServiceSelectionListing({
                                             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-4 md:pt-6 border-t border-slate-50">
                                                 <Link
                                                     href={`/services/${service.slug}`}
+                                                    onClick={(e) => {
+                                                        // Prevent the full page navigation which might be optimized away
+                                                        e.preventDefault();
+                                                        // Update URL manually without full page refresh
+                                                        window.history.pushState(null, '', `/services/${service.slug}`);
+                                                        // Set active service immediately for state
+                                                        setSelectedService(service);
+                                                    }}
                                                     className="h-14 sm:h-12 px-6 rounded-2xl bg-slate-50 hover:bg-slate-100 text-slate-600 font-black text-[10px] uppercase tracking-widest transition-all flex items-center justify-center gap-2 group/btn"
                                                 >
                                                     View Details
@@ -442,21 +449,21 @@ export function ServiceSelectionListing({
                 onOpenChange={(open) => {
                     if (!open) {
                         setSelectedService(null);
-                        // SEO Friendly URL Cleanup: If we were on a service slug, go back to category slug
-                        if (highlightedServiceId && activeCategory?.slug) {
-                            router.push(`/services/${activeCategory.slug}`, { scroll: false });
+                        // SEO Friendly URL Cleanup: Clear service slug and reset to category slug
+                        if (activeCategory?.slug) {
+                            window.history.pushState(null, '', `/services/${activeCategory.slug}`);
                         }
                     }
                 }}
             >
-                <DialogContent className="sm:max-w-[700px] max-h-[95vh] overflow-y-auto rounded-[48px] p-0 border-none shadow-[0_32px_128px_-12px_rgba(0,0,0,0.3)] bg-white overflow-x-hidden">
+                <DialogContent className="sm:max-w-[700px] max-h-[95vh] overflow-y-auto rounded-[48px] p-0 border-none shadow-[0_32px_128px_-12px_rgba(0,0,0,0.3)] bg-white overflow-x-hidden [&>button]:hidden">
                     {selectedService && (
                         <div className="relative">
                             <div className="relative h-[400px] w-full group/modal-img">
                                 <img
                                     src={selectedService.image || '/images/placeholder-service.jpg'}
                                     alt={selectedService.name}
-                                    className="w-full h-full object-cover transition-transform duration-1000 group-hover/modal-img:scale-110"
+                                    className="w-full h-full object-cover transition-transform duration-1000"
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-white via-white/40 to-black/20" />
                                 <DialogTitle className="sr-only">{selectedService.name}</DialogTitle>
@@ -493,7 +500,7 @@ export function ServiceSelectionListing({
                                         </div>
                                         <div className="flex flex-wrap gap-4">
                                             {activeCategory.brandLogos.map((logo: string, idx: number) => (
-                                                <div key={idx} className="h-12 w-20 px-3 py-2 bg-slate-50 rounded-2xl border border-slate-100 flex items-center justify-center shrink-0 shadow-sm transition-transform hover:scale-110">
+                                                <div key={idx} className="h-12 w-20 px-3 py-2 bg-slate-50 rounded-2xl border border-slate-100 flex items-center justify-center shrink-0 shadow-sm transition-transform">
                                                     <img src={logo} alt="Brand Supported" className="max-h-full max-w-full object-contain" />
                                                 </div>
                                             ))}
