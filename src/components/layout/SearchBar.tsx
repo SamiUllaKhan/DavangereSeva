@@ -16,13 +16,16 @@ function SearchBarContent({ className, placeholder = "Search for a service...", 
     const router = useRouter();
     const searchParams = useSearchParams();
     const [query, setQuery] = useState('');
+    const [isSearching, setIsSearching] = useState(false);
 
     useEffect(() => {
         setQuery(searchParams.get('q') || '');
+        setIsSearching(false);
     }, [searchParams]);
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
+        setIsSearching(true);
         if (query.trim()) {
             router.push(`/services?q=${encodeURIComponent(query.trim())}`);
         } else {
@@ -65,10 +68,11 @@ function SearchBarContent({ className, placeholder = "Search for a service...", 
                                 placeholder="Search for AC Repair, Cleaning..."
                                 value={query}
                                 onChange={(e) => setQuery(e.target.value)}
+                                disabled={isSearching}
                             />
                         </div>
                         
-                        {query && (
+                        {query && !isSearching && (
                             <button
                                 type="button"
                                 onClick={handleClear}
@@ -80,10 +84,15 @@ function SearchBarContent({ className, placeholder = "Search for a service...", 
 
                         <Button 
                             type="submit" 
+                            disabled={isSearching}
                             className="hidden md:flex h-12 px-8 rounded-[18px] bg-primary hover:bg-primary-dark text-white font-black uppercase tracking-[0.2em] text-[10px] shadow-lg shadow-primary/20 transition-all hover:scale-[1.02] active:scale-95 gap-2 ml-2"
                         >
-                            Find Service
-                            <Icons.ArrowRight size={16} />
+                            {isSearching ? <Icons.Loader2 className="animate-spin" size={16} /> : (
+                                <>
+                                    Find Service
+                                    <Icons.ArrowRight size={16} />
+                                </>
+                            )}
                         </Button>
                     </form>
 
@@ -91,9 +100,10 @@ function SearchBarContent({ className, placeholder = "Search for a service...", 
                     <div className="md:hidden p-1.5 pt-0">
                         <Button 
                             onClick={handleSearch}
+                            disabled={isSearching}
                             className="w-full h-12 rounded-[18px] bg-primary text-white font-black uppercase tracking-[0.2em] text-[10px]"
                         >
-                            Find Service
+                            {isSearching ? <Icons.Loader2 className="animate-spin" size={16} /> : 'Find Service'}
                         </Button>
                     </div>
                 </div>
@@ -109,7 +119,11 @@ function SearchBarContent({ className, placeholder = "Search for a service...", 
             <div className="relative flex items-center bg-white/70 backdrop-blur-2xl border border-white rounded-xl md:rounded-[26px] shadow-[0_4px_24px_-4px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_48px_-12px_rgba(0,0,0,0.08)] transition-all duration-500 p-1 md:p-2 overflow-hidden">
                 <div className="flex items-center px-2 md:px-6 gap-2 md:gap-5 flex-1">
                     <div className="relative">
-                        <Icons.Search size={16} className="text-primary md:w-[22px] md:h-[22px] stroke-[2.5] relative z-10" />
+                        {isSearching ? (
+                            <Icons.Loader2 size={16} className="text-primary md:w-[22px] md:h-[22px] animate-spin relative z-10" />
+                        ) : (
+                            <Icons.Search size={16} className="text-primary md:w-[22px] md:h-[22px] stroke-[2.5] relative z-10" />
+                        )}
                         <div className="absolute inset-0 bg-primary/20 blur-md rounded-full scale-150 opacity-0 group-focus-within:opacity-100 transition-opacity" />
                     </div>
                     <Input
@@ -117,11 +131,12 @@ function SearchBarContent({ className, placeholder = "Search for a service...", 
                         className="border-none focus-visible:ring-0 text-gray-900 placeholder:text-gray-500/60 bg-transparent h-8 md:h-14 text-[13px] md:text-lg font-black tracking-tight p-0 w-full"
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
+                        disabled={isSearching}
                     />
                 </div>
                 
                 <div className="flex items-center gap-1.5 md:gap-3 px-1 md:px-2">
-                    {query && (
+                    {query && !isSearching && (
                         <Button
                             type="button"
                             variant="ghost"
@@ -134,9 +149,10 @@ function SearchBarContent({ className, placeholder = "Search for a service...", 
                     )}
                     <Button
                         type="submit"
+                        disabled={isSearching}
                         className="rounded-lg md:rounded-[20px] px-3 md:px-8 h-8 md:h-12 font-black uppercase tracking-[0.2em] text-[7px] md:text-[10px] bg-primary text-white hover:bg-primary-dark transition-all shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95"
                     >
-                        Search
+                        {isSearching ? <Icons.Loader2 className="animate-spin" size={14} /> : 'Search'}
                     </Button>
                 </div>
             </div>

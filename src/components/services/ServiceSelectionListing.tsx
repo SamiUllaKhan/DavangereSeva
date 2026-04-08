@@ -40,6 +40,7 @@ export function ServiceSelectionListing({
     const [cart, setCart] = useState<CartItem[]>([]);
     const [mounted, setMounted] = useState(false);
     const [selectedService, setSelectedService] = useState<any>(null);
+    const [checkoutLoading, setCheckoutLoading] = useState(false);
 
     useEffect(() => {
         setMounted(true);
@@ -391,10 +392,24 @@ export function ServiceSelectionListing({
                                                 </div>
                                             </div>
 
-                                            <Button asChild className="w-full h-16 rounded-[24px] shadow-2xl shadow-primary/30 group hover:scale-[1.02] active:scale-95 transition-all">
-                                                <Link href="/cart" className="flex items-center justify-between px-8">
-                                                    <span className="font-black text-lg uppercase tracking-widest">Checkout</span>
-                                                    <Icons.ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                                            <Button 
+                                                asChild 
+                                                disabled={checkoutLoading}
+                                                className="w-full h-16 rounded-[24px] shadow-2xl shadow-primary/30 group hover:scale-[1.02] active:scale-95 transition-all"
+                                            >
+                                                <Link 
+                                                    href="/cart" 
+                                                    onClick={() => setCheckoutLoading(true)}
+                                                    className="flex items-center justify-between px-8"
+                                                >
+                                                    <span className="font-black text-lg uppercase tracking-widest">
+                                                        {checkoutLoading ? 'Processing...' : 'Checkout'}
+                                                    </span>
+                                                    {checkoutLoading ? (
+                                                        <Icons.Loader2 className="animate-spin" size={20} />
+                                                    ) : (
+                                                        <Icons.ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                                                    )}
                                                 </Link>
                                             </Button>
                                         </div>

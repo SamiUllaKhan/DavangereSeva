@@ -10,6 +10,7 @@ import { toast } from 'sonner';
 import { ArrowLeft, Trash2, Minus, Plus } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { createBooking } from '@/app/actions/booking';
+import { LoadingOverlay } from '@/components/ui/LoadingOverlay';
 
 interface CartItem {
     id: string;
@@ -132,6 +133,11 @@ export default function CartPage() {
 
     return (
         <div className="min-h-screen bg-[#F8FAFC] py-10 px-4 sm:px-6 lg:px-8">
+            <LoadingOverlay 
+                isVisible={loading} 
+                message="Confirming Booking" 
+                subMessage="Please wait while we secure your slot with a professional expert" 
+            />
             <div className="max-w-5xl mx-auto">
                 <div className="mb-8">
                     <Link href="/services" className="inline-flex items-center text-sm font-bold text-slate-500 hover:text-primary transition-colors mb-6">

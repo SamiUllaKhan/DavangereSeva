@@ -9,6 +9,7 @@ import { isAuthenticated } from "@/app/actions/auth";
 import { getUserSession } from "@/app/actions/user";
 import FloatingSupport from "@/components/ui/FloatingSupport";
 import FloatingCartBar from "@/components/ui/FloatingCartBar";
+import NextTopLoader from 'nextjs-toploader';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,6 +39,17 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased pb-16 md:pb-0`}
       >
+        <NextTopLoader 
+          color="#0ea5e9"
+          initialPosition={0.08}
+          crawlSpeed={200}
+          height={3}
+          crawl={true}
+          showSpinner={false}
+          easing="ease"
+          speed={200}
+          shadow="0 0 10px #0ea5e9,0 0 5px #0ea5e9"
+        />
         <Navbar isAuth={isAdmin} userSession={userSession} />
         <main className="min-h-screen">
           {children}
