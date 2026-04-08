@@ -16,7 +16,7 @@ interface HomeClientWrapperProps {
 
 export default function HomeClientWrapper({ categories, spotlightServices, isConnected }: HomeClientWrapperProps) {
   return (
-    <div className="flex flex-col gap-6 pb-12">
+    <div className="flex flex-col gap-4 md:gap-12 pb-12">
       {/* Database Connection Status (Internal/Dev Only) */}
       <div className="fixed top-4 right-4 z-[100] scale-75 origin-top-right">
         {isConnected ? (
@@ -88,7 +88,7 @@ export default function HomeClientWrapper({ categories, spotlightServices, isCon
       </section>
 
       {/* Category Grid - Brought Higher and cleaner */}
-      <section className="container px-4 md:px-8 mx-auto mt-8 lg:-mt-24 relative z-20 pb-8">
+      <section className="container px-4 md:px-8 mx-auto mt-4 md:mt-8 lg:-mt-24 relative z-20 pb-4 md:pb-8">
         <Card className="border-none shadow-2xl bg-white/80 backdrop-blur-xl">
           <CardContent className="p-3 md:p-8">
             <div className="flex flex-col items-center text-center mb-6 gap-0.5">
@@ -125,8 +125,8 @@ export default function HomeClientWrapper({ categories, spotlightServices, isCon
       </section>
 
       {/* Trust Stats Section (New) */}
-      <section className="container px-4 md:px-8 mx-auto mt-4 lg:-mt-6 py-6 md:py-12">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-8 text-center px-4 md:px-8 py-6 md:py-10 bg-gray-900 rounded-[30px] md:rounded-[40px] text-white shadow-2xl">
+      <section className="container px-4 md:px-8 mx-auto mt-2 md:mt-4 lg:-mt-6 py-4 md:py-12">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-8 text-center px-4 md:px-8 py-4 md:py-10 bg-gray-900 rounded-[24px] md:rounded-[40px] text-white shadow-2xl">
           {[
             { val: "500+", label: "Verified Experts", sub: "Skilled professionals" },
             { val: "10k+", label: "Happy Homes", sub: "Services delivered" },
@@ -149,19 +149,19 @@ export default function HomeClientWrapper({ categories, spotlightServices, isCon
       </div>
 
       {/* Modern How it Works */}
-      <section className="py-12 relative overflow-hidden bg-white">
+      <section className="py-8 md:py-20 relative overflow-hidden bg-white">
         <div className="container px-4 md:px-8 mx-auto relative z-10">
-          <div className="max-w-3xl mb-8 md:mb-12">
-            <h2 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary mb-2 md:mb-4 italic">Step-by-step Guide</h2>
-            <h3 className="text-2xl md:text-5xl font-black tracking-tighter mb-4 md:mb-6 text-gray-900 leading-[1.1]">
+          <div className="max-w-3xl mb-6 md:mb-16">
+            <h2 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary mb-1 md:mb-4 italic">Step-by-step Guide</h2>
+            <h3 className="text-2xl md:text-5xl font-black tracking-tighter mb-2 md:mb-6 text-gray-900 leading-[1.1]">
               HOW IT <span className="text-primary italic underline decoration-blue-200 underline-offset-8">WORKS</span>
             </h3>
-            <p className="text-base md:text-lg text-gray-500 font-medium max-w-xl">
-              Davanagere Seva simplifies your home maintenance. Just follow these 3 easy steps to get your job done.
+            <p className="text-sm md:text-lg text-gray-500 font-medium max-w-xl">
+              Davanagere Seva simplifies your home maintenance. Just follow these 3 easy steps.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-4 relative">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-6 relative">
             {/* Visual Connector Line (Desktop) */}
             <div className="hidden md:block absolute top-[100px] left-[15%] right-[15%] h-[2px] bg-gray-100 -z-0">
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
@@ -190,34 +190,44 @@ export default function HomeClientWrapper({ categories, spotlightServices, isCon
                 gradient: 'from-primary/90 to-primary/70'
               }
             ].map((item, idx) => (
-              <div key={idx} className="relative group p-0 md:p-8">
-                <div className="bg-white rounded-[32px] md:rounded-[40px] p-6 md:p-10 border border-gray-50 shadow-sm hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 group-hover:-translate-y-4 relative z-10">
-                  <div className="flex justify-between items-start mb-6 md:mb-8">
-                    <div className={`w-14 h-14 md:w-16 md:h-16 rounded-2xl md:rounded-3xl bg-gradient-to-br ${item.gradient} flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform duration-500`}>
-                      <item.icon size={28} />
+              <div key={idx} className="relative group p-0 md:p-4">
+                <div className="bg-white rounded-[24px] md:rounded-[40px] p-4 md:p-10 border border-gray-100 md:border-gray-50 shadow-sm hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 md:group-hover:-translate-y-4 relative z-10">
+                  <div className="flex flex-row md:flex-col items-center md:items-start gap-4 md:gap-0">
+                    <div className={`w-12 h-12 md:w-16 md:h-16 shrink-0 rounded-2xl md:rounded-3xl bg-gradient-to-br ${item.gradient} flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform duration-500 mb-0 md:mb-8`}>
+                      <item.icon className="w-6 h-6 md:w-8 md:h-8" />
                     </div>
-                    <span className="text-4xl md:text-5xl font-black text-gray-100 group-hover:text-primary/10 transition-colors uppercase italic">{item.step}</span>
+                    
+                    <div className="flex-1">
+                      <div className="flex justify-between items-center md:block">
+                        <h4 className="text-sm md:text-xl font-black md:mb-4 tracking-tight text-gray-900 group-hover:text-primary transition-colors uppercase">
+                          {item.title}
+                        </h4>
+                        <span className="text-2xl md:text-5xl font-black text-gray-100 group-hover:text-primary/10 transition-colors uppercase italic md:absolute md:top-8 md:right-10 leading-none">
+                          {item.step}
+                        </span>
+                      </div>
+                      <p className="text-gray-500 font-medium leading-relaxed italic text-xs md:text-base mb-2 md:mb-6">
+                        "{item.desc}"
+                      </p>
+                      <div className="h-0.5 md:h-1 w-8 md:w-12 bg-gray-100 rounded-full group-hover:w-24 group-hover:bg-primary transition-all duration-500" />
+                    </div>
                   </div>
-                  <h4 className="text-lg md:text-xl font-black mb-3 md:mb-4 tracking-tight text-gray-900 group-hover:text-primary transition-colors uppercase">{item.title}</h4>
-                  <p className="text-gray-500 font-medium leading-relaxed mb-4 md:mb-6 italic text-sm md:text-base">"{item.desc}"</p>
-
-                  <div className="h-1 w-12 bg-gray-100 rounded-full group-hover:w-24 group-hover:bg-primary transition-all duration-500" />
                 </div>
 
                 {/* Mobile Connector */}
                 {idx < 2 && (
-                  <div className="md:hidden flex justify-center py-4">
-                    <div className="h-8 w-[2px] bg-gray-100" />
+                  <div className="md:hidden flex justify-center py-1">
+                    <div className="h-4 w-[1px] bg-gray-100" />
                   </div>
                 )}
               </div>
             ))}
           </div>
 
-          <div className="mt-12 text-center">
+          <div className="mt-6 md:mt-12 text-center">
             <Link href="/services">
-              <Button size="lg" className="rounded-full px-12 h-14 font-black uppercase tracking-widest gap-2 bg-gray-950 hover:bg-primary transition-all shadow-xl hover:shadow-primary/20">
-                Ready to start? <Icons.ArrowRight size={20} />
+              <Button size="lg" className="rounded-full px-8 md:px-12 h-11 md:h-14 text-[10px] md:text-sm font-black uppercase tracking-widest gap-2 bg-gray-950 hover:bg-primary transition-all shadow-xl hover:shadow-primary/20">
+                Ready to start? <Icons.ArrowRight className="w-4 h-4 md:w-5 md:h-5" />
               </Button>
             </Link>
           </div>
@@ -229,9 +239,9 @@ export default function HomeClientWrapper({ categories, spotlightServices, isCon
       </section>
 
       {/* Promise Section */}
-      <section className="bg-white py-16 border-t border-gray-50">
+      <section className="bg-white py-6 md:py-16 border-t border-gray-50">
         <div className="container px-4 md:px-8 mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-stretch">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-20 items-stretch">
             <div className="relative h-full">
               <div className="absolute -top-10 -left-10 w-40 h-40 bg-primary/5 rounded-full blur-3xl hidden md:block" />
               <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-blue-500/5 rounded-full blur-3xl hidden md:block" />
@@ -255,46 +265,46 @@ export default function HomeClientWrapper({ categories, spotlightServices, isCon
               </div>
 
               {/* Float Rating Badge */}
-              <div className="absolute -bottom-8 -left-8 md:bottom-12 md:-left-12 bg-white p-6 rounded-[32px] shadow-2xl border border-gray-50 flex items-center gap-4 animate-bounce-slow">
-                <div className="bg-amber-400 p-3 rounded-2xl text-white">
-                  <Icons.Star size={24} fill="currentColor" />
+              <div className="absolute -bottom-6 -left-4 md:-bottom-8 md:-left-8 bg-white p-3 md:p-6 rounded-2xl md:rounded-[32px] shadow-2xl border border-gray-50 flex items-center gap-2 md:gap-4 animate-bounce-slow">
+                <div className="bg-amber-400 p-1.5 md:p-3 rounded-xl md:rounded-2xl text-white">
+                  <Icons.Star className="w-4 h-4 md:w-6 md:h-6" fill="currentColor" />
                 </div>
                 <div>
-                  <p className="text-2xl font-black text-gray-900 leading-none">4.8</p>
-                  <p className="text-[10px] font-black uppercase tracking-widest text-gray-400">User Rating</p>
+                  <p className="text-lg md:text-2xl font-black text-gray-900 leading-none">4.8</p>
+                  <p className="text-[8px] md:text-[10px] font-black uppercase tracking-widest text-gray-400">User Rating</p>
                 </div>
               </div>
             </div>
 
-            <div className="space-y-12">
-              <div className="max-w-md">
-                <h2 className="text-[10px] md:text-sm font-black uppercase tracking-[0.3em] text-primary mb-3 md:mb-4">Why we are different</h2>
-                <h3 className="text-2xl md:text-5xl font-black tracking-tighter mb-4 md:mb-6 text-gray-900 leading-none uppercase">
+            <div className="space-y-6 md:space-y-12">
+              <div className="max-w-md text-center lg:text-left mx-auto lg:mx-0">
+                <h2 className="text-[10px] md:text-sm font-black uppercase tracking-[0.3em] text-primary mb-2 md:mb-4">Why we are different</h2>
+                <h3 className="text-xl md:text-5xl font-black tracking-tighter mb-2 md:mb-6 text-gray-900 leading-none uppercase">
                   Service you can <br /> <span className="text-primary underline decoration-blue-100 underline-offset-8">depend on.</span>
                 </h3>
               </div>
               
-              <div className="grid gap-8">
+              <div className="grid gap-4 md:gap-8">
                 {[
                   { title: 'Verified Professionals', desc: 'Every service provider is background-checked and expert-vetted.', icon: Icons.UserCheck, color: 'bg-emerald-50 text-emerald-600' },
                   { title: 'Transparent Pricing', desc: 'No hidden costs. Pay only what was agreed upfront.', icon: Icons.CreditCard, color: 'bg-blue-50 text-blue-600' },
                   { title: 'Customer Satisfaction', desc: 'We take full responsibility for the quality of work delivered.', icon: Icons.Heart, color: 'bg-rose-50 text-rose-600' }
                 ].map((item, idx) => (
-                  <div key={idx} className="flex gap-6 group">
-                    <div className={`mt-1 w-14 h-14 shrink-0 rounded-2xl ${item.color} flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:shadow-lg`}>
-                      <item.icon size={24} className="stroke-[2.5]" />
+                  <div key={idx} className="flex gap-4 md:gap-6 group">
+                    <div className={`mt-1 w-12 h-12 md:w-14 md:h-14 shrink-0 rounded-2xl ${item.color} flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:shadow-lg`}>
+                      <item.icon className="w-5 h-5 md:w-6 md:h-6 stroke-[2.5]" />
                     </div>
-                    <div>
-                      <h4 className="font-black text-lg md:text-xl mb-0.5 md:mb-1 tracking-tight text-gray-900 group-hover:text-primary transition-colors uppercase">{item.title}</h4>
-                      <p className="text-gray-500 font-medium text-xs md:text-sm leading-relaxed">{item.desc}</p>
+                    <div className="text-left">
+                      <h4 className="font-black text-sm md:text-xl mb-0.5 md:mb-1 tracking-tight text-gray-900 group-hover:text-primary transition-colors uppercase">{item.title}</h4>
+                      <p className="text-gray-500 font-medium text-[10px] md:text-sm leading-relaxed">{item.desc}</p>
                     </div>
                   </div>
                 ))}
               </div>
 
-              <div className="pt-8">
-                <Button size="lg" className="rounded-full px-12 h-16 font-black uppercase tracking-widest gap-2 bg-gray-900 hover:bg-primary transition-all shadow-2xl hover:shadow-primary/20">
-                  Join our community <Icons.ArrowRight size={20} />
+              <div className="pt-4 md:pt-8 text-center lg:text-left">
+                <Button size="lg" className="rounded-full px-8 md:px-12 h-12 md:h-16 text-[10px] md:text-sm font-black uppercase tracking-widest gap-2 bg-gray-900 hover:bg-primary transition-all shadow-2xl hover:shadow-primary/20">
+                  Join our community <Icons.ArrowRight className="w-4 h-4 md:w-5 md:h-5" />
                 </Button>
               </div>
             </div>

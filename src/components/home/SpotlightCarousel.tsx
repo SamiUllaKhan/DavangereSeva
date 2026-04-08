@@ -37,11 +37,11 @@ export function SpotlightCarousel({ services }: SpotlightCarouselProps) {
     if (items.length === 0) return null;
 
     return (
-        <section className="py-8 md:py-12 bg-[#FAFAFA] overflow-hidden">
+        <section className="py-4 md:py-12 bg-[#FAFAFA] overflow-hidden">
             <div className="container px-3 md:px-12 mx-auto">
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-6 md:mb-10 gap-4 md:gap-8 px-3">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-4 md:mb-10 gap-4 md:gap-8 px-3">
                     <div className="max-w-2xl">
-                        <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] mb-6 animate-fade-in border border-primary/20">
+                        <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] mb-4 md:mb-6 animate-fade-in border border-primary/20">
                             <span className="relative flex h-2 w-2">
                                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
                                 <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
@@ -97,7 +97,7 @@ export function SpotlightCarousel({ services }: SpotlightCarouselProps) {
                             animate={controls}
                             style={{ x }}
                             dragConstraints={{ right: 4, left: -width - 4 }}
-                            className="flex gap-4 md:gap-8 py-8"
+                            className="flex gap-4 md:gap-8 py-4 md:py-8"
                         >
                             {items.map((item) => (
                                 <motion.div
@@ -196,7 +196,7 @@ export function SpotlightCarousel({ services }: SpotlightCarouselProps) {
                     </motion.div>
                 </div>
 
-                <div className="lg:hidden mt-8 text-center">
+                <div className="lg:hidden mt-4 text-center">
                     <div className="inline-flex items-center gap-4 text-[10px] font-black uppercase tracking-[0.4em] text-gray-300">
                         <div className="w-12 h-[1px] bg-gray-200" />
                         Swipe to Explore
