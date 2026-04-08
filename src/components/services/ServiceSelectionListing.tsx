@@ -217,7 +217,7 @@ export function ServiceSelectionListing({
                 {/* Content with Sidebar */}
                 <div className="flex flex-col lg:flex-row gap-10 items-start">
                     {/* Main Content Area */}
-                    <main className="flex-1 w-full space-y-2 md:space-y-10">
+                    <main className="flex-1 w-full space-y-4 md:space-y-10">
                         {activeServices.map((service, index) => {
                             const cartItem = cart.find(item => item.id === service._id);
                             const isHighlighted = highlightedServiceId === service._id;
@@ -481,7 +481,7 @@ export function ServiceSelectionListing({
                     }
                 }}
             >
-                <DialogContent className="sm:max-w-[700px] max-h-[95vh] overflow-y-auto rounded-[32px] md:rounded-[48px] p-0 border-none shadow-[0_32px_128px_-12px_rgba(0,0,0,0.3)] bg-white overflow-x-hidden [&>button]:hidden">
+                <DialogContent className="sm:max-w-[700px] max-h-[95vh] overflow-y-auto rounded-none md:rounded-[48px] p-0 border-none shadow-[0_32px_128px_-12px_rgba(0,0,0,0.3)] bg-white overflow-x-hidden [&>button]:hidden">
                     {selectedService && (
                         <div className="relative">
                             <div className="relative h-[260px] md:h-[400px] w-full group/modal-img">
