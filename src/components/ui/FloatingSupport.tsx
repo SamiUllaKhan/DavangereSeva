@@ -10,7 +10,7 @@ export default function FloatingSupport() {
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
 
     return (
-        <div className="fixed bottom-40 right-4 z-[100] flex flex-col items-end gap-3 md:bottom-10 md:right-8">
+        <div className="hidden md:flex fixed bottom-10 right-8 z-[100] flex-col items-end gap-3">
             {/* WhatsApp Link */}
             <motion.div
                 initial={{ opacity: 0, x: 20 }}

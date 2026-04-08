@@ -80,29 +80,34 @@ function ServicesPageContent() {
 
             {/* Main Content Area */}
             <section className="container px-4 md:px-8 mx-auto pb-24">
-                <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-8">
+                <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-8">
                     {categories.map((category: any, index: number) => {
                         const IconComponent = (Icons as any)[category.icon] || Icons.Grid;
                         return (
                             <Link 
                                 key={category._id} 
                                 href={`/services/${category.slug}`}
-                                className="group bg-white rounded-[32px] md:rounded-[40px] p-6 md:p-10 border border-gray-100 shadow-sm transition-all duration-500 hover:shadow-2xl hover:shadow-primary/5 hover:-translate-y-2 text-center flex flex-col items-center"
+                                className="group bg-white rounded-[24px] md:rounded-[40px] p-4 md:p-10 border border-slate-100 shadow-sm transition-all duration-500 hover:shadow-2xl hover:shadow-primary/5 md:hover:-translate-y-2 flex flex-col items-center text-center"
                             >
                                 <motion.div
                                     initial={{ opacity: 0, scale: 0.9 }}
                                     animate={{ opacity: 1, scale: 1 }}
                                     transition={{ delay: index * 0.05 }}
-                                    className="w-12 h-12 md:w-24 md:h-24 bg-primary/5 rounded-2xl md:rounded-[32px] flex items-center justify-center mb-4 md:mb-8 group-hover:scale-110 group-hover:bg-primary group-hover:text-white transition-all duration-500 text-primary"
+                                    className="w-12 h-12 md:w-24 md:h-24 bg-primary/5 rounded-2xl md:rounded-[32px] flex items-center justify-center mb-3 md:mb-8 group-hover:scale-110 group-hover:bg-primary group-hover:text-white transition-all duration-500 text-primary"
                                 >
-                                    <IconComponent size={24} className="md:w-12 md:h-12" />
+                                    <IconComponent className="w-6 h-6 md:w-12 md:h-12" />
                                 </motion.div>
-                                <h3 className="text-sm md:text-2xl font-black text-gray-900 group-hover:text-primary transition-colors tracking-tighter uppercase mb-2">
-                                    {category.name}
-                                </h3>
-                                <p className="text-gray-400 text-[10px] font-black uppercase tracking-[0.2em] opacity-0 group-hover:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0">
-                                    Book Now
-                                </p>
+                                <div className="space-y-1 md:space-y-2">
+                                    <h3 className="text-[13px] md:text-2xl font-black text-slate-900 group-hover:text-primary transition-colors tracking-tighter uppercase line-clamp-1">
+                                        {category.name}
+                                    </h3>
+                                    <p className="text-primary text-[8px] font-black uppercase tracking-widest md:hidden">
+                                        View All
+                                    </p>
+                                    <p className="text-gray-400 text-[10px] font-black uppercase tracking-[0.2em] hidden md:block opacity-0 group-hover:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0">
+                                        Book Now
+                                    </p>
+                                </div>
                             </Link>
                         );
                     })}
@@ -110,15 +115,15 @@ function ServicesPageContent() {
             </section>
 
             {/* Support CTA */}
-            <section className="py-24 bg-white border-t border-gray-100">
+            <section className="py-8 md:py-24 bg-white border-t border-gray-100">
                 <div className="container px-4 md:px-8 mx-auto">
-                    <div className="bg-gray-50 rounded-[48px] p-12 md:p-20 text-center border border-gray-100 relative overflow-hidden group">
+                    <div className="bg-gray-50 rounded-[32px] md:rounded-[48px] p-8 md:p-20 text-center border border-gray-100 relative overflow-hidden group">
                         <div className="relative z-10 max-w-2xl mx-auto">
-                            <h2 className="text-3xl md:text-5xl font-black mb-6 tracking-tighter uppercase italic">Need Custom Help?</h2>
-                            <p className="text-lg text-gray-500 mb-10 font-bold uppercase tracking-widest text-xs">
+                            <h2 className="text-2xl md:text-5xl font-black mb-3 md:mb-6 tracking-tighter uppercase italic text-slate-900">Need Custom Help?</h2>
+                            <p className="text-gray-500 mb-6 md:mb-10 font-bold uppercase tracking-widest text-[10px] md:text-xs">
                                 Our experts are available 24/7 for consultations
                             </p>
-                            <Button asChild size="lg" className="h-16 px-12 rounded-2xl font-black uppercase tracking-widest text-base shadow-2xl shadow-primary/20 hover:shadow-primary/40 transition-all bg-primary text-white">
+                            <Button asChild size="lg" className="h-12 md:h-16 px-8 md:px-12 rounded-xl md:rounded-2xl font-black uppercase tracking-widest text-xs md:text-base shadow-2xl shadow-primary/20 hover:shadow-primary/40 transition-all bg-primary text-white">
                                 <Link href="tel:+918904777090">
                                     Talk To An Expert
                                 </Link>

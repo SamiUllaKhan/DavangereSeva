@@ -138,10 +138,10 @@ export function ServiceSelectionListing({
     if (!mounted) return null;
 
     return (
-        <div className="min-h-screen bg-[#F8FAFC] py-4 md:py-8">
+        <div className="min-h-screen bg-[#F8FAFC] pt-4 md:pt-8 pb-20 md:pb-12">
             <div className="max-w-7xl mx-auto px-0 sm:px-6 lg:px-8">
                 {/* Header Section */}
-                <div className="mb-6 md:mb-12 px-4 md:px-0">
+                <div className="mb-4 md:mb-12 px-4 md:px-0">
                     <motion.div 
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -149,7 +149,12 @@ export function ServiceSelectionListing({
                     >
                         <div>
                             <div className="flex items-center gap-3 mb-1 md:mb-4">
-                                <div className="w-12 h-0.5 bg-primary rounded-full" />
+                                <div className="w-8 h-8 md:w-12 md:h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                                    {(() => {
+                                        const IconComponent = (Icons as any)[activeCategory?.icon] || Icons.Zap;
+                                        return <IconComponent className="w-5 h-5 md:w-7 md:h-7" />;
+                                    })()}
+                                </div>
                                 <span className="text-primary font-black uppercase tracking-[0.3em] text-[7px] md:text-[10px]">Booking Services</span>
                             </div>
                             <h1 className="text-2xl md:text-6xl font-black text-slate-900 uppercase tracking-tighter leading-none mb-2 md:mb-4">
@@ -172,13 +177,13 @@ export function ServiceSelectionListing({
                     <motion.div 
                         initial={{ opacity: 0, scale: 0.98 }}
                         whileInView={{ opacity: 1, scale: 1 }}
-                        className="mb-10 px-4 md:px-0"
+                        className="mb-6 md:mb-10 px-4 md:px-0"
                     >
-                        <div className="bg-white rounded-[48px] p-6 md:p-10 border border-slate-100 shadow-xl shadow-primary/5 relative overflow-hidden group">
+                        <div className="bg-white rounded-[32px] md:rounded-[48px] p-4 md:p-10 border border-slate-100 shadow-xl shadow-primary/5 relative overflow-hidden group">
                             {/* Animated Background Accent */}
                             <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2 group-hover:bg-primary/10 transition-colors duration-700" />
                             
-                            <div className="flex flex-col md:flex-row items-center justify-between gap-8 relative z-10">
+                            <div className="flex flex-col md:flex-row items-center justify-between gap-4 md:gap-8 relative z-10">
                                 <div className="space-y-1 shrink-0 text-center md:text-left">
                                     <div className="flex items-center justify-center md:justify-start gap-2 mb-2">
                                         <div className="w-1.5 h-1.5 bg-primary rounded-full animate-pulse" />
@@ -193,7 +198,7 @@ export function ServiceSelectionListing({
                                         {activeCategory.brandLogos.map((logo: string, idx: number) => (
                                             <motion.div 
                                                 key={idx} 
-                                                className="h-16 md:h-20 min-w-[120px] md:min-w-[160px] px-3 py-2 bg-slate-50/50 hover:bg-white rounded-3xl border border-slate-100 hover:border-primary/20 shadow-sm transition-all flex items-center justify-center group/logo shrink-0"
+                                                className="h-12 md:h-20 min-w-[100px] md:min-w-[160px] px-3 py-2 bg-slate-50/50 hover:bg-white rounded-xl md:rounded-3xl border border-slate-100 hover:border-primary/20 shadow-sm transition-all flex items-center justify-center group/logo shrink-0"
                                             >
                                                 <img 
                                                     src={logo} 
@@ -212,7 +217,7 @@ export function ServiceSelectionListing({
                 {/* Content with Sidebar */}
                 <div className="flex flex-col lg:flex-row gap-10 items-start">
                     {/* Main Content Area */}
-                    <main className="flex-1 w-full space-y-8">
+                    <main className="flex-1 w-full space-y-2 md:space-y-10">
                         {activeServices.map((service, index) => {
                             const cartItem = cart.find(item => item.id === service._id);
                             const isHighlighted = highlightedServiceId === service._id;
@@ -224,9 +229,17 @@ export function ServiceSelectionListing({
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ delay: index * 0.1 }}
                                     id={`service-${service._id}`}
-                                    className={`relative group bg-white rounded-[32px] md:rounded-[40px] p-4 md:p-8 border border-slate-100 shadow-sm transition-all duration-500 hover:shadow-2xl hover:shadow-primary/5 hover:-translate-y-1 ${isHighlighted ? 'ring-2 ring-primary ring-offset-4 ring-offset-[#F8FAFC]' : ''}`}
+                                    onClick={(e) => {
+                                        // Only trigger on mobile or if not clicking a button/interactive element
+                                        const target = e.target as HTMLElement;
+                                        if (!target.closest('button') && !target.closest('a')) {
+                                            window.history.pushState(null, '', `/services/${service.slug}`);
+                                            setSelectedService(service);
+                                        }
+                                    }}
+                                    className={`relative group bg-white rounded-[20px] md:rounded-[40px] p-2 md:p-8 border border-slate-100 shadow-sm transition-all duration-500 hover:shadow-2xl hover:shadow-primary/5 md:hover:-translate-y-1 cursor-pointer ${isHighlighted ? 'ring-2 ring-primary ring-offset-4 ring-offset-[#F8FAFC]' : ''}`}
                                 >
-                                    <div className="flex flex-row gap-4 md:gap-8 items-start">
+                                    <div className="flex flex-row gap-2.5 md:gap-8 items-start">
                                         {/* Service Image Section */}
                                         <div className="w-24 md:w-56 shrink-0 relative">
                                             <div className="aspect-square rounded-2xl md:rounded-[32px] overflow-hidden bg-slate-100 shadow-inner transition-transform duration-700">
@@ -279,33 +292,33 @@ export function ServiceSelectionListing({
                                                         window.history.pushState(null, '', `/services/${service.slug}`);
                                                         setSelectedService(service);
                                                     }}
-                                                    className="h-8 md:h-12 px-3 md:px-6 rounded-lg md:rounded-2xl bg-slate-50 hover:bg-slate-100 text-slate-600 font-black text-[8px] md:text-[10px] uppercase tracking-widest transition-all flex items-center justify-center gap-1 group/btn shrink-0"
+                                                    className="h-7 md:h-12 px-2 md:px-6 rounded-md md:rounded-2xl bg-slate-50 hover:bg-slate-100 text-slate-600 font-black text-[7px] md:text-[10px] uppercase tracking-widest transition-all flex items-center justify-center gap-1 group/btn shrink-0"
                                                 >
                                                     Details
-                                                    <Icons.ChevronRight size={10} className="group-hover/btn:translate-x-1 transition-transform md:size-3.5" />
+                                                    <Icons.ChevronRight size={8} className="group-hover/btn:translate-x-1 transition-transform md:size-3.5" />
                                                 </Link>
                                                 
                                                 <div className="flex-1">
                                                     {cartItem ? (
-                                                        <div className="flex items-center justify-between gap-2 md:gap-6 bg-primary px-2 md:px-4 py-1 md:py-2 rounded-lg md:rounded-2xl shadow-xl shadow-primary/20 text-white h-8 md:h-12">
+                                                        <div className="flex items-center justify-between gap-1 md:gap-6 bg-primary px-1.5 md:px-4 py-1 md:py-2 rounded-md md:rounded-2xl shadow-xl shadow-primary/20 text-white h-7 md:h-12">
                                                             <button 
                                                                 onClick={() => removeFromCart(service._id)}
-                                                                className="w-6 h-6 md:w-10 md:h-10 flex items-center justify-center hover:bg-white/20 rounded-md transition-colors shrink-0"
+                                                                className="w-5 h-5 md:w-10 md:h-10 flex items-center justify-center hover:bg-white/20 rounded-md transition-colors shrink-0"
                                                             >
-                                                                <Icons.Minus size={14} className="md:size-5" />
+                                                                <Icons.Minus size={12} className="md:size-5" />
                                                             </button>
-                                                            <span className="font-black text-sm md:text-xl w-4 md:w-8 text-center">{cartItem.quantity}</span>
+                                                            <span className="font-black text-xs md:text-xl w-3 md:w-8 text-center">{cartItem.quantity}</span>
                                                             <button 
                                                                 onClick={() => addToCart(service)}
-                                                                className="w-6 h-6 md:w-10 md:h-10 flex items-center justify-center hover:bg-white/20 rounded-md transition-colors shrink-0"
+                                                                className="w-5 h-5 md:w-10 md:h-10 flex items-center justify-center hover:bg-white/20 rounded-md transition-colors shrink-0"
                                                             >
-                                                                <Icons.Plus size={14} className="md:size-5" />
+                                                                <Icons.Plus size={12} className="md:size-5" />
                                                             </button>
                                                         </div>
                                                     ) : (
                                                         <Button
                                                             onClick={() => addToCart(service)}
-                                                            className="w-full h-8 md:h-12 px-2 md:px-10 rounded-lg md:rounded-2xl font-black uppercase tracking-widest text-[8px] md:text-xs shadow-xl shadow-primary/20 bg-primary text-white"
+                                                            className="w-full h-7 md:h-12 px-2 md:px-10 rounded-md md:rounded-2xl font-black uppercase tracking-widest text-[7px] md:text-xs shadow-xl shadow-primary/20 bg-primary text-white"
                                                         >
                                                             Add
                                                         </Button>
@@ -333,7 +346,7 @@ export function ServiceSelectionListing({
                             <CardContent className="p-8 space-y-8">
                                 <AnimatePresence mode="popLayout">
                                     {cart.length > 0 ? (
-                                        <div className="space-y-6">
+                                        <div className="space-y-4 md:space-y-6">
                                             <div className="space-y-4 max-h-[45vh] overflow-y-auto pr-4 custom-scrollbar">
                                                 {cart.map((item) => (
                                                     <motion.div 
@@ -468,16 +481,16 @@ export function ServiceSelectionListing({
                     }
                 }}
             >
-                <DialogContent className="sm:max-w-[700px] max-h-[95vh] overflow-y-auto rounded-[48px] p-0 border-none shadow-[0_32px_128px_-12px_rgba(0,0,0,0.3)] bg-white overflow-x-hidden [&>button]:hidden">
+                <DialogContent className="sm:max-w-[700px] max-h-[95vh] overflow-y-auto rounded-[32px] md:rounded-[48px] p-0 border-none shadow-[0_32px_128px_-12px_rgba(0,0,0,0.3)] bg-white overflow-x-hidden [&>button]:hidden">
                     {selectedService && (
                         <div className="relative">
-                            <div className="relative h-[400px] w-full group/modal-img">
+                            <div className="relative h-[260px] md:h-[400px] w-full group/modal-img">
                                 <img
                                     src={selectedService.image || '/images/placeholder-service.jpg'}
                                     alt={selectedService.name}
                                     className="w-full h-full object-cover transition-transform duration-1000"
                                 />
-                                <div className="absolute inset-0 bg-gradient-to-t from-white via-white/40 to-black/20" />
+                                <div className="absolute inset-0 bg-gradient-to-t from-white via-white/20 to-black/10 md:to-black/20" />
                                 <DialogTitle className="sr-only">{selectedService.name}</DialogTitle>
                                 
                                 <button 
@@ -487,23 +500,23 @@ export function ServiceSelectionListing({
                                     <Icons.X size={24} />
                                 </button>
 
-                                <div className="absolute bottom-8 left-10 right-10">
+                                <div className="absolute bottom-6 md:bottom-8 left-6 md:left-10 right-6 md:right-10">
                                     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-                                        <div className="flex items-center gap-3 mb-4">
-                                            <Badge className="bg-primary text-white border-none font-black px-4 py-2 rounded-xl text-xs uppercase tracking-widest shadow-lg shadow-primary/20">
+                                        <div className="flex items-center gap-2 md:gap-3 mb-2 md:mb-4">
+                                            <Badge className="bg-primary text-white border-none font-black px-3 md:px-4 py-1.5 md:py-2 rounded-lg md:rounded-xl text-[10px] md:text-xs uppercase tracking-widest shadow-lg shadow-primary/20">
                                                 ₹{selectedService.price}
                                             </Badge>
-                                            <div className="flex items-center gap-1.5 px-4 py-2 bg-white rounded-xl text-yellow-600 text-xs font-black shadow-lg">
-                                                <Icons.Star size={14} className="fill-current" />
+                                            <div className="flex items-center gap-1 md:gap-1.5 px-3 md:px-4 py-1.5 md:py-2 bg-white rounded-lg md:rounded-xl text-yellow-600 text-[10px] md:text-xs font-black shadow-lg">
+                                                <Icons.Star size={12} className="fill-current md:size-3.5" />
                                                 {selectedService.rating?.toFixed(1) || '4.8'}
                                             </div>
                                         </div>
-                                        <h2 className="text-5xl font-black text-slate-900 uppercase tracking-tighter leading-[0.9]">{selectedService.name}</h2>
+                                        <h2 className="text-3xl md:text-5xl font-black text-slate-900 uppercase tracking-tighter leading-[0.9]">{selectedService.name}</h2>
                                     </motion.div>
                                 </div>
                             </div>
 
-                            <div className="px-6 md:px-10 pb-10 md:pb-12 pt-4 space-y-8 md:space-y-12 text-left">
+                            <div className="px-5 md:px-10 pb-8 md:pb-12 pt-4 space-y-6 md:space-y-12 text-left">
                                 {activeCategory?.brandLogos && activeCategory.brandLogos.length > 0 && (
                                     <div className="space-y-4">
                                         <div className="flex items-center gap-3">
@@ -538,12 +551,12 @@ export function ServiceSelectionListing({
                                                 <motion.div 
                                                     key={idx} 
                                                     whileHover={{ x: 5 }}
-                                                    className="flex items-center gap-4 p-5 bg-emerald-50/30 rounded-[28px] border border-emerald-100/50 group hover:bg-emerald-50 transition-all"
+                                                    className="flex items-center gap-4 p-4 md:p-5 bg-emerald-50/30 rounded-2xl md:rounded-[28px] border border-emerald-100/50 group hover:bg-emerald-50 transition-all"
                                                 >
-                                                    <div className="w-10 h-10 rounded-2xl bg-emerald-500 flex items-center justify-center shrink-0 shadow-lg shadow-emerald-200">
-                                                        <Icons.CheckCircle2 size={20} className="text-white" />
+                                                    <div className="w-8 h-8 md:w-10 md:h-10 rounded-xl md:rounded-2xl bg-emerald-500 flex items-center justify-center shrink-0 shadow-lg shadow-emerald-200">
+                                                        <Icons.CheckCircle2 size={16} className="text-white md:size-5" />
                                                     </div>
-                                                    <span className="text-sm font-black text-emerald-900 tracking-tight">{feature}</span>
+                                                    <span className="text-xs md:text-sm font-black text-emerald-900 tracking-tight">{feature}</span>
                                                 </motion.div>
                                             ))}
                                         </div>
@@ -560,7 +573,7 @@ export function ServiceSelectionListing({
                                             }
                                             setSelectedService(null);
                                         }}
-                                        className="w-full h-20 rounded-[28px] font-black uppercase tracking-[0.2em] text-sm shadow-2xl shadow-primary/30 transition-all hover:scale-[1.02] active:scale-95 bg-primary text-white"
+                                        className="w-full h-14 md:h-20 rounded-2xl md:rounded-[28px] font-black uppercase tracking-[0.2em] text-xs md:text-sm shadow-2xl shadow-primary/30 transition-all hover:scale-[1.02] active:scale-95 bg-primary text-white"
                                     >
                                         {cart.find(i => i.id === selectedService._id) ? 'Continue Booking' : `Add Service • ₹${selectedService.price}`}
                                     </Button>
