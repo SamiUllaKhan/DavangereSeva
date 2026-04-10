@@ -139,9 +139,9 @@ export function ServiceSelectionListing({
 
     return (
         <div className="min-h-screen bg-[#F8FAFC] pt-4 md:pt-8 pb-20 md:pb-12">
-            <div className="max-w-7xl mx-auto px-0 sm:px-6 lg:px-8">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Header Section */}
-                <div className="mb-4 md:mb-12 px-4 md:px-0">
+                <div className="mb-4 md:mb-12 md:px-0">
                     <motion.div 
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -177,7 +177,7 @@ export function ServiceSelectionListing({
                     <motion.div 
                         initial={{ opacity: 0, scale: 0.98 }}
                         whileInView={{ opacity: 1, scale: 1 }}
-                        className="mb-6 md:mb-10 px-4 md:px-0"
+                        className="mb-6 md:mb-10 md:px-0"
                     >
                         <div className="bg-white rounded-[32px] md:rounded-[48px] p-4 md:p-10 border border-slate-100 shadow-xl shadow-primary/5 relative overflow-hidden group">
                             {/* Animated Background Accent */}
@@ -239,10 +239,10 @@ export function ServiceSelectionListing({
                                     }}
                                     className={`relative group bg-white rounded-[20px] md:rounded-[40px] p-2 md:p-8 border border-slate-100 shadow-sm transition-all duration-500 hover:shadow-2xl hover:shadow-primary/5 md:hover:-translate-y-1 cursor-pointer ${isHighlighted ? 'ring-2 ring-primary ring-offset-4 ring-offset-[#F8FAFC]' : ''}`}
                                 >
-                                    <div className="flex flex-row gap-2.5 md:gap-8 items-start">
+                                    <div className="flex flex-row gap-2.5 md:gap-8 items-stretch">
                                         {/* Service Image Section */}
                                         <div className="w-24 md:w-56 shrink-0 relative">
-                                            <div className="aspect-square rounded-2xl md:rounded-[32px] overflow-hidden bg-slate-100 shadow-inner transition-transform duration-700">
+                                            <div className="h-full rounded-2xl md:rounded-[32px] overflow-hidden bg-slate-100 shadow-inner transition-transform duration-700">
                                                 <img
                                                     src={service.image || '/images/placeholder-service.jpg'}
                                                     alt={service.name}
@@ -258,10 +258,10 @@ export function ServiceSelectionListing({
                                         </div>
 
                                         {/* Service Details Section */}
-                                        <div className="flex-1 space-y-2 md:space-y-6 min-w-0">
+                                        <div className="flex-1 flex flex-col space-y-2 md:space-y-6 min-w-0">
                                             <div className="space-y-1 md:space-y-2">
                                                 <div className="flex items-start md:items-center justify-between gap-2">
-                                                    <h3 className="text-base md:text-2xl font-black text-slate-900 group-hover:text-primary transition-colors tracking-tight line-clamp-1">{service.name}</h3>
+                                                    <h3 className="text-sm md:text-xl font-black text-slate-900 group-hover:text-primary transition-colors tracking-tight line-clamp-1">{service.name}</h3>
                                                     <div className="flex items-center gap-1 bg-yellow-50 text-yellow-700 px-1.5 md:px-3 py-0.5 md:py-1 rounded-lg text-[9px] md:text-xs font-black border border-yellow-100/50 shrink-0">
                                                         <Icons.Star size={10} className="fill-current md:size-3.5" />
                                                         {service.rating?.toFixed(1) || '4.8'}
@@ -284,7 +284,7 @@ export function ServiceSelectionListing({
                                                 </div>
                                             </div>
 
-                                            <div className="flex flex-row items-center gap-2 md:gap-4 pt-2 md:pt-6 border-t border-slate-50">
+                                            <div className="flex flex-row items-center gap-2 md:gap-4 pt-2 md:pt-6 border-t border-slate-50 mt-auto">
                                                 <Link
                                                     href={`/services/${service.slug}`}
                                                     onClick={(e) => {
