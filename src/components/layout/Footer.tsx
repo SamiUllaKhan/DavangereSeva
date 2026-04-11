@@ -4,6 +4,18 @@ import { Facebook, Twitter, Instagram, Mail, Phone, MapPin } from 'lucide-react'
 export default function Footer() {
     return (
         <footer className="bg-primary text-white py-12 pb-24 md:pb-12">
+            {/* Pre-footer / Service Area Banner */}
+            <div className="border-b border-white/10 pb-8 mb-8">
+                <div className="container px-4 md:px-8 mx-auto">
+                    <div className="flex items-center justify-center gap-2 text-center overflow-x-auto whitespace-nowrap py-1 scrollbar-hide">
+                        <MapPin size={18} className="text-blue-300 shrink-0" />
+                        <p className="text-blue-100 text-sm md:text-base font-medium tracking-wide">
+                            We are available in Davangere, Harihar, Chitradurga, Honnali, Sulekere, Santhebennur, and surrounding areas within a 70 km radius of Davangere. For assistance, contact us anytime.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
             <div className="container px-4 md:px-8 mx-auto">
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
                     <div className="space-y-4">
