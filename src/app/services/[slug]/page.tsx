@@ -114,6 +114,7 @@ export default async function ServiceCategoryPage({ params }: { params: Promise<
                     services={data.services}
                     initialCategoryId={data.initialCategoryId}
                     highlightedServiceId={data.highlightedServiceId}
+                    isLoggedIn={!!user}
                 />
             </section>
 

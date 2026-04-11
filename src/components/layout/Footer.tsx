@@ -3,21 +3,21 @@ import { Facebook, Twitter, Instagram, Mail, Phone, MapPin } from 'lucide-react'
 
 export default function Footer() {
     return (
-        <footer className="bg-primary text-white py-12 pb-24 md:pb-12">
+        <footer className="bg-primary text-white py-8 md:py-12 pb-8 md:pb-12">
             {/* Pre-footer / Service Area Banner */}
-            <div className="border-b border-white/10 pb-8 mb-8">
+            <div className="border-b border-white/10 pb-6 mb-6">
                 <div className="container px-4 md:px-8 mx-auto">
-                    <div className="flex items-center justify-center gap-2 text-center overflow-x-auto whitespace-nowrap py-1 scrollbar-hide">
-                        <MapPin size={18} className="text-blue-300 shrink-0" />
-                        <p className="text-blue-100 text-sm md:text-base font-medium tracking-wide">
-                            We are available in Davangere, Harihar, Chitradurga, Honnali, Sulekere, Santhebennur, and surrounding areas within a 70 km radius of Davangere. For assistance, contact us anytime.
+                    <div className="flex flex-col md:flex-row items-center justify-center gap-2 text-center py-1">
+                        <MapPin size={18} className="text-blue-300 shrink-0 mb-1 md:mb-0" />
+                        <p className="text-blue-100 text-sm md:text-base font-medium tracking-wide leading-relaxed">
+                            We are available in Davanagere, Harihar, Chitradurga, Honnali, Sulekere, Santhebennur, and surrounding areas within a 70 km radius of Davanagere. For assistance, contact us anytime.
                         </p>
                     </div>
                 </div>
             </div>
 
             <div className="container px-4 md:px-8 mx-auto">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 md:gap-12">
                     <div className="lg:col-span-3 space-y-4">
                         <h3 className="text-xl font-bold uppercase tracking-wider">Davanagere Seva</h3>
                         <p className="text-blue-100/80 text-sm leading-relaxed">
@@ -87,7 +87,7 @@ export default function Footer() {
                         </div>
                     </div>
                 </div>
-                <div className="border-t border-white/10 mt-12 pt-8 text-center text-sm text-blue-200">
+                <div className="border-t border-white/10 mt-8 md:mt-12 pt-6 md:pt-8 text-center text-sm text-blue-200">
                     <p>© {new Date().getFullYear()} Davanagere Seva. All rights reserved.</p>
                 </div>
             </div>

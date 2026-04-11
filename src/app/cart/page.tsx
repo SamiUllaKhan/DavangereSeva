@@ -11,12 +11,14 @@ import { ArrowLeft, Trash2, Minus, Plus } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { createBooking } from '@/app/actions/booking';
 import { LoadingOverlay } from '@/components/ui/LoadingOverlay';
+import { getCurrentUser } from '@/app/actions/user';
 
 interface CartItem {
     id: string;
     name: string;
     price: number;
     quantity: number;
+    image?: string;
 }
 
 export default function CartPage() {
@@ -41,6 +43,18 @@ export default function CartPage() {
                 console.error("Failed to parse cart", e);
             }
         }
+
+        // Auto-fill user details
+        const fetchUser = async () => {
+            const user = await getCurrentUser();
+            if (user) {
+                setName(user.name || '');
+                setPhone(user.phone || '');
+                setEmail(user.email || '');
+                setAddress(user.address || '');
+            }
+        };
+        fetchUser();
     }, []);
 
     const saveCart = (newCart: CartItem[]) => {
@@ -78,7 +92,7 @@ export default function CartPage() {
         setLoading(true);
         const bookingData = {
             items: cart,
-            totalAmount: cartTotal,
+            totalAmount: cartTotal + 50,
             customerName: name,
             customerPhone: phone,
             customerEmail: email,
@@ -173,39 +187,51 @@ export default function CartPage() {
                                             animate={{ opacity: 1, y: 0 }}
                                             exit={{ opacity: 0, scale: 0.95 }}
                                         >
-                                            <Card className="rounded-[24px] border border-slate-100 shadow-sm bg-white overflow-hidden group">
-                                                <CardContent className="p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
-                                                    <div className="flex-1">
-                                                        <h4 className="font-bold text-lg text-slate-900 mb-1">{item.name}</h4>
-                                                        <p className="text-primary font-black">₹{item.price}</p>
+                                            <Card className="rounded-[20px] md:rounded-[32px] border border-slate-100 shadow-sm bg-white overflow-hidden group">
+                                                <CardContent className="px-3 py-1 md:p-6 flex flex-row items-center gap-3 md:gap-6">
+                                                    {/* Service Image */}
+                                                    <div className="w-20 h-20 md:w-28 md:h-28 rounded-xl md:rounded-3xl overflow-hidden bg-slate-100 shrink-0">
+                                                        <img 
+                                                            src={item.image || '/images/placeholder-service.jpg'} 
+                                                            alt={item.name} 
+                                                            className="w-full h-full object-cover"
+                                                        />
                                                     </div>
-                                                    
-                                                    <div className="flex items-center gap-6 w-full sm:w-auto justify-between sm:justify-end border-t sm:border-t-0 border-slate-100 pt-4 sm:pt-0">
-                                                        <div className="flex items-center gap-4 bg-slate-50 px-2 py-1.5 rounded-2xl border border-slate-100">
-                                                            <button 
-                                                                onClick={() => updateQuantity(item.id, -1)}
-                                                                className="w-8 h-8 flex items-center justify-center text-slate-500 hover:text-primary transition-colors bg-white rounded-xl shadow-sm"
-                                                            >
-                                                                <Minus size={16} />
-                                                            </button>
-                                                            <span className="font-black w-6 text-center text-slate-900">{item.quantity}</span>
-                                                            <button 
-                                                                onClick={() => updateQuantity(item.id, 1)}
-                                                                className="w-8 h-8 flex items-center justify-center text-slate-500 hover:text-primary transition-colors bg-white rounded-xl shadow-sm"
-                                                            >
-                                                                <Plus size={16} />
-                                                            </button>
+
+                                                    <div className="flex-1 flex flex-col md:flex-row md:items-center justify-between gap-2 min-w-0">
+                                                        <div className="space-y-0.5 md:space-y-1">
+                                                            <h4 className="font-black text-sm md:text-xl text-slate-900 truncate leading-tight">{item.name}</h4>
+                                                            <p className="text-primary font-black text-xs md:text-lg">₹{item.price}</p>
                                                         </div>
-                                                        <div className="flex items-center gap-4">
-                                                            <div className="font-black text-xl text-slate-900 w-20 text-right">
-                                                                ₹{item.price * item.quantity}
+                                                        
+                                                        <div className="flex items-center justify-between md:justify-end gap-3 md:gap-8">
+                                                            <div className="flex items-center gap-2 md:gap-4 bg-slate-50 p-1 md:p-1.5 rounded-xl md:rounded-2xl border border-slate-100">
+                                                                <button 
+                                                                    onClick={() => updateQuantity(item.id, -1)}
+                                                                    className="w-7 h-7 md:w-9 md:h-9 flex items-center justify-center text-slate-500 hover:text-primary transition-colors bg-white rounded-lg md:rounded-xl shadow-sm"
+                                                                >
+                                                                    <Minus size={14} className="md:size-5" />
+                                                                </button>
+                                                                <span className="font-black text-xs md:text-base w-4 md:w-6 text-center text-slate-900">{item.quantity}</span>
+                                                                <button 
+                                                                    onClick={() => updateQuantity(item.id, 1)}
+                                                                    className="w-7 h-7 md:w-9 md:h-9 flex items-center justify-center text-slate-500 hover:text-primary transition-colors bg-white rounded-lg md:rounded-xl shadow-sm"
+                                                                >
+                                                                    <Plus size={14} className="md:size-5" />
+                                                                </button>
                                                             </div>
-                                                            <button 
-                                                                onClick={() => removeItem(item.id)}
-                                                                className="w-10 h-10 flex items-center justify-center text-red-300 hover:text-red-500 hover:bg-red-50 transition-all rounded-xl"
-                                                            >
-                                                                <Trash2 size={18} />
-                                                            </button>
+                                                            
+                                                            <div className="flex items-center gap-2 md:gap-4">
+                                                                <div className="font-black text-sm md:text-2xl text-slate-900 text-right min-w-[60px] md:min-w-[100px]">
+                                                                    ₹{item.price * item.quantity}
+                                                                </div>
+                                                                <button 
+                                                                    onClick={() => removeItem(item.id)}
+                                                                    className="w-8 h-8 md:w-11 md:h-11 flex items-center justify-center text-red-200 hover:text-red-500 hover:bg-red-50 transition-all rounded-lg md:rounded-xl"
+                                                                >
+                                                                    <Trash2 size={16} className="md:size-5" />
+                                                                </button>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </CardContent>
@@ -231,7 +257,7 @@ export default function CartPage() {
                                             required 
                                             value={name} 
                                             onChange={(e) => setName(e.target.value)} 
-                                            placeholder="John Doe"
+                                            placeholder="Contact Person"
                                             className="h-12 rounded-xl border-slate-200 bg-slate-50/50"
                                         />
                                     </div>
@@ -243,7 +269,7 @@ export default function CartPage() {
                                             type="tel"
                                             value={phone} 
                                             onChange={(e) => setPhone(e.target.value)} 
-                                            placeholder="+91 98765 43210"
+                                            placeholder="Phone Number"
                                             className="h-12 rounded-xl border-slate-200 bg-slate-50/50"
                                         />
                                     </div>
@@ -255,7 +281,7 @@ export default function CartPage() {
                                             type="email"
                                             value={email} 
                                             onChange={(e) => setEmail(e.target.value)} 
-                                            placeholder="john@example.com"
+                                            placeholder="Email Address"
                                             className="h-12 rounded-xl border-slate-200 bg-slate-50/50"
                                         />
                                     </div>
@@ -266,7 +292,7 @@ export default function CartPage() {
                                             required
                                             value={address}
                                             onChange={(e) => setAddress(e.target.value)}
-                                            placeholder="House/Flat No, Street, Landmark"
+                                            placeholder="Service Address"
                                             className="w-full p-3 h-24 rounded-xl border border-slate-200 bg-slate-50/50 resize-none outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm transition-all"
                                         />
                                     </div>
@@ -278,12 +304,16 @@ export default function CartPage() {
                                         <span>₹{cartTotal}</span>
                                     </div>
                                     <div className="flex justify-between items-center text-slate-500 font-bold text-sm">
+                                        <span>Platform Charges</span>
+                                        <span>₹50</span>
+                                    </div>
+                                    <div className="flex justify-between items-center text-slate-500 font-bold text-sm">
                                         <span>Taxes (Included)</span>
                                         <span>₹0</span>
                                     </div>
                                     <div className="flex justify-between items-center text-slate-900 pt-2 border-t border-slate-100">
                                         <span className="text-lg font-black uppercase tracking-tighter">Total Payable</span>
-                                        <span className="text-3xl font-black text-primary">₹{cartTotal}</span>
+                                        <span className="text-3xl font-black text-primary">₹{cartTotal + 50}</span>
                                     </div>
                                 </div>
                             </CardContent>

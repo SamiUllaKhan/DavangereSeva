@@ -77,7 +77,7 @@ export default function MobileNav({ isAuth, userSession }: { isAuth: boolean, us
                 )}
             </AnimatePresence>
 
-            <div className="fixed bottom-0 left-0 z-[70] w-full h-16 bg-white border-t border-gray-200 md:hidden shadow-[0_-10px_40px_rgba(0,0,0,0.05)]">
+            <div className="fixed bottom-0 left-0 z-[100] w-full h-16 bg-white border-t border-gray-200 md:hidden shadow-[0_-10px_40px_rgba(0,0,0,0.05)]">
                 <div className="grid h-full max-w-lg grid-cols-5 mx-auto font-medium">
                     {navItems.map((item) => {
                         const isActive = pathname === item.href;

@@ -28,12 +28,14 @@ export function ServiceSelectionListing({
     categories,
     services,
     initialCategoryId,
-    highlightedServiceId
+    highlightedServiceId,
+    isLoggedIn = false
 }: {
     categories: any[],
     services: any[],
     initialCategoryId?: string,
-    highlightedServiceId?: string | null
+    highlightedServiceId?: string | null,
+    isLoggedIn?: boolean
 }) {
     const router = useRouter();
     const [activeCategoryId, setActiveCategoryId] = useState<string | null>(initialCategoryId || null);
@@ -97,7 +99,7 @@ export function ServiceSelectionListing({
                 cartItem.id === id ? { ...cartItem, quantity: cartItem.quantity + 1 } : cartItem
             );
         } else {
-            nextCart = [...currentCart, { id: id, name: item.name, price: item.price, quantity: 1 }];
+            nextCart = [...currentCart, { id: id, name: item.name, price: item.price, quantity: 1, image: item.image }];
         }
         
         setCart(nextCart);
@@ -399,9 +401,13 @@ export function ServiceSelectionListing({
                                                     <span>Subtotal</span>
                                                     <span>₹{cartTotal}</span>
                                                 </div>
+                                                <div className="flex justify-between items-center text-slate-500 font-bold text-sm">
+                                                    <span>Platform Charges</span>
+                                                    <span>₹50</span>
+                                                </div>
                                                 <div className="flex justify-between items-center text-slate-900 pt-2 border-t border-slate-100">
                                                     <span className="text-lg font-black uppercase tracking-tighter">Order Total</span>
-                                                    <span className="text-3xl font-black">₹{cartTotal}</span>
+                                                    <span className="text-3xl font-black">₹{cartTotal + 50}</span>
                                                 </div>
                                             </div>
 
@@ -411,12 +417,16 @@ export function ServiceSelectionListing({
                                                 className="w-full h-16 rounded-[24px] shadow-2xl shadow-primary/30 group hover:scale-[1.02] active:scale-95 transition-all"
                                             >
                                                 <Link 
-                                                    href="/cart" 
-                                                    onClick={() => setCheckoutLoading(true)}
+                                                    href={isLoggedIn ? "/cart" : "/register"} 
+                                                    onClick={(e) => {
+                                                        if (isLoggedIn) {
+                                                            setCheckoutLoading(true);
+                                                        }
+                                                    }}
                                                     className="flex items-center justify-between px-8"
                                                 >
-                                                    <span className="font-black text-lg uppercase tracking-widest">
-                                                        {checkoutLoading ? 'Processing...' : 'Checkout'}
+                                                    <span className="font-black text-sm uppercase tracking-wide">
+                                                        {checkoutLoading ? 'Processing...' : (isLoggedIn ? 'Checkout' : 'Login to complete order')}
                                                     </span>
                                                     {checkoutLoading ? (
                                                         <Icons.Loader2 className="animate-spin" size={20} />
@@ -471,6 +481,7 @@ export function ServiceSelectionListing({
             {/* Service Details & Add-ons Dialog - Modernized */}
             <Dialog 
                 open={!!selectedService} 
+                modal={false}
                 onOpenChange={(open) => {
                     if (!open) {
                         setSelectedService(null);
@@ -481,7 +492,7 @@ export function ServiceSelectionListing({
                     }
                 }}
             >
-                <DialogContent className="sm:max-w-[700px] max-h-[95vh] overflow-y-auto rounded-none md:rounded-[48px] p-0 border-none shadow-[0_32px_128px_-12px_rgba(0,0,0,0.3)] bg-white overflow-x-hidden [&>button]:hidden">
+                <DialogContent className="sm:max-w-[700px] w-full h-full md:h-auto md:max-h-[95vh] top-0 md:top-[50%] translate-y-0 md:translate-y-[-50%] overflow-y-auto rounded-none md:rounded-[48px] p-0 border-none shadow-[0_32px_128px_-12px_rgba(0,0,0,0.3)] bg-white overflow-x-hidden [&>button]:hidden pb-24 md:pb-0">
                     {selectedService && (
                         <div className="relative">
                             <div className="relative h-[260px] md:h-[400px] w-full group/modal-img">

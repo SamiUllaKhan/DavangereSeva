@@ -9,19 +9,25 @@ import { motion } from 'framer-motion';
 import { useState, useEffect, Suspense, useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { getCategoriesAndServices } from '@/app/services/actions';
+import { getUserSession } from '@/app/actions/user';
 
 function ServicesPageContent() {
     const searchParams = useSearchParams();
     const [categories, setCategories] = useState<any[]>([]);
     const [services, setServices] = useState<any[]>([]);
+    const [user, setUser] = useState<any>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const data = await getCategoriesAndServices();
+                const [data, session] = await Promise.all([
+                    getCategoriesAndServices(),
+                    getUserSession()
+                ]);
                 setCategories(data.categories);
                 setServices(data.services);
+                setUser(session);
             } catch (error) {
                 console.error('Error fetching data:', error);
             } finally {
@@ -100,6 +106,7 @@ function ServicesPageContent() {
                                 categories={categories}
                                 services={filteredServices}
                                 initialCategoryId="all"
+                                isLoggedIn={!!user}
                             />
                         ) : (
                             <div className="bg-white rounded-[40px] p-20 text-center border border-slate-100 shadow-xl max-w-3xl mx-auto mt-12">
