@@ -31,8 +31,10 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const isAdmin = await isAuthenticated();
-  const userSession = await getUserSession();
+  const [isAdmin, userSession] = await Promise.all([
+    isAuthenticated(),
+    getUserSession()
+  ]);
 
   return (
     <html lang="en">

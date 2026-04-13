@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, useAnimation, useMotionValue } from 'framer-motion';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Star, ChevronRight, ChevronLeft, Zap } from 'lucide-react';
 
 interface SpotlightCarouselProps {
@@ -99,7 +100,7 @@ export function SpotlightCarousel({ services }: SpotlightCarouselProps) {
                             dragConstraints={{ right: 4, left: -width - 4 }}
                             className="flex gap-4 md:gap-8 py-4 md:py-8"
                         >
-                            {items.map((item) => (
+                            {items.map((item, idx) => (
                                 <motion.div
                                     key={item._id}
                                     whileHover={{ y: -8 }}
@@ -116,10 +117,12 @@ export function SpotlightCarousel({ services }: SpotlightCarouselProps) {
                                                 <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent z-10" />
                                                 
                                                 {item.image ? (
-                                                    <img 
+                                                    <Image 
                                                         src={item.image} 
                                                         alt={item.name} 
-                                                        className="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-[2.5s] ease-out pointer-events-none"
+                                                        fill
+                                                        priority={idx < 4}
+                                                        className="object-cover object-center group-hover:scale-110 transition-transform duration-[2.5s] ease-out pointer-events-none"
                                                     />
                                                 ) : (
                                                     <div className="w-full h-full flex items-center justify-center">

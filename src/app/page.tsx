@@ -1,17 +1,25 @@
 import dbConnect from '@/lib/mongodb';
 import { getCategories, getSpotlightServices } from '@/app/actions/admin';
 import HomeClientWrapper from '@/components/home/HomeClientWrapper';
+import { Suspense } from 'react';
 
-export default async function Home() {
-  const categories = await getCategories();
-  const spotlightServices = await getSpotlightServices();
-  let isConnected = false;
-  try {
-    await dbConnect();
-    isConnected = true;
-  } catch (e) {
-    console.error('Database connection failed:', e);
-  }
+async function HomeContent() {
+  const [categories, spotlightServices] = await Promise.all([
+    getCategories(),
+    getSpotlightServices()
+  ]);
+  
+  return <HomeClientWrapper categories={categories} spotlightServices={spotlightServices} isConnected={true} />;
+}
 
-  return <HomeClientWrapper categories={categories} spotlightServices={spotlightServices} isConnected={isConnected} />;
+export default function Home() {
+  return (
+    <Suspense fallback={
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    }>
+      <HomeContent />
+    </Suspense>
+  );
 }

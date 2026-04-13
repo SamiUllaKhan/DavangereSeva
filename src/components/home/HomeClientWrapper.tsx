@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import * as Icons from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
@@ -34,14 +35,14 @@ export default function HomeClientWrapper({ categories, spotlightServices, isCon
 
       {/* Hero Section */}
       <section className="relative min-h-[450px] md:h-[700px] flex items-center justify-center overflow-hidden px-4 md:px-0 bg-gray-900 py-12 md:py-0">
-        <div 
-          className="absolute inset-0 z-0"
-          style={{
-            backgroundImage: "url('/images/hero-banner.png')",
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-          }}
-        >
+        <div className="absolute inset-0 z-0">
+          <Image 
+            src="/images/hero-banner.png"
+            alt="Hero Banner"
+            fill
+            priority
+            className="object-cover object-center"
+          />
           {/* Subtle overlay for text readability */}
           <div className="absolute inset-0 bg-gray-900/60 transition-opacity"></div>
           {/* Top gradient to blend with the header if needed */}
@@ -246,14 +247,13 @@ export default function HomeClientWrapper({ categories, spotlightServices, isCon
               <div className="absolute -top-10 -left-10 w-40 h-40 bg-primary/5 rounded-full blur-3xl hidden md:block" />
               <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-blue-500/5 rounded-full blur-3xl hidden md:block" />
               
-              <div 
-                className="relative h-full w-full min-h-[300px] lg:min-h-full rounded-[30px] md:rounded-[60px] overflow-hidden border border-gray-100 group shadow-2xl"
-                style={{
-                  backgroundImage: "url('/images/promise-bg.png')",
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-                }}
-              >
+              <div className="relative h-full w-full min-h-[300px] lg:min-h-full rounded-[30px] md:rounded-[60px] overflow-hidden border border-gray-100 group shadow-2xl">
+                <Image 
+                  src="/images/promise-bg.png"
+                  alt="Promise Background"
+                  fill
+                  className="object-cover object-center"
+                />
                 <div className="absolute inset-0 bg-gray-900/60 transition-opacity duration-700 group-hover:bg-gray-900/70" />
                 <div className="flex flex-col items-center justify-center h-full w-full p-8 md:p-12 text-center relative z-10">
                   <div className="w-20 h-20 md:w-24 md:h-24 rounded-[30px] md:rounded-[40px] bg-white/10 backdrop-blur-md shadow-xl border border-white/20 flex items-center justify-center mb-6 md:mb-8 transform -rotate-6 group-hover:rotate-0 transition-transform duration-700">

@@ -5,7 +5,7 @@ import User from '@/models/User';
 import Service from '@/models/Service';
 import Category from '@/models/Category';
 import Booking from '@/models/Booking';
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, unstable_cache } from 'next/cache';
 import { cookies } from 'next/headers';
 import { writeFile, mkdir } from 'fs/promises';
 import { join } from 'path';
@@ -80,32 +80,40 @@ export async function getServices() {
     }
 }
 
-export async function getCategories(all = false) {
-    try {
-        await dbConnect();
-        const query = all ? {} : { status: { $ne: 'inactive' } };
-        const categories = await Category.find(query).lean();
-        return JSON.parse(JSON.stringify(categories));
-    } catch (error) {
-        console.error('Error fetching categories:', error);
-        return [];
-    }
-}
+export const getCategories = unstable_cache(
+    async (all = false) => {
+        try {
+            await dbConnect();
+            const query = all ? {} : { status: { $ne: 'inactive' } };
+            const categories = await Category.find(query).lean();
+            return JSON.parse(JSON.stringify(categories));
+        } catch (error) {
+            console.error('Error fetching categories:', error);
+            return [];
+        }
+    },
+    ['categories-list'],
+    { revalidate: 3600, tags: ['categories'] }
+);
 
-export async function getSpotlightServices() {
-    try {
-        await dbConnect();
-        const services = await Service.find({ isActive: true })
-            .populate('category')
-            .sort({ rating: -1, reviewCount: -1 })
-            .limit(10)
-            .lean();
-        return JSON.parse(JSON.stringify(services));
-    } catch (error) {
-        console.error('Error fetching spotlight services:', error);
-        return [];
-    }
-}
+export const getSpotlightServices = unstable_cache(
+    async () => {
+        try {
+            await dbConnect();
+            const services = await Service.find({ isActive: true })
+                .populate('category')
+                .sort({ rating: -1, reviewCount: -1 })
+                .limit(10)
+                .lean();
+            return JSON.parse(JSON.stringify(services));
+        } catch (error) {
+            console.error('Error fetching spotlight services:', error);
+            return [];
+        }
+    },
+    ['spotlight-services'],
+    { revalidate: 3600, tags: ['services', 'spotlight'] }
+);
 
 export async function saveService(formData: FormData) {
     try {
@@ -151,9 +159,9 @@ export async function saveService(formData: FormData) {
             await Service.create(serviceData);
         }
 
-        revalidatePath('/admin');
-        revalidatePath('/services');
-        revalidatePath(`/services/${slug}`);
+        revalidatePath('/admin', 'page');
+        revalidatePath('/services', 'page');
+        revalidatePath(`/services/${slug}`, 'page');
         return { success: true };
     } catch (error: any) {
         console.error('Error saving service:', error);
@@ -219,9 +227,9 @@ export async function saveCategory(formData: FormData) {
             await Category.create(categoryData);
         }
 
-        revalidatePath('/admin');
-        revalidatePath('/services');
-        revalidatePath('/');
+        revalidatePath('/admin', 'page');
+        revalidatePath('/services', 'page');
+        revalidatePath('/', 'page');
         return { success: true };
     } catch (error: any) {
         console.error('Error saving category:', error);
