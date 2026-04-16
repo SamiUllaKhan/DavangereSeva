@@ -139,3 +139,42 @@ export async function submitRating(bookingId: string, rating: number, review: st
     }
 }
 
+export async function addPartsToBooking(bookingId: string, parts: any[]) {
+    try {
+        await dbConnect();
+        const booking = await Booking.findById(bookingId);
+        if (!booking) return { success: false, error: 'Booking not found' };
+
+        // Add parts to existing parts array or replace it
+        // For simplicity, we'll replace the parts array with the new list
+        booking.parts = parts.map(p => ({
+            partId: p.partId || p._id,
+            name: p.name,
+            price: p.price,
+            quantity: p.quantity || 1
+        }));
+
+        // Recalculate total amount: Sum of items + Sum of parts
+        let itemsTotal = booking.items.reduce((sum: number, item: any) => sum + (item.price * item.quantity), 0);
+        const partsTotal = booking.parts.reduce((sum: number, part: any) => sum + (part.price * part.quantity), 0);
+        
+        // If the base service was 0 (Quote-based) but parts are now being added, 
+        // add a mandatory 200 visit charge.
+        if (itemsTotal === 0 && partsTotal > 0) {
+            itemsTotal = 200;
+        }
+        
+        booking.totalAmount = itemsTotal + partsTotal;
+        await booking.save();
+
+        revalidatePath('/partner-dashboard');
+        revalidatePath('/admin');
+        revalidatePath('/bookings');
+
+        return { success: true, booking: JSON.parse(JSON.stringify(booking)) };
+    } catch (error: any) {
+        console.error('Add Parts Error:', error);
+        return { success: false, error: error.message };
+    }
+}
+

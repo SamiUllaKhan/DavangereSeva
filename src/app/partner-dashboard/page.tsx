@@ -4,6 +4,7 @@ import { getCurrentUser } from '@/app/actions/user';
 import { Badge } from '@/components/ui/badge';
 import { redirect } from 'next/navigation';
 import PartnerOrderList from '@/components/partner/PartnerOrderList';
+import { getParts } from '@/app/actions/parts';
 
 export default async function PartnerDashboardPage() {
     const user = await getCurrentUser();
@@ -14,6 +15,7 @@ export default async function PartnerDashboardPage() {
     }
 
     const bookings = await getPartnerBookings(user._id);
+    const parts = await getParts();
 
     return (
         <div className="container px-4 md:px-8 mx-auto py-20 pb-32">
@@ -30,7 +32,7 @@ export default async function PartnerDashboardPage() {
                 </div>
             </div>
 
-            <PartnerOrderList initialBookings={bookings} />
+            <PartnerOrderList initialBookings={bookings} allParts={parts} />
         </div>
     );
 }

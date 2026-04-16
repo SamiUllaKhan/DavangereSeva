@@ -9,6 +9,8 @@ import AdminServiceList from './AdminServiceList';
 import AdminCategoryList from './AdminCategoryList';
 import AdminReviewList from './AdminReviewList';
 import AdminCustomerList from './AdminCustomerList';
+import AdminPartsList from './AdminPartsList';
+import { Package } from 'lucide-react';
 
 interface AdminDashboardTabsProps {
     bookings: any[];
@@ -17,6 +19,7 @@ interface AdminDashboardTabsProps {
     services: any[];
     categories: any[];
     pendingReviews: any[];
+    parts: any[];
 }
 
 export default function AdminDashboardTabs({
@@ -26,6 +29,7 @@ export default function AdminDashboardTabs({
     services,
     categories,
     pendingReviews,
+    parts,
 }: AdminDashboardTabsProps) {
     const [mounted, setMounted] = useState(false);
     useEffect(() => { setMounted(true); }, []);
@@ -71,6 +75,9 @@ export default function AdminDashboardTabs({
                         </span>
                     )}
                 </TabsTrigger>
+                <TabsTrigger value="parts" className="flex-1 lg:flex-none rounded-2xl px-5 py-3.5 data-[state=active]:bg-primary data-[state=active]:text-white data-[state=inactive]:text-gray-500 data-[state=inactive]:hover:bg-gray-50 font-black uppercase tracking-widest text-[10px] gap-2 transition-all shadow-none border-none">
+                    <Package size={14} className="shrink-0" /> <span className="truncate">Parts</span>
+                </TabsTrigger>
             </TabsList>
 
             <TabsContent value="orders">
@@ -95,6 +102,10 @@ export default function AdminDashboardTabs({
 
             <TabsContent value="reviews">
                 <AdminReviewList initialReviews={pendingReviews} />
+            </TabsContent>
+
+            <TabsContent value="parts">
+                <AdminPartsList initialParts={parts} />
             </TabsContent>
         </Tabs>
     );

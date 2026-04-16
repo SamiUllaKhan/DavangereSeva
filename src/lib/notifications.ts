@@ -1,5 +1,6 @@
 import nodemailer from 'nodemailer';
 import { getBookingAdminEmail, getBookingCustomerEmail, getPartnerWelcomeEmail } from './email-templates';
+import { sendBookingWhatsApp } from './whatsapp';
 
 const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -13,11 +14,19 @@ export async function sendBookingNotifications(booking: any) {
     try {
         console.log('Sending booking notifications...');
 
+        // Helper to get service name for subjects
+        const primaryService = booking.service?.name || (booking.items && booking.items.length > 0 ? booking.items[0].name : 'Home Service');
+        const secondaryInfo = booking.items && booking.items.length > 1 ? ` (+${booking.items.length - 1} more)` : '';
+        const serviceDisplayName = `${primaryService}${secondaryInfo}`;
+
+        // Add fallback booking.service if it doesn't exist for template compatibility
+        if (!booking.service) booking.service = { name: serviceDisplayName };
+
         // 1. Send to Admin
         await transporter.sendMail({
             from: `"Davanagere Seva" <${process.env.GMAIL_USER}>`,
             to: process.env.ADMIN_EMAIL,
-            subject: `New Booking: ${booking.service.name} - ${booking.customerName}`,
+            subject: `New Booking: ${serviceDisplayName} - ${booking.customerName}`,
             html: getBookingAdminEmail(booking),
         });
 
@@ -26,10 +35,13 @@ export async function sendBookingNotifications(booking: any) {
             await transporter.sendMail({
                 from: `"Davanagere Seva" <${process.env.GMAIL_USER}>`,
                 to: booking.customerEmail,
-                subject: `Booking Confirmed: ${booking.service.name}`,
+                subject: `Booking Confirmed: ${serviceDisplayName}`,
                 html: getBookingCustomerEmail(booking),
             });
         }
+
+        // 3. Send WhatsApp Notifications
+        await sendBookingWhatsApp(booking).catch(err => console.error('WhatsApp Notification Error:', err));
 
         // SMS Placeholder (You can integrate services like Twilio here)
         console.log(`[SMS Placeholder] To Admin: New booking ${booking.service.name} by ${booking.customerName}`);

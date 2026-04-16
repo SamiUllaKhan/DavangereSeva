@@ -221,6 +221,26 @@ export function ServiceSelectionListing({
                 <div className="flex flex-col lg:flex-row gap-10 items-start">
                     {/* Main Content Area */}
                     <main className="flex-1 w-full space-y-4 md:space-y-10">
+                        {/* Section-Specific Availability Notice (Conditional) */}
+                        {(activeCategory?.slug === 'computer-repair' || activeCategory?.slug === 'printer-repair') && (
+                            <motion.div 
+                                initial={{ opacity: 0, scale: 0.98 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                className="p-6 md:p-10 bg-blue-50/50 rounded-[32px] md:rounded-[48px] border border-blue-100 flex items-center gap-6 group relative overflow-hidden"
+                            >
+                                <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+                                <div className="w-12 h-12 md:w-16 md:h-16 rounded-2xl md:rounded-3xl bg-white text-primary flex items-center justify-center shrink-0 shadow-sm group-hover:scale-110 transition-transform duration-500">
+                                    <Icons.Info size={28} />
+                                </div>
+                                <div>
+                                    <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary mb-2 italic">Service Coverage Notice</p>
+                                    <p className="text-sm md:text-xl font-black text-slate-900 leading-tight tracking-tight">
+                                        Currently available in <span className="text-primary italic underline decoration-blue-200 underline-offset-4">Davanagere City Only</span>. <br className="hidden md:block" />
+                                        <span className="text-slate-400 font-bold uppercase text-[10px] tracking-widest">Growing fast - soon coming to other places too!</span>
+                                    </p>
+                                </div>
+                            </motion.div>
+                        )}
                         {activeServices.map((service, index) => {
                             const cartItem = cart.find(item => item.id === service._id);
                             const isHighlighted = highlightedServiceId === service._id;

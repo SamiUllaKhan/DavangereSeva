@@ -8,6 +8,12 @@ const BookingSchema = new Schema({
         price: { type: Number, required: true },
         quantity: { type: Number, default: 1 }
     }],
+    parts: [{
+        partId: { type: Schema.Types.ObjectId, ref: 'Part' },
+        name: { type: String, required: true },
+        price: { type: Number, required: true },
+        quantity: { type: Number, default: 1 }
+    }],
     totalAmount: { type: Number, required: true },
     customerId: { type: Schema.Types.ObjectId, ref: 'User' },
     assignedPartnerId: { type: Schema.Types.ObjectId, ref: 'User' },

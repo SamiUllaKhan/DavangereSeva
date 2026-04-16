@@ -1,6 +1,7 @@
 export const dynamic = 'force-dynamic';
 import { getBookings, getPartners } from '@/app/actions/booking';
 import { getAllPartners, getServices, getCategories, getPendingReviews, getCustomers } from '@/app/actions/admin';
+import { getParts } from '@/app/actions/parts';
 import AdminDashboardTabs from '@/components/admin/AdminDashboardTabs';
 
 export default async function AdminDashboard() {
@@ -10,6 +11,7 @@ export default async function AdminDashboard() {
     const categories = await getCategories(true);
     const pendingReviews = await getPendingReviews();
     const customers = await getCustomers();
+    const parts = await getParts();
 
     return (
         <div className="min-h-screen bg-gray-50/50">
@@ -47,6 +49,7 @@ export default async function AdminDashboard() {
                     services={services}
                     categories={categories}
                     pendingReviews={pendingReviews}
+                    parts={parts}
                 />
             </div>
         </div>
